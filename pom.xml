@@ -12,13 +12,13 @@
     </parent>
 
     <groupId>ai.bert-backend</groupId>
-    <artifactId>service-name</artifactId>
+    <artifactId>academic-service</artifactId>
     <version>1.0.0</version>
 
     <properties>
         <java.version>21</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <sonar.projectKey>service-name</sonar.projectKey>
+        <sonar.projectKey>academic-service</sonar.projectKey>
     </properties>
 
     <dependencies>
