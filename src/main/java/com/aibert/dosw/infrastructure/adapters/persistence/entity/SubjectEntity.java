@@ -1,0 +1,43 @@
+package com.aibert.dosw.infrastructure.adapters.persistence.entity;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.List;
+
+@Entity
+@Table(
+        name = "subjects",
+        uniqueConstraints = @UniqueConstraint(
+                columnNames = {"student_id", "subject_name", "semester"}
+        )
+)
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class SubjectEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "student_id", nullable = false)
+    private String studentId;
+
+    @Column(name = "subject_name", nullable = false, length = 100)
+    private String subjectName;
+
+    @Column(nullable = false)
+    private Integer credits;
+
+    @Column(name = "teacher_name", nullable = false, length = 100)
+    private String teacherName;
+
+    @Column(nullable = false)
+    private String semester;
+
+    @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<EvaluationCutEntity> evaluationCuts;
+}
