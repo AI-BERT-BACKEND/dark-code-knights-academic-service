@@ -284,3 +284,8 @@ $RECYCLE.BIN/
 .nfs*
 postgres_data/
 /uploads/
+
+### CLAUDE ###
+.claude/
+CLAUDE.md
+ROADMAP.md
