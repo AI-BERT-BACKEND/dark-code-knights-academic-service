@@ -1,0 +1,27 @@
+package com.aibert.dosw.application.dto.request;
+
+import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class UpdateGradeRequestDTO {
+
+    @NotBlank(message = "El nombre de la actividad es obligatorio")
+    private String activityName;
+
+    @NotNull(message = "La nota es obligatoria")
+    @DecimalMin(value = "0.0", message = "La nota mínima es 0.0")
+    @DecimalMax(value = "5.0", message = "La nota máxima es 5.0")
+    private Double gradeValue;
+
+    @NotNull(message = "El porcentaje de la actividad es obligatorio")
+    @DecimalMin(value = "0.1", message = "El porcentaje debe ser mayor a 0")
+    @DecimalMax(value = "100.0", message = "El porcentaje no puede superar 100")
+    private Double percentage;
+}
