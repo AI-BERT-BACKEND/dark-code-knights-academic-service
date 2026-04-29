@@ -1,7 +1,9 @@
 package com.aibert.dosw.entrypoints.advice;
 
+import com.aibert.dosw.domain.exceptions.CutCapacityExceededException;
 import com.aibert.dosw.domain.exceptions.DuplicateSubjectException;
 import com.aibert.dosw.domain.exceptions.EvaluationStructureLockedException;
+import com.aibert.dosw.domain.exceptions.GradeOutOfRangeException;
 import com.aibert.dosw.domain.exceptions.InvalidEvaluationStructureException;
 import com.aibert.dosw.domain.exceptions.SubjectNotFoundException;
 import com.aibert.dosw.entrypoints.ApiResponse;
@@ -25,6 +27,20 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ApiResponse.error(errors, HttpStatus.BAD_REQUEST.value()));
+    }
+
+    @ExceptionHandler(GradeOutOfRangeException.class)
+    public ResponseEntity<ApiResponse<Void>> handleGradeOutOfRange(GradeOutOfRangeException ex) {
+        return ResponseEntity
+                .status(HttpStatus.UNPROCESSABLE_ENTITY)
+                .body(ApiResponse.error(ex.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY.value()));
+    }
+
+    @ExceptionHandler(CutCapacityExceededException.class)
+    public ResponseEntity<ApiResponse<Void>> handleCutCapacityExceeded(CutCapacityExceededException ex) {
+        return ResponseEntity
+                .status(HttpStatus.UNPROCESSABLE_ENTITY)
+                .body(ApiResponse.error(ex.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY.value()));
     }
 
     @ExceptionHandler(SubjectNotFoundException.class)
