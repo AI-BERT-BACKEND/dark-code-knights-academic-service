@@ -6,6 +6,7 @@ import com.aibert.dosw.domain.exceptions.GradeNotFoundException;
 import com.aibert.dosw.domain.exceptions.EvaluationStructureLockedException;
 import com.aibert.dosw.domain.exceptions.GradeOutOfRangeException;
 import com.aibert.dosw.domain.exceptions.InvalidEvaluationStructureException;
+import com.aibert.dosw.domain.exceptions.NoPendingCutsException;
 import com.aibert.dosw.domain.exceptions.SubjectNotFoundException;
 import com.aibert.dosw.entrypoints.ApiResponse;
 import org.springframework.http.HttpStatus;
@@ -77,6 +78,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .body(ApiResponse.error(ex.getMessage(), HttpStatus.CONFLICT.value()));
+    }
+
+    @ExceptionHandler(NoPendingCutsException.class)
+    public ResponseEntity<ApiResponse<Void>> handleNoPendingCuts(NoPendingCutsException ex) {
+        return ResponseEntity
+                .status(HttpStatus.UNPROCESSABLE_ENTITY)
+                .body(ApiResponse.error(ex.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY.value()));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
