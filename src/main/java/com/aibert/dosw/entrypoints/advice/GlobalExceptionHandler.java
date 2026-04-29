@@ -1,6 +1,7 @@
 package com.aibert.dosw.entrypoints.advice;
 
 import com.aibert.dosw.domain.exceptions.DuplicateSubjectException;
+import com.aibert.dosw.domain.exceptions.EvaluationStructureLockedException;
 import com.aibert.dosw.domain.exceptions.InvalidEvaluationStructureException;
 import com.aibert.dosw.domain.exceptions.SubjectNotFoundException;
 import com.aibert.dosw.entrypoints.ApiResponse;
@@ -38,6 +39,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ApiResponse.error(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
+    }
+
+    @ExceptionHandler(EvaluationStructureLockedException.class)
+    public ResponseEntity<ApiResponse<Void>> handleEvaluationStructureLocked(EvaluationStructureLockedException ex) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(ApiResponse.error(ex.getMessage(), HttpStatus.CONFLICT.value()));
     }
 
     @ExceptionHandler(DuplicateSubjectException.class)

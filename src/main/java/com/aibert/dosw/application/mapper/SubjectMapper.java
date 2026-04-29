@@ -27,4 +27,8 @@ public interface SubjectMapper {
     EvaluationCutResponseDTO toResponseDTO(EvaluationCut cut);
 
     List<SubjectResponseDTO> toResponseDTOList(List<Subject> subjects);
+
+    List<EvaluationCut> toDomainCutList(List<EvaluationCutDTO> dtos);
+
+    List<EvaluationCutResponseDTO> toResponseCutDTOList(List<EvaluationCut> cuts);
 }
