@@ -1,6 +1,10 @@
 ##### GIT IGNORE FOR THE BACKEND OF THE TECHCUP PROJECT ####
 
 #### JAVA ####
+mvnw
+mvnw.cmd
+.gitkeep
+**/.gitkeep
 *.class
 *.log
 *.ctxt
