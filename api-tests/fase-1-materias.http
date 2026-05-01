@@ -1,0 +1,217 @@
+### ================================================================
+### FASE 1 — Gestión de Materias (R06)
+### Prerequisito: base de datos limpia (IDs inician en 1)
+###
+### IDs resultantes al terminar este archivo:
+###   subjects  → id=1 "Cálculo Diferencial" (existe)
+###               id=2 "Física General"      (ELIMINADA)
+###   eval_cuts → id=1 (Corte 1, 40%) id=2 (Corte 2, 60%) → de subject 1
+###               id=3 (Corte 1, 50%) id=4 (Corte 2, 50%) → de subject 2 (eliminados)
+###
+### Siguiente ID de subject:  3
+### Siguiente ID de cut:      5
+### ================================================================
+
+@baseUrl = http://localhost:8002
+@studentId = student-test
+@ct = application/json
+
+
+# ------------------------------------------------------------------
+# CASO 1 — Error: porcentajes no suman 100 → 400 Bad Request
+# Espera: { "success": false, "error": "...", "code": 400 }
+# ------------------------------------------------------------------
+### POST materia con porcentajes inválidos (40 + 40 = 80)
+POST {{baseUrl}}/api/v1/subjects
+Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
+
+{
+  "subjectName": "Materia Invalida",
+  "credits": 3,
+  "teacherName": "Prof. Error",
+  "semester": "2025-1",
+  "evaluationCuts": [
+    { "cutName": "Corte 1", "cutPercentage": 40 },
+    { "cutName": "Corte 2", "cutPercentage": 40 }
+  ]
+}
+
+
+# ------------------------------------------------------------------
+# CASO 2 — Crear materia válida → 201 Created
+# Espera: id=1, evaluationCuts con id=1 (40%) e id=2 (60%)
+# ------------------------------------------------------------------
+### POST Cálculo Diferencial — subjectId=1
+POST {{baseUrl}}/api/v1/subjects
+Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
+
+{
+  "subjectName": "Cálculo Diferencial",
+  "credits": 4,
+  "teacherName": "Prof. Ramírez",
+  "semester": "2025-1",
+  "evaluationCuts": [
+    { "cutName": "Corte 1", "cutPercentage": 40 },
+    { "cutName": "Corte 2", "cutPercentage": 60 }
+  ]
+}
+
+
+# ------------------------------------------------------------------
+# CASO 3 — Error: materia duplicada (mismo nombre + semestre + estudiante) → 409 Conflict
+# Espera: { "success": false, "error": "Ya existe una materia con el nombre...", "code": 409 }
+# ------------------------------------------------------------------
+### POST Cálculo Diferencial duplicada
+POST {{baseUrl}}/api/v1/subjects
+Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
+
+{
+  "subjectName": "Cálculo Diferencial",
+  "credits": 3,
+  "teacherName": "Otro Profesor",
+  "semester": "2025-1",
+  "evaluationCuts": [
+    { "cutName": "Corte 1", "cutPercentage": 50 },
+    { "cutName": "Corte 2", "cutPercentage": 50 }
+  ]
+}
+
+
+# ------------------------------------------------------------------
+# CASO 4 — Crear segunda materia → 201 Created
+# Espera: id=2, evaluationCuts con id=3 (50%) e id=4 (50%)
+# ------------------------------------------------------------------
+### POST Física General — subjectId=2
+POST {{baseUrl}}/api/v1/subjects
+Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
+
+{
+  "subjectName": "Física General",
+  "credits": 3,
+  "teacherName": "Prof. Torres",
+  "semester": "2025-1",
+  "evaluationCuts": [
+    { "cutName": "Corte 1", "cutPercentage": 50 },
+    { "cutName": "Corte 2", "cutPercentage": 50 }
+  ]
+}
+
+
+# ------------------------------------------------------------------
+# CASO 5 — Listar todas las materias del estudiante → 200 OK
+# Espera: lista con 2 materias (Cálculo Diferencial y Física General)
+# ------------------------------------------------------------------
+### GET todas las materias de student-test
+GET {{baseUrl}}/api/v1/subjects
+X-Student-Id: {{studentId}}
+
+
+# ------------------------------------------------------------------
+# CASO 6 — Obtener materia por ID → 200 OK
+# Espera: detalle de Cálculo Diferencial con cutId=1 y cutId=2
+# ------------------------------------------------------------------
+### GET subject id=1
+GET {{baseUrl}}/api/v1/subjects/1
+X-Student-Id: {{studentId}}
+
+
+# ------------------------------------------------------------------
+# CASO 7 — Error: ID inexistente → 404 Not Found
+# Espera: { "success": false, "error": "Materia con id 999 no encontrada", "code": 404 }
+# ------------------------------------------------------------------
+### GET subject id=999
+GET {{baseUrl}}/api/v1/subjects/999
+X-Student-Id: {{studentId}}
+
+
+# ------------------------------------------------------------------
+# CASO 8 — Actualizar materia → 200 OK
+# Espera: Física General actualizada con nombre "Física Clásica" y credits=4
+# ------------------------------------------------------------------
+### PUT subject id=2
+PUT {{baseUrl}}/api/v1/subjects/2
+Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
+
+{
+  "subjectName": "Física Clásica",
+  "credits": 4,
+  "teacherName": "Prof. Torres",
+  "semester": "2025-1",
+  "evaluationCuts": [
+    { "cutName": "Corte 1", "cutPercentage": 50 },
+    { "cutName": "Corte 2", "cutPercentage": 50 }
+  ]
+}
+
+
+# ------------------------------------------------------------------
+# CASO 9 — Verificar actualización → 200 OK
+# Espera: subjectName="Física Clásica", credits=4
+# ------------------------------------------------------------------
+### GET subject id=2 post-update
+GET {{baseUrl}}/api/v1/subjects/2
+X-Student-Id: {{studentId}}
+
+
+# ------------------------------------------------------------------
+# CASO 10 — Error: validación nombre muy corto → 400 Bad Request
+# Espera: error de validación @Size (mínimo 3 caracteres)
+# ------------------------------------------------------------------
+### POST nombre de 2 caracteres
+POST {{baseUrl}}/api/v1/subjects
+Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
+
+{
+  "subjectName": "AB",
+  "credits": 3,
+  "teacherName": "Prof. X",
+  "semester": "2025-1",
+  "evaluationCuts": [
+    { "cutName": "Corte 1", "cutPercentage": 100 }
+  ]
+}
+
+
+# ------------------------------------------------------------------
+# CASO 11 — Error: validación créditos fuera de rango → 400 Bad Request
+# Espera: error de validación @Max (máximo 10 créditos)
+# ------------------------------------------------------------------
+### POST con credits=15
+POST {{baseUrl}}/api/v1/subjects
+Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
+
+{
+  "subjectName": "Materia Inválida",
+  "credits": 15,
+  "teacherName": "Prof. X",
+  "semester": "2025-1",
+  "evaluationCuts": [
+    { "cutName": "Corte 1", "cutPercentage": 100 }
+  ]
+}
+
+
+# ------------------------------------------------------------------
+# CASO 12 — Eliminar materia → 200 OK
+# Sus cortes (id=3, id=4) se borran en cascada por orphanRemoval
+# Espera: { "success": true, "data": null, "message": "Materia eliminada exitosamente" }
+# ------------------------------------------------------------------
+### DELETE subject id=2
+DELETE {{baseUrl}}/api/v1/subjects/2
+X-Student-Id: {{studentId}}
+
+
+# ------------------------------------------------------------------
+# CASO 13 — Verificar eliminación → 404 Not Found
+# Espera: { "success": false, "error": "Materia con id 2 no encontrada", "code": 404 }
+# ------------------------------------------------------------------
+### GET subject id=2 post-delete
+GET {{baseUrl}}/api/v1/subjects/2
+X-Student-Id: {{studentId}}

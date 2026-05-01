@@ -1,0 +1,174 @@
+### ================================================================
+### FASE 6 — Simulación de Nota Objetivo (R10)
+### Prerequisito: fases 1, 2, 3 y 4 ejecutadas (fase 5 es opcional)
+###
+### Estado de la BD al llegar aquí (subject id=1):
+###   cutId=5  Corte 1  30%  grade=5.00  → calificado
+###   cutId=6  Corte 2  30%  grade=3.50  → calificado
+###   cutId=7  Corte 3  40%  grade=null  → PENDIENTE
+###
+### Fórmula de simulación:
+###   currentScore     = 5.00*30 + 3.50*30 = 255
+###   pendingPercentage = 40
+###   requiredGrade    = (targetGrade*100 - 255) / 40
+### ================================================================
+
+@baseUrl = http://localhost:8002
+@ct = application/json
+@s1 = 1
+@cut3 = 7
+
+
+# ------------------------------------------------------------------
+# CASO 1 — Error: materia inexistente → 404 Not Found
+# Espera: { "success": false, "error": "Materia con id 999 no encontrada", "code": 404 }
+# ------------------------------------------------------------------
+### POST simulate en subjectId=999
+POST {{baseUrl}}/api/v1/subjects/999/simulate
+Content-Type: {{ct}}
+
+{
+  "targetGrade": 3.5
+}
+
+
+# ------------------------------------------------------------------
+# CASO 2 — Error: targetGrade fuera de rango (> 5.0) → 400 Bad Request
+# Espera: { "success": false, "error": "La nota objetivo no puede superar 5.0", "code": 400 }
+# ------------------------------------------------------------------
+### POST simulate con targetGrade=6.0
+POST {{baseUrl}}/api/v1/subjects/{{s1}}/simulate
+Content-Type: {{ct}}
+
+{
+  "targetGrade": 6.0
+}
+
+
+# ------------------------------------------------------------------
+# CASO 3 — Error: targetGrade negativo → 400 Bad Request
+# Espera: error de validación @DecimalMin
+# ------------------------------------------------------------------
+### POST simulate con targetGrade=-1.0
+POST {{baseUrl}}/api/v1/subjects/{{s1}}/simulate
+Content-Type: {{ct}}
+
+{
+  "targetGrade": -1.0
+}
+
+
+# ------------------------------------------------------------------
+# CASO 4 — Error: targetGrade nulo → 400 Bad Request
+# Espera: { "success": false, "error": "La nota objetivo no puede ser nula", "code": 400 }
+# ------------------------------------------------------------------
+### POST simulate con targetGrade=null
+POST {{baseUrl}}/api/v1/subjects/{{s1}}/simulate
+Content-Type: {{ct}}
+
+{
+  "targetGrade": null
+}
+
+
+# ------------------------------------------------------------------
+# CASO 5 — Meta alcanzable → 200 OK  isAchievable=true
+# targetGrade=4.0
+# requiredGrade = (4.0*100 - 255) / 40 = 145/40 = 3.625
+# Espera:
+#   targetGrade=4.0
+#   requiredGrade=3.625
+#   achievable=true
+#   pendingCutsPercentage=40.0
+#   message="Para alcanzar 4.0 necesitas obtener 3.63 o más..."
+# ------------------------------------------------------------------
+### POST simulate targetGrade=4.0 — meta alcanzable
+POST {{baseUrl}}/api/v1/subjects/{{s1}}/simulate
+Content-Type: {{ct}}
+
+{
+  "targetGrade": 4.0
+}
+
+
+# ------------------------------------------------------------------
+# CASO 6 — Meta inalcanzable → 200 OK  isAchievable=false
+# targetGrade=5.0
+# requiredGrade = (5.0*100 - 255) / 40 = 245/40 = 6.125  → supera 5.0
+# Espera:
+#   targetGrade=5.0
+#   requiredGrade=6.125
+#   achievable=false
+#   message="No es posible alcanzar 5.0. La nota requerida (6.13) supera el máximo..."
+# ------------------------------------------------------------------
+### POST simulate targetGrade=5.0 — meta inalcanzable
+POST {{baseUrl}}/api/v1/subjects/{{s1}}/simulate
+Content-Type: {{ct}}
+
+{
+  "targetGrade": 5.0
+}
+
+
+# ------------------------------------------------------------------
+# CASO 7 — Meta ya asegurada → 200 OK  isAchievable=true  requiredGrade=0.0
+# targetGrade=2.0
+# requiredGrade = (2.0*100 - 255) / 40 = -55/40 = -1.375 → clampeado a 0.0
+# Ya se supera la meta sin importar la nota del Corte 3
+# Espera:
+#   targetGrade=2.0
+#   requiredGrade=0.0
+#   achievable=true
+#   message="¡Ya tienes asegurado superar tu meta!..."
+# ------------------------------------------------------------------
+### POST simulate targetGrade=2.0 — meta ya asegurada
+POST {{baseUrl}}/api/v1/subjects/{{s1}}/simulate
+Content-Type: {{ct}}
+
+{
+  "targetGrade": 2.0
+}
+
+
+# ------------------------------------------------------------------
+# Setup para CASO 8: registrar nota en Corte 3 (el último pendiente)
+# gradeId=4 (o el siguiente disponible), cutId=7, 100%
+# Tras este POST, subject id=1 no tiene cortes pendientes
+# ------------------------------------------------------------------
+### POST nota en Corte 3 — cierra todos los cortes
+POST {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut3}}/grades
+Content-Type: {{ct}}
+
+{
+  "activityName": "Examen Final",
+  "gradeValue": 3.8,
+  "percentage": 100
+}
+
+
+# ------------------------------------------------------------------
+# CASO 8 — Sin cortes pendientes → 422 Unprocessable Entity
+# Todos los cortes tienen nota; no hay qué simular
+# Espera: { "success": false,
+#            "error": "La materia con id 1 no tiene cortes pendientes por calificar",
+#            "code": 422 }
+# ------------------------------------------------------------------
+### POST simulate sin cortes pendientes
+POST {{baseUrl}}/api/v1/subjects/{{s1}}/simulate
+Content-Type: {{ct}}
+
+{
+  "targetGrade": 3.5
+}
+
+
+# ------------------------------------------------------------------
+# CASO 9 — Verificar promedio final de la materia → 200 OK
+# Con los 3 cortes calificados:
+#   Corte 1: 5.00 * 30 = 150
+#   Corte 2: 3.50 * 30 = 105
+#   Corte 3: 3.80 * 40 = 152
+#   overallAverage = (150 + 105 + 152) / 100 = 4.07
+# ------------------------------------------------------------------
+### GET averages finales con los 3 cortes calificados
+GET {{baseUrl}}/api/v1/subjects/{{s1}}/averages
