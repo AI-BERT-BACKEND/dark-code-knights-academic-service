@@ -56,12 +56,12 @@
 
 **Equipo:** `dark-code-knights`
 
-| Integrante          | Rol                     | Responsabilidades |
-|---------------------|-------------------------|-------------------|
-| Jose Luis Lancheros | Backend Developer (Ops) |                   |
-| Natalia Mahecha     | Lider                   |                   |
-| Andres Camilo Vivas | Backend Arquitectura    |                   |
-| Carlos Uribe        | Frontend Developer      |                   |
+| Integrante          | Rol                | Responsabilidades |
+|---------------------|--------------------|-------------------|
+| Jose Luis Lancheros | Backend Developer  | Creación y configuración del repositorio backend, estructura de carpetas, configuración CI/CD, implementación de requerimientos backend, dockerización completa del microservicio, despliegue en Azure                  |
+| Natalia Mahecha     | Lider              | Requerimientos funcionales, matriz de trazabilidad, documentos del sprint, gestión del backlog en Jira, coordinación general del equipo                  |
+| Andres Camilo Vivas | Backend Arquitectura | Diagramas de clases, componentes general y componentes específico, diagrama entidad-relación, implementación del set de pruebas, análisis de cobertura con JaCoCo y SonarQube                  |
+| Carlos Uribe        | Frontend Developer | implementación de pantallas en Figma                  |
 
 ---
 
@@ -472,4 +472,4 @@ academic-service/
 
 ---
 
-> **Módulo 2 — Gestión Académica** · Equipo `dark-code-knights` · IABert Platform · 2025
+> **Módulo 2 — Gestión Académica** · Equipo `dark-code-knights` · IABert Platform · 2026
