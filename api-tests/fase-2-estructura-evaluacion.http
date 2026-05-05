@@ -1,0 +1,123 @@
+### ================================================================
+### FASE 2 — Estructura de Evaluación (R07)
+### Prerequisito: fase-1-materias.http ejecutado
+###
+### Estado inicial:
+###   subjectId=1 "Cálculo Diferencial"
+###   cutId=1 (Corte 1, 40%)  cutId=2 (Corte 2, 60%)
+###
+### IDs resultantes al terminar este archivo:
+###   cutId=1 y cutId=2 ELIMINADOS (orphanRemoval al reconfigurar)
+###   cutId=5 (Corte 1, 30%)
+###   cutId=6 (Corte 2, 30%)
+###   cutId=7 (Corte 3, 40%)
+###
+### NOTA: IDs 3 y 4 fueron de "Física Clásica" (eliminada en fase 1).
+###       La secuencia de la BD continúa desde 5.
+### ================================================================
+
+@baseUrl = http://localhost:8002
+@ct = application/json
+
+
+# ------------------------------------------------------------------
+# CASO 1 — Consultar estructura actual antes de cambios → 200 OK
+# Espera: 2 cortes: Corte 1 (40%) y Corte 2 (60%)
+# ------------------------------------------------------------------
+### GET estructura actual de subject id=1
+GET {{baseUrl}}/api/v1/subjects/1/evaluation-structure
+
+
+# ------------------------------------------------------------------
+# CASO 2 — Error: lista de cortes vacía → 400 Bad Request
+# Espera: { "success": false, "error": "...", "code": 400 }
+# ------------------------------------------------------------------
+### PUT estructura con array vacío
+PUT {{baseUrl}}/api/v1/subjects/1/evaluation-structure
+Content-Type: {{ct}}
+
+{
+  "evaluationCuts": []
+}
+
+
+# ------------------------------------------------------------------
+# CASO 3 — Error: porcentajes no suman 100 → 400 Bad Request
+# Espera: error de validación de estructura (30 + 30 = 60)
+# ------------------------------------------------------------------
+### PUT estructura con porcentajes inválidos
+PUT {{baseUrl}}/api/v1/subjects/1/evaluation-structure
+Content-Type: {{ct}}
+
+{
+  "evaluationCuts": [
+    { "cutName": "Corte 1", "cutPercentage": 30 },
+    { "cutName": "Corte 2", "cutPercentage": 30 }
+  ]
+}
+
+
+# ------------------------------------------------------------------
+# CASO 4 — Error: porcentaje de un corte = 0 → 400 Bad Request
+# Espera: error de validación @DecimalMin en EvaluationCutDTO
+# ------------------------------------------------------------------
+### PUT con cutPercentage=0
+PUT {{baseUrl}}/api/v1/subjects/1/evaluation-structure
+Content-Type: {{ct}}
+
+{
+  "evaluationCuts": [
+    { "cutName": "Corte 1", "cutPercentage": 0 },
+    { "cutName": "Corte 2", "cutPercentage": 100 }
+  ]
+}
+
+
+# ------------------------------------------------------------------
+# CASO 5 — Error: materia inexistente → 404 Not Found
+# Espera: { "success": false, "error": "Materia con id 999 no encontrada", "code": 404 }
+# ------------------------------------------------------------------
+### PUT estructura en subject inexistente
+PUT {{baseUrl}}/api/v1/subjects/999/evaluation-structure
+Content-Type: {{ct}}
+
+{
+  "evaluationCuts": [
+    { "cutName": "Corte 1", "cutPercentage": 100 }
+  ]
+}
+
+
+# ------------------------------------------------------------------
+# CASO 6 — Reconfigurar estructura: de 2 a 3 cortes → 200 OK
+# Los cortes id=1 y id=2 se ELIMINAN (orphanRemoval).
+# Se CREAN 3 nuevos: id=5 (30%), id=6 (30%), id=7 (40%)
+# Espera: lista con 3 cortes y sus nuevos IDs
+# ------------------------------------------------------------------
+### PUT nueva estructura con 3 cortes — cutIds resultantes: 5, 6, 7
+PUT {{baseUrl}}/api/v1/subjects/1/evaluation-structure
+Content-Type: {{ct}}
+
+{
+  "evaluationCuts": [
+    { "cutName": "Corte 1", "cutPercentage": 30 },
+    { "cutName": "Corte 2", "cutPercentage": 30 },
+    { "cutName": "Corte 3", "cutPercentage": 40 }
+  ]
+}
+
+
+# ------------------------------------------------------------------
+# CASO 7 — Verificar nueva estructura → 200 OK
+# Espera: 3 cortes con ids 5, 6, 7 y porcentajes 30, 30, 40
+# ------------------------------------------------------------------
+### GET estructura actualizada de subject id=1
+GET {{baseUrl}}/api/v1/subjects/1/evaluation-structure
+
+
+# ------------------------------------------------------------------
+# CASO 8 — Verificar que GET de la materia también refleja el cambio → 200 OK
+# Espera: evaluationCuts con 3 cortes (ids 5, 6, 7)
+# ------------------------------------------------------------------
+### GET subject id=1 completo
+GET {{baseUrl}}/api/v1/subjects/1
