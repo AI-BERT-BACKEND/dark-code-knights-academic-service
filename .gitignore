@@ -1,8 +1,6 @@
 ##### GIT IGNORE FOR THE BACKEND OF THE TECHCUP PROJECT ####
 
 #### JAVA ####
-mvnw
-mvnw.cmd
 .gitkeep
 **/.gitkeep
 *.class
@@ -151,20 +149,8 @@ poetry.toml
 pyrightconfig.json
 
 #### MAVEN ####
-.mvn/
 target/
-pom.xml.tag
-pom.xml.releaseBackup
-pom.xml.versionsBackup
-pom.xml.next
-release.properties
-dependency-reduced-pom.xml
-buildNumber.properties
-.mvn/timing.properties
-.mvn/wrapper/maven-wrapper.jar
-.project
-.classpath
-
+!.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 
