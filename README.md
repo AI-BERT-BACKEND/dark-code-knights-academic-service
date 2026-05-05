@@ -358,8 +358,6 @@ La documentación interactiva completa está disponible en **`http://localhost:8
 
 ### Requisitos previos
 
-- Java 21 o superior
-- Maven 3.9+ (o usar el wrapper incluido `./mvnw`)
 - Docker y Docker Compose
 
 ### 1. Clonar el repositorio
@@ -371,38 +369,55 @@ cd academic-service
 
 ### 2. Configurar variables de entorno
 
-Crea el archivo `.env` en la raíz del proyecto:
+El archivo `.env` incluido en el repositorio ya tiene los valores por defecto para desarrollo local:
 
 ```env
-DB_USER=
-DB_PASSWORD=
+DB_NAME=academic
+DB_USER=academic_user
+DB_PASSWORD=academic_pass
 ```
 
-### 3. Levantar la base de datos
+Modifica los valores si tu entorno lo requiere.
+
+### 3. Levantar el stack completo con Docker Compose
 
 ```bash
-docker compose up -d
+docker compose up --build
 ```
 
-Esto inicia un contenedor de **PostgreSQL 16** en el puerto `5432` con la base de datos `academic_db`.
+Este comando:
+- Construye la imagen del microservicio desde el `Dockerfile`
+- Levanta **PostgreSQL 16** en el puerto `5435`
+- Levanta el **backend** en el puerto `8083`
+- Espera a que la base de datos esté lista antes de iniciar el backend (`healthcheck`)
 
-### 4. Compilar el proyecto
+Para ejecutarlo en segundo plano:
 
 ```bash
-./mvnw clean compile
+docker compose up --build -d
 ```
 
-### 5. Ejecutar el servicio
+Para detener y eliminar los contenedores:
+
+```bash
+docker compose down
+```
+
+### 4. Explorar la API con Swagger
+
+Una vez levantado, abre en el navegador:
+
+**`http://localhost:8083/swagger-ui.html`**
+
+### Desarrollo local sin Docker
+
+Si preferís ejecutar el backend directamente con Maven (requiere PostgreSQL corriendo en `localhost:5432`):
 
 ```bash
 ./mvnw spring-boot:run
 ```
 
-El servicio queda disponible en **`http://localhost:8002`**.
-
-### 6. Explorar la API con Swagger
-
-Abre en el navegador: **`http://localhost:8002/swagger-ui.html`**
+El servicio queda disponible en **`http://localhost:8080`**.
 
 ---
 
