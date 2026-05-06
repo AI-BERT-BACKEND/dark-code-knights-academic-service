@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+import com.aibert.dosw.application.dto.request.evaluationCutDTO;
+
 @Data
 @Builder
 @NoArgsConstructor
