@@ -211,7 +211,6 @@ cmake-build-*/
 *.iml
 *.ipr
 *.iws
-out/
 com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
