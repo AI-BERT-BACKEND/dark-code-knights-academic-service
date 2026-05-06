@@ -36,7 +36,6 @@ public class SubjectRequestDTO {
     @NotBlank(message = "El semestre es obligatorio")
     private String semester;
 
-    @NotNull(message = "Los cortes evaluativos son obligatorios")
     @NotEmpty(message = "La materia debe tener al menos un corte evaluativo")
     @Valid
     private List<EvaluationCutDTO> evaluationCuts;
