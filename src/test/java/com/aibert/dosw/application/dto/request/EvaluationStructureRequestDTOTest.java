@@ -1,6 +1,6 @@
 package com.aibert.dosw.application.dto.request;
 
-import com.aibert.dosw.application.dto.request.evaluationCutDTO;
+import com.aibert.dosw.application.dto.request.EvaluationCutDTO;
 import org.junit.jupiter.api.Test;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
