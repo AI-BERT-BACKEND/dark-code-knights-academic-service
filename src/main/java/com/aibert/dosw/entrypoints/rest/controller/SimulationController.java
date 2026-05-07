@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Locale;
+
 @RestController
 @RequiredArgsConstructor
 public class SimulationController {
@@ -29,14 +31,17 @@ public class SimulationController {
         String message;
         if (!result.isAchievable()) {
             message = String.format(
+                    Locale.forLanguageTag("es"),
                     "No es posible alcanzar %.1f. La nota requerida (%.2f) supera el máximo permitido (5.0).",
                     result.getTargetGrade(), result.getRequiredGrade());
         } else if (result.getRequiredGrade() == 0.0) {
             message = String.format(
+                    Locale.forLanguageTag("es"),
                     "¡Ya tienes asegurado superar tu meta! Con cualquier nota en los cortes pendientes alcanzarás %.1f.",
                     result.getTargetGrade());
         } else {
             message = String.format(
+                    Locale.forLanguageTag("es"),
                     "Para alcanzar %.1f necesitas obtener %.2f o más en los cortes pendientes (%.0f%% restante).",
                     result.getTargetGrade(), result.getRequiredGrade(), result.getPendingPercentage());
         }

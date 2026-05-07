@@ -53,7 +53,6 @@ MANIFEST
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
 *.spec
-
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
@@ -95,7 +94,7 @@ docs/_build/
 
 # PyBuilder
 .pybuilder/
-target/
+# target/  # Temporarily commented out to access JaCoCo reports
 
 # Jupyter Notebook
 .ipynb_checkpoints
@@ -213,10 +212,6 @@ cmake-build-*/
 *.ipr
 *.iws
 /out/
-com_crashlytics_export_strings.xml
-crashlytics.properties
-crashlytics-build.properties
-fabric.properties
 
 ### VSCode ###
 .vscode/*
