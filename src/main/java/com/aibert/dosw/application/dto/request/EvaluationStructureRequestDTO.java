@@ -10,13 +10,15 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+import com.aibert.dosw.application.dto.request.EvaluationCutDTO;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class EvaluationStructureRequestDTO {
 
-    @NotNull(message = "Los cortes evaluativos son obligatorios")
+    @NotNull(message = "La materia debe tener al menos un corte evaluativo")
     @NotEmpty(message = "La materia debe tener al menos un corte evaluativo")
     @Valid
     private List<EvaluationCutDTO> evaluationCuts;
