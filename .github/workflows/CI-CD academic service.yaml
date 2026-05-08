@@ -102,7 +102,11 @@ jobs:
       - name: Generate JaCoCo report
         run: ./mvnw jacoco:report -B --no-transfer-progress
       - name: Analyze with SonarCloud
-        run: ./mvnw sonar:sonar -B --no-transfer-progress -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+        run: ./mvnw sonar:sonar -B --no-transfer-progress \
+          -Dsonar.projectKey=dark-code-knights-academic-service \
+          -Dsonar.organization=ai-bert-backend \
+          -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.token=${{ secrets.SONAR_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload JaCoCo report
@@ -144,7 +148,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ env.REGISTRY_OWNER }}/<Nombre del repo>
+          images: ghcr.io/${{ env.REGISTRY_OWNER }}/dark-code-knights-academic-service
           tags: |
             type=sha,prefix=,format=short
             type=raw,value=qa-latest,enable=${{ github.ref == 'refs/heads/develop'}}
