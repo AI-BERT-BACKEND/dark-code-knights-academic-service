@@ -275,24 +275,37 @@ La documentación interactiva completa está disponible en **`http://localhost:8
 ## Diagramas
 
 ### Contexto del sistema
-- [Diagrama de contexto](docs/diagramas/contexto.png)
+![Diagrama_Contexto.png](docs/Diagrama_Contexto.png)
+- El sistema interactúa con un sistema externos:  Api IA que en este caso vamos a usar gemini
+  Además, se identifican dos actores principales: el estudiante, quien utiliza el sistema para gestionar su información académica y consultar sus resultados, y el administrador, encargado de supervisar el sistema y garantizar la integridad de los datos. Estas interacciones muestran cómo el sistema se integra con su entorno y quiénes lo utilizan directamente.
 
-### Casos de Uso
-- [Casos de uso — R05 a R10](docs/diagramas/casos-uso.png)
 
 ### Diagrama de Clases (Dominio)
-- [Clases de dominio](docs/diagramas/clases-dominio.png)
+- [Diagrama_de_clases link](https://viewer.diagrams.net/?tags=%7B%7D&lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1&title=DiagramaClasesAIBERT.xml&dark=0#R%3Cmxfile%3E%3Cdiagram%20name%3D%22Academic%20Service%20-%20Diagrama%20de%20clases%22%20id%3D%22class-diagram%22%3E5V1bd%2BI4Ev41nJN56BzLN%2BCRGMKwu92dgcn2zhPHsRXwjsGMLwnsr1%2FJlo0sXzEC29NPwXJJCH1flapKZWcgabvj3NUP26%2BOCe2BKJjHgTQdiCIYSWP0B7ecopYRvsING9cyoybh3LCy%2FgdJz7g1sEzokbaoyXcc27cO6UbD2e%2Bh4afadNd1PtNi745tphoO%2BgZmGlaGbmdbf1imv41a0aSF841fobXZxl89jO%2Fs9FiaNHhb3XQ%2BqSZpNpA013H86NPuqEEbr156YZ4L7iYzc%2BHer9PB1k%2FQXSNh95TtSkbz%2FFP8y71Pa2fre3T15Pm66xNsJAE1vDv7%2BBrI8TXpCtC16wR7E5rkSneNuDO6ir7oQ7cD8kUzPKODY%2B19j9yDrg%2BP1LzI75lDZwfD2QtbeslVssCfZ4CAqqhRIxknliE0lMmlTuixSYY%2BLyD6QNYwfz1XWnYZM2tML%2BhWP%2BCPu%2BMG68pjsLMfDVv30BSePreWD1cH3cACn%2Bg2atv6OzteQdva7NFnA40MXQYAkLeoA00cTJ6i4dHHJySh2miST28u%2BrTBn1bB23%2BRymhoKNexbehmRfJanrC2uVD34cMvRfc30J%2FYdun9p9PCLBYIDmbpFyAzA6P7TQgDsoRJtPSYJghHvkx6zpeJoZtwZxlNCIMAXwW7ne6eHjw%2FMNG0FmYz8IZKJXbSDcCb9V3bZ1hc9y1nv%2FLdwPADFzbSfGf%2Fbm1Q51LlTr6ioYaOckCW0yAr4xF3kOc9xxj5YGYjVF24sTw0j1JQw9G9tmy2UG2zRzFteG7yi55zYmXtAjvU%2BybE8KLe8MGLnIWFORC1kDB%2F3cx8A6DwV%2B0IMv1w6JTrOzkcbMsI0Wm0mslOl3J9h8My1ze5vmY5NXf1WqgYySq3qxYWFn%2FHo8aqMRAlgDFcaKH%2FShzgVw9qugep%2B6mPlL9LlOCXgTRBjaR7I%2BByQpYKD1Thsb%2F5vUZtjp3IcM29GphFMcjTaRX5mw8EtX%2BhjS5PlsQj1yNbbeAYZIGoXA%2Ft66HX0L6GvkN9hSS%2BhkW2ozYVUxQ4wDe1ew3fNHTt6sNHXEHLJIh9OBjJBnApl8M1HHEwpJNew4UMaRzMk6i8nj3NCeEpm8pJ2xQmmAf890Ft1mv4tDgGz4np6zgzVAhPb4l2Ok2gBT4VHWS5QIX4dUfhFC8MmUzASOLOkOVm3meGLEk8H4bsNShBxf8hlmG%2FPNSjHMDTCcH6cLXy50ArVUT0w0cuvlKvwY18pbrQJlkZGtgmO%2B3laAGJgyZO7V6DFXlGdcFKUmT8vaIKrEQBXI%2FVytr1GSuSKoO%2F625s6mpglqTI4ugjSbgtoRfY%2FBwjJgEOgMykybgYR%2BTEf9VzsmQ9AZHEIOgnHMI8Zx5s4RBIInJh4iE42USBQUkGt9jC5q7ZZ5RC3eouRgBwiBEnHxtNt42OY5Q%2BO4iXf4IWWd9APH9sy5wilIjzaBA5iNxC0rXhMU%2Be3atEa8xh64pAMZ2dbu2zkLV4RDClpnTp6cAo93RASi0nczqg8jgdIEYYTb2I%2FfRCd1EBkhRiHu2%2FkJ8aRj%2FOfsPcSrIjxB%2FwXSsrE43%2FTd%2FBEinDhable5HEAv2uTcpeYhEf6sYWuhUDeXAHvXBZCkUgHbJ7twzpQZ57yjg3Nzj8wD8ATb3HpGQhuJyaTlBFOSTxAl0837AwEstNneDNhozcJgwkU%2FebUEGoUc0jjrhzIfQ%2FesyEbH6mLgOMIDFMOXd1w7c%2BLP9UQZIQ%2FH9HUy1kyKGARk1oIuZYDIYmSuwFcKQJCuVQDNdjnmRj0SLK%2BOeYtwRTF%2F4VWGhTqpJDe5KFNhR8IxR6cxwb6vsMQ%2FYmIleRvWlClLzKzkzmQ%2BROlAXyF5Yv3WdJWfIj8kiW8OB4FvL4Ty%2BOW8AXkvfQP6Jir3Tzu7U3k9revFur2D3KkYjyX3F3XhtKuW%2FBpbxogQLynhMg1Onbw68F94Se9SVGDPaAh2N5XH177j708GjAQ1hpVhDsfHP8ZxyZzhLBJjDIOSioTAQPpHQEz8W9Py5mqz6jsNgjYcvMOdO9PyBJte11iMz7rRehRWxPK4AicgHh%2B7L3IHwP%2FO%2FvS32%2FaUEXuNR3zY7TXhunaRAVKsc1Xi3AoHDIyc%2BOmjbrMw7Ie9J09H0oRscQQBO2YJgkwCHhPjt%2Beyk8K%2B4DFN%2Bclyh%2BxfnS24MgCzJ3n%2Bn3xfLty%2BTX1WktLacz7Z8%2Fhr%2BBL0TNoJl5MLoUJSdwDdKBTf9TCOJR46MQFGBsnY2z1%2B3ZufUJrekEP7eNBQ5wH7U8W%2Fg3TNnDFXwNj5b%2FH3zvcTwekes%2FwmtZlcn19Eg6hxen%2BAI%2FvxN1FQQpboj6qkMxbjh3Dq9SvV%2Bga6FVx4RKxmfbojWI8iuD3Ew0TbpcrrgQJ3E%2B0njkAR92RcunnyiB86PVZOQX3EAFRWI6KIqzbc%2B15QFDumgGl31bMt2ISaRXyTRkATADMe5StOSZgUKlSBa3uZ6Mr9YTlgd30xM5rSeKWq4nOaRO6Y6c1h35rEyX6E5WT9JZ%2BrtpSSHjVKYUGQiAreWoS16VyVYDQWKH4kffiIXW%2Ft3VsxRt8Wh7gWfkxVFuo50zr2AAqEyBsCoyaz3kcTYQvC0nRRpPrXUnjwXYXO%2FE1A94XF7Oi1SaceWVcf%2FHIYfPHQOgOuOOfsUZiDshwKUyF83%2F5WuPASDrj%2FYhDxe%2F742kIu0uGIg8cmxz1%2BytFWIOHG5sg8TxDYwQWv6eG6EQhLuYIBYALjYIAdBrGxQu%2F90skDhOPynFxQSRKKbfepAqrbqNOrDvr5FuUK8SvM1ItNBlGEqdUvQDLP%2FU%2FcLL%2FJLKBlwBoPrcWlHYXIfKTXH7y5iU0l7Bm%2BqqSKNzVZEjMOTPCLSb9pcN4VZ6BQu6WvtYgwxAUBX%2BbHDXYY5jnQq1a6Q7aZ6kTwXiUOWiRKepe9sko9Q866lQOU9Q91xASWU2K7Ka0W%2BjE5iplcvQOPASP%2BSqdOaleFJxe1%2FRTOWvlTuhSa3bzbBsdoCTDqzIAz6FxzdMGDYuP%2B0BCvu0lcCQjjrtaZCcdtdznMNYp2Lp5rycnxMiP42VoVeuA1YmwnN%2Bjsz7imZDK6OMUng%2BCjKowLT2eZjZTQMkjtK1CUOx1KSw4lUmSBbBVfKikJrP1SYr9zhY5rCjJs73XU6CQTN%2BZ857lSEnfrMBact1EcMhQ7uRWkyj7L6ZvKbo2kIHILHv6pCH6ZFuXOmgXEttFtj70BsxNV0QpEj1OS4yHJca1TTUqweaU2F3y5xH0SbD2lGJ7cxzFpnu7AMWtUmvMvlRAMRbkR4FRtpac1c1aB5XS9B2W%2Fu53E3q1b8dcDYRcnO%2Fs8jRtkhN2aIRqIkXSBsiUamyQ%2FVMjp8LYhvBq8g4g%2Bq41DCw8nEZIL94FFHq9dB5SiEqtKD81GuGW%2BYNe5pcERMw4rJaLp48GJgvz4dlU7sHLAMtsIx6G3LLLBtdxjJGXJEuYxkjz4FlE7Q9ThqybPKTOTbUS5074NjMsE86awjd7KdzSmddwm6urZebeTPo5m0iJ9I%2BhfA4HlU8GdAQv3o%2BKvUO5m5g%2BnroLKb5Ob1hzaQeE2NIqlwFYL2EHvWiZX77%2BEWQTe2eQXb5ozid8JMAYCsQyHVhfkcU2Ljvwg7ySGHoUJqZAkM1t%2Ftt8kkLbb2yds2ol%2FzLsZ9l86ZeG90BQ6%2B5K1wi0Qw7Kjl2b8vRzNZX5pNy4GIe7207gcSknOP%2FiVaYQGLkh%2BQ0pZ4dSUqv4t5sCTVPM4K82vVMa8jE2R2Z2I7duN1z1PWtBXJScalDM4woD%2FcOGDVzDR8FIQ3TozTk4x229HhvQX5QZt5xoZSnoceSdJX8UJGLrU4zn8ParVfLhi7HeQf%2BuxoL5l2ebdiKczlt%2FKrAi3HiXHX5ZjvGnxmgPN91%2FoQ%2FSL0xSODKgic0Aq%2BqXCQLHr1mrUSSSYliU%2BTmnCvZeoMctWY3Rw5duo7j00YUP5Pw1TEhlvg%2F%3C%2Fdiagram%3E%3C%2Fmxfile%3E)
+- El diagrama de clases del academic-service sigue una arquitectura hexagonal (Puertos y Adaptadores), dividida en cuatro capas: Entrypoints, Aplicación, Dominio e Infraestructura. Esta estructura permite separar responsabilidades y mantener la lógica de negocio independiente de tecnologías externas
+-  Capa de Entrypoints (Controladores REST) ->
+   Responsabilidad:
+   Recibir peticiones HTTP, validar datos y delegar la lógica a los casos de uso.
+-  Capa de Aplicación (Casos de Uso) ->
+   Responsabilidad:
+   Implementar la lógica de negocio mediante casos de uso.
+-  Capa de Dominio ->
+   Responsabilidad:
+   Contener entidades, reglas de negocio y puertos del sistema
+-  Capa de Infraestructura (Adaptadores) ->
+   Responsabilidad:
+   Implementar los puertos del dominio usando JPA y PostgreSQL
 
-### Diagrama de Componentes
-- [Componentes hexagonales](docs/diagramas/componentes.png)
+### Diagrama de Componentes especifico
+![DIagrama_componentes_especifico.png](docs/DIagrama_componentes_especifico.png)
+- El diagrama específico muestra la organización interna del academic-service. Cada flujo de requerimiento sigue la misma arquitectura en capas: Controller → Service → Validator/Calculator → Repository, con apoyo de Mappers (MapStruct) para la conversión entre entidades y DTOs. La tabla a continuación describe cada componente y su responsabilidad.
 
 ### Entidad-Relación
-- [Modelo ER — PostgreSQL](docs/diagramas/er.png)
+![Diagrama_entidad_relacion.png](docs/Diagrama_entidad_relacion.png)
+- El modelo de datos del Módulo 2 está compuesto por tres entidades principales: subjects (materias), evaluation_cuts (cortes evaluativos) y grades (notas). La entidad subjects actúa como núcleo del módulo, ya que concentra la información de cada materia y se relaciona con los cortes y las notas mediante claves foráneas.
 
-### Diagramas de Secuencia
-- [Registrar nota y recalcular promedio](docs/secuencia/registrar-nota.md)
-- [Simular nota objetivo](docs/secuencia/simular-nota.md)
-- [Configurar estructura de evaluación](docs/secuencia/configurar-estructura.md)
+
+
 
 ---
 
