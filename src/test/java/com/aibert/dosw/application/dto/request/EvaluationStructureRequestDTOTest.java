@@ -324,4 +324,24 @@ class EvaluationStructureRequestDTOTest {
         assertThat(result).contains("Test Cut");
         assertThat(result).contains("30.0");
     }
+
+    @Test
+    void equalsWithAllNullFields() {
+        assertThat(new EvaluationStructureRequestDTO()).isEqualTo(new EvaluationStructureRequestDTO());
+    }
+
+    @Test
+    void equalsWithNullEvalCutsVsNonNull() {
+        EvaluationStructureRequestDTO withNull = new EvaluationStructureRequestDTO();
+        EvaluationStructureRequestDTO withValue = EvaluationStructureRequestDTO.builder()
+            .evaluationCuts(List.of(EvaluationCutDTO.builder().cutName("A").cutPercentage(100.0).build()))
+            .build();
+        assertThat(withNull).isNotEqualTo(withValue);
+        assertThat(withValue).isNotEqualTo(withNull);
+    }
+
+    @Test
+    void hashCodeWithNullFields() {
+        assertThat(new EvaluationStructureRequestDTO().hashCode()).isEqualTo(new EvaluationStructureRequestDTO().hashCode());
+    }
 }

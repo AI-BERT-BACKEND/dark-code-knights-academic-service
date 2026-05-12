@@ -266,6 +266,16 @@ class GradeMapperTest {
     }
 
     @Test
+    void shouldHandleNullGradeRequestDTO() {
+        assertThat(mapper.toDomain((GradeRequestDTO) null)).isNull();
+    }
+
+    @Test
+    void shouldHandleNullUpdateGradeRequestDTO() {
+        assertThat(mapper.toDomain((UpdateGradeRequestDTO) null)).isNull();
+    }
+
+    @Test
     @DisplayName("Should handle grade with boundary percentage")
     void shouldHandleGradeWithBoundaryPercentage() {
         // Given

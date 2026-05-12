@@ -317,4 +317,38 @@ class AcademicSummaryDTOTest {
         assertThat(result).contains("student123");
         assertThat(result).contains("3.5");
     }
+
+    @Test
+    void equalsWhenAcademicGpaDiffers() {
+        AcademicSummaryDTO a = AcademicSummaryDTO.builder().studentId("s1").academicGpa(3.5).subjects(List.of()).build();
+        AcademicSummaryDTO b = AcademicSummaryDTO.builder().studentId("s1").academicGpa(4.0).subjects(List.of()).build();
+        assertThat(a).isNotEqualTo(b);
+    }
+
+    @Test
+    void equalsWhenSubjectsDiffer() {
+        List<AveragesResponseDTO> s1 = List.of(AveragesResponseDTO.builder().subjectId(1L).build());
+        List<AveragesResponseDTO> s2 = List.of(AveragesResponseDTO.builder().subjectId(2L).build());
+        AcademicSummaryDTO a = AcademicSummaryDTO.builder().studentId("s1").academicGpa(3.5).subjects(s1).build();
+        AcademicSummaryDTO b = AcademicSummaryDTO.builder().studentId("s1").academicGpa(3.5).subjects(s2).build();
+        assertThat(a).isNotEqualTo(b);
+    }
+
+    @Test
+    void equalsWithAllNullFields() {
+        assertThat(new AcademicSummaryDTO()).isEqualTo(new AcademicSummaryDTO());
+    }
+
+    @Test
+    void equalsWithNullStudentIdVsNonNull() {
+        AcademicSummaryDTO withNull = new AcademicSummaryDTO();
+        AcademicSummaryDTO withValue = AcademicSummaryDTO.builder().studentId("s1").build();
+        assertThat(withNull).isNotEqualTo(withValue);
+        assertThat(withValue).isNotEqualTo(withNull);
+    }
+
+    @Test
+    void hashCodeWithNullFields() {
+        assertThat(new AcademicSummaryDTO().hashCode()).isEqualTo(new AcademicSummaryDTO().hashCode());
+    }
 }

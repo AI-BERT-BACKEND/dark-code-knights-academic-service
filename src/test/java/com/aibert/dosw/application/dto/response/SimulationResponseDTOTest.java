@@ -360,4 +360,50 @@ class SimulationResponseDTOTest {
         assertThat(result).contains("70.0");
         assertThat(result).contains("Test message");
     }
+
+    @Test
+    void equalsWhenRequiredGradeDiffers() {
+        SimulationResponseDTO a = SimulationResponseDTO.builder().targetGrade(4.0).requiredGrade(3.5).achievable(true).pendingCutsPercentage(70.0).message("M").build();
+        SimulationResponseDTO b = SimulationResponseDTO.builder().targetGrade(4.0).requiredGrade(4.0).achievable(true).pendingCutsPercentage(70.0).message("M").build();
+        assertThat(a).isNotEqualTo(b);
+    }
+
+    @Test
+    void equalsWhenAchievableDiffers() {
+        SimulationResponseDTO a = SimulationResponseDTO.builder().targetGrade(4.0).requiredGrade(3.5).achievable(true).pendingCutsPercentage(70.0).message("M").build();
+        SimulationResponseDTO b = SimulationResponseDTO.builder().targetGrade(4.0).requiredGrade(3.5).achievable(false).pendingCutsPercentage(70.0).message("M").build();
+        assertThat(a).isNotEqualTo(b);
+    }
+
+    @Test
+    void equalsWhenPendingCutsPercentageDiffers() {
+        SimulationResponseDTO a = SimulationResponseDTO.builder().targetGrade(4.0).requiredGrade(3.5).achievable(true).pendingCutsPercentage(70.0).message("M").build();
+        SimulationResponseDTO b = SimulationResponseDTO.builder().targetGrade(4.0).requiredGrade(3.5).achievable(true).pendingCutsPercentage(80.0).message("M").build();
+        assertThat(a).isNotEqualTo(b);
+    }
+
+    @Test
+    void equalsWhenMessageDiffers() {
+        SimulationResponseDTO a = SimulationResponseDTO.builder().targetGrade(4.0).requiredGrade(3.5).achievable(true).pendingCutsPercentage(70.0).message("A").build();
+        SimulationResponseDTO b = SimulationResponseDTO.builder().targetGrade(4.0).requiredGrade(3.5).achievable(true).pendingCutsPercentage(70.0).message("B").build();
+        assertThat(a).isNotEqualTo(b);
+    }
+
+    @Test
+    void equalsWithAllNullFields() {
+        assertThat(new SimulationResponseDTO()).isEqualTo(new SimulationResponseDTO());
+    }
+
+    @Test
+    void equalsWithNullTargetGradeVsNonNull() {
+        SimulationResponseDTO withNull = new SimulationResponseDTO();
+        SimulationResponseDTO withValue = SimulationResponseDTO.builder().targetGrade(4.0).build();
+        assertThat(withNull).isNotEqualTo(withValue);
+        assertThat(withValue).isNotEqualTo(withNull);
+    }
+
+    @Test
+    void hashCodeWithNullFields() {
+        assertThat(new SimulationResponseDTO().hashCode()).isEqualTo(new SimulationResponseDTO().hashCode());
+    }
 }

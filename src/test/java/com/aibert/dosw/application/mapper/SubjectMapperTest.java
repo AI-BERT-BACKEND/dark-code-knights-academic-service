@@ -131,6 +131,31 @@ class SubjectMapperTest {
     }
 
     @Test
+    void shouldHandleNullSubjectRequestDTO() {
+        assertNull(subjectMapper.toDomain((com.aibert.dosw.application.dto.request.SubjectRequestDTO) null));
+    }
+
+    @Test
+    void shouldHandleNullEvaluationCutDTO() {
+        assertNull(subjectMapper.toDomain((com.aibert.dosw.application.dto.request.EvaluationCutDTO) null));
+    }
+
+    @Test
+    void shouldHandleNullEvaluationCut() {
+        assertNull(subjectMapper.toResponseDTO((com.aibert.dosw.domain.model.EvaluationCut) null));
+    }
+
+    @Test
+    void shouldHandleNullDomainCutList() {
+        assertNull(subjectMapper.toDomainCutList(null));
+    }
+
+    @Test
+    void shouldHandleNullResponseCutDTOList() {
+        assertNull(subjectMapper.toResponseCutDTOList(null));
+    }
+
+    @Test
     @DisplayName("Should preserve evaluation cut grades in mapping")
     void shouldPreserveEvaluationCutGradesInMapping() {
         SubjectResponseDTO responseDTO = subjectMapper.toResponseDTO((com.aibert.dosw.domain.model.Subject) subject);

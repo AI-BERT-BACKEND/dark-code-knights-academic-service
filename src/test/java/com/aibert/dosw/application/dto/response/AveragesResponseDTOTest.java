@@ -389,4 +389,52 @@ class AveragesResponseDTOTest {
         assertThat(result).contains("2025-1");
         assertThat(result).contains("4.0");
     }
+
+    @Test
+    void equalsWhenSubjectNameDiffers() {
+        AveragesResponseDTO a = AveragesResponseDTO.builder().subjectId(1L).subjectName("A").semester("2025-1").overallAverage(4.0).cuts(List.of()).build();
+        AveragesResponseDTO b = AveragesResponseDTO.builder().subjectId(1L).subjectName("B").semester("2025-1").overallAverage(4.0).cuts(List.of()).build();
+        assertThat(a).isNotEqualTo(b);
+    }
+
+    @Test
+    void equalsWhenSemesterDiffers() {
+        AveragesResponseDTO a = AveragesResponseDTO.builder().subjectId(1L).subjectName("A").semester("2025-1").overallAverage(4.0).cuts(List.of()).build();
+        AveragesResponseDTO b = AveragesResponseDTO.builder().subjectId(1L).subjectName("A").semester("2025-2").overallAverage(4.0).cuts(List.of()).build();
+        assertThat(a).isNotEqualTo(b);
+    }
+
+    @Test
+    void equalsWhenOverallAverageDiffers() {
+        AveragesResponseDTO a = AveragesResponseDTO.builder().subjectId(1L).subjectName("A").semester("2025-1").overallAverage(4.0).cuts(List.of()).build();
+        AveragesResponseDTO b = AveragesResponseDTO.builder().subjectId(1L).subjectName("A").semester("2025-1").overallAverage(5.0).cuts(List.of()).build();
+        assertThat(a).isNotEqualTo(b);
+    }
+
+    @Test
+    void equalsWhenCutsDiffer() {
+        List<EvaluationCutResponseDTO> c1 = List.of(EvaluationCutResponseDTO.builder().id(1L).build());
+        List<EvaluationCutResponseDTO> c2 = List.of(EvaluationCutResponseDTO.builder().id(2L).build());
+        AveragesResponseDTO a = AveragesResponseDTO.builder().subjectId(1L).subjectName("A").semester("2025-1").overallAverage(4.0).cuts(c1).build();
+        AveragesResponseDTO b = AveragesResponseDTO.builder().subjectId(1L).subjectName("A").semester("2025-1").overallAverage(4.0).cuts(c2).build();
+        assertThat(a).isNotEqualTo(b);
+    }
+
+    @Test
+    void equalsWithAllNullFields() {
+        assertThat(new AveragesResponseDTO()).isEqualTo(new AveragesResponseDTO());
+    }
+
+    @Test
+    void equalsWithNullSubjectIdVsNonNull() {
+        AveragesResponseDTO withNull = new AveragesResponseDTO();
+        AveragesResponseDTO withValue = AveragesResponseDTO.builder().subjectId(1L).build();
+        assertThat(withNull).isNotEqualTo(withValue);
+        assertThat(withValue).isNotEqualTo(withNull);
+    }
+
+    @Test
+    void hashCodeWithNullFields() {
+        assertThat(new AveragesResponseDTO().hashCode()).isEqualTo(new AveragesResponseDTO().hashCode());
+    }
 }

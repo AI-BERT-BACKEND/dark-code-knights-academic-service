@@ -248,6 +248,11 @@ class GradePersistenceMapperTest {
     }
 
     @Test
+    void shouldHandleNullDomainToEntity() {
+        assertThat(mapper.toEntity((com.aibert.dosw.domain.model.Grade) null)).isNull();
+    }
+
+    @Test
     @DisplayName("Should handle boundary percentage values")
     void shouldHandleBoundaryPercentageValues() {
         // Given

@@ -415,6 +415,16 @@ class GradeIntegrationTest {
     }
 
     @Test
+    @DisplayName("Should get averages with null overallAverage when no grades registered")
+    void shouldGetAveragesWithNullOverallAverageWhenNoGradesRegistered() throws Exception {
+        mockMvc.perform(get("/api/v1/subjects/{subjectId}/averages", subjectId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.data.overallAverage").doesNotExist())
+                .andExpect(jsonPath("$.data.cuts").isArray());
+    }
+
+    @Test
     @DisplayName("Should handle boundary grade values")
     void shouldHandleBoundaryGradeValues() throws Exception {
         String minGradeJson = """

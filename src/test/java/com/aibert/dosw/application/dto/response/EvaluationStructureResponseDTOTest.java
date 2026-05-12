@@ -299,4 +299,31 @@ class EvaluationStructureResponseDTOTest {
         // Then
         assertThat(result).contains("1");
     }
+
+    @Test
+    void equalsWhenEvaluationCutsDiffer() {
+        List<EvaluationCutResponseDTO> c1 = List.of(EvaluationCutResponseDTO.builder().id(1L).build());
+        List<EvaluationCutResponseDTO> c2 = List.of(EvaluationCutResponseDTO.builder().id(2L).build());
+        EvaluationStructureResponseDTO a = EvaluationStructureResponseDTO.builder().subjectId(1L).evaluationCuts(c1).build();
+        EvaluationStructureResponseDTO b = EvaluationStructureResponseDTO.builder().subjectId(1L).evaluationCuts(c2).build();
+        assertThat(a).isNotEqualTo(b);
+    }
+
+    @Test
+    void equalsWithAllNullFields() {
+        assertThat(new EvaluationStructureResponseDTO()).isEqualTo(new EvaluationStructureResponseDTO());
+    }
+
+    @Test
+    void equalsWithNullSubjectIdVsNonNull() {
+        EvaluationStructureResponseDTO withNull = new EvaluationStructureResponseDTO();
+        EvaluationStructureResponseDTO withValue = EvaluationStructureResponseDTO.builder().subjectId(1L).build();
+        assertThat(withNull).isNotEqualTo(withValue);
+        assertThat(withValue).isNotEqualTo(withNull);
+    }
+
+    @Test
+    void hashCodeWithNullFields() {
+        assertThat(new EvaluationStructureResponseDTO().hashCode()).isEqualTo(new EvaluationStructureResponseDTO().hashCode());
+    }
 }

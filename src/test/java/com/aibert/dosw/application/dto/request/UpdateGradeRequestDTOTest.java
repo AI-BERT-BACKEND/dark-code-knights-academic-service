@@ -419,4 +419,36 @@ class UpdateGradeRequestDTOTest {
         assertThat(result).contains("4.0");
         assertThat(result).contains("30.0");
     }
+
+    @Test
+    void equalsWhenGradeValueDiffers() {
+        UpdateGradeRequestDTO a = UpdateGradeRequestDTO.builder().activityName("A").gradeValue(4.0).percentage(30.0).build();
+        UpdateGradeRequestDTO b = UpdateGradeRequestDTO.builder().activityName("A").gradeValue(5.0).percentage(30.0).build();
+        assertThat(a).isNotEqualTo(b);
+    }
+
+    @Test
+    void equalsWhenPercentageDiffers() {
+        UpdateGradeRequestDTO a = UpdateGradeRequestDTO.builder().activityName("A").gradeValue(4.0).percentage(30.0).build();
+        UpdateGradeRequestDTO b = UpdateGradeRequestDTO.builder().activityName("A").gradeValue(4.0).percentage(40.0).build();
+        assertThat(a).isNotEqualTo(b);
+    }
+
+    @Test
+    void equalsWithAllNullFields() {
+        assertThat(new UpdateGradeRequestDTO()).isEqualTo(new UpdateGradeRequestDTO());
+    }
+
+    @Test
+    void equalsWithNullActivityNameVsNonNull() {
+        UpdateGradeRequestDTO withNull = new UpdateGradeRequestDTO();
+        UpdateGradeRequestDTO withValue = UpdateGradeRequestDTO.builder().activityName("A").build();
+        assertThat(withNull).isNotEqualTo(withValue);
+        assertThat(withValue).isNotEqualTo(withNull);
+    }
+
+    @Test
+    void hashCodeWithNullFields() {
+        assertThat(new UpdateGradeRequestDTO().hashCode()).isEqualTo(new UpdateGradeRequestDTO().hashCode());
+    }
 }

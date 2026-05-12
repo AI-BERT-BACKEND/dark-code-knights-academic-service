@@ -305,4 +305,43 @@ class EvaluationCutResponseDTOTest {
         assertThat(result).contains("30.0");
         assertThat(result).contains("4.0");
     }
+
+    @Test
+    void equalsWhenCutNameDiffers() {
+        EvaluationCutResponseDTO a = EvaluationCutResponseDTO.builder().id(1L).cutName("A").cutPercentage(30.0).grade(4.0).build();
+        EvaluationCutResponseDTO b = EvaluationCutResponseDTO.builder().id(1L).cutName("B").cutPercentage(30.0).grade(4.0).build();
+        assertThat(a).isNotEqualTo(b);
+    }
+
+    @Test
+    void equalsWhenCutPercentageDiffers() {
+        EvaluationCutResponseDTO a = EvaluationCutResponseDTO.builder().id(1L).cutName("A").cutPercentage(30.0).grade(4.0).build();
+        EvaluationCutResponseDTO b = EvaluationCutResponseDTO.builder().id(1L).cutName("A").cutPercentage(40.0).grade(4.0).build();
+        assertThat(a).isNotEqualTo(b);
+    }
+
+    @Test
+    void equalsWhenGradeDiffers() {
+        EvaluationCutResponseDTO a = EvaluationCutResponseDTO.builder().id(1L).cutName("A").cutPercentage(30.0).grade(4.0).build();
+        EvaluationCutResponseDTO b = EvaluationCutResponseDTO.builder().id(1L).cutName("A").cutPercentage(30.0).grade(5.0).build();
+        assertThat(a).isNotEqualTo(b);
+    }
+
+    @Test
+    void equalsWithAllNullFields() {
+        assertThat(new EvaluationCutResponseDTO()).isEqualTo(new EvaluationCutResponseDTO());
+    }
+
+    @Test
+    void equalsWithNullIdVsNonNull() {
+        EvaluationCutResponseDTO withNull = new EvaluationCutResponseDTO();
+        EvaluationCutResponseDTO withValue = EvaluationCutResponseDTO.builder().id(1L).build();
+        assertThat(withNull).isNotEqualTo(withValue);
+        assertThat(withValue).isNotEqualTo(withNull);
+    }
+
+    @Test
+    void hashCodeWithNullFields() {
+        assertThat(new EvaluationCutResponseDTO().hashCode()).isEqualTo(new EvaluationCutResponseDTO().hashCode());
+    }
 }

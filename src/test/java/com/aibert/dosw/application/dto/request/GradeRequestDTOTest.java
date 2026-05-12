@@ -420,4 +420,36 @@ class GradeRequestDTOTest {
         assertThat(result).contains("4.0");
         assertThat(result).contains("30.0");
     }
+
+    @Test
+    void equalsWhenGradeValueDiffers() {
+        GradeRequestDTO a = GradeRequestDTO.builder().activityName("A").gradeValue(4.0).percentage(30.0).build();
+        GradeRequestDTO b = GradeRequestDTO.builder().activityName("A").gradeValue(5.0).percentage(30.0).build();
+        assertThat(a).isNotEqualTo(b);
+    }
+
+    @Test
+    void equalsWhenPercentageDiffers() {
+        GradeRequestDTO a = GradeRequestDTO.builder().activityName("A").gradeValue(4.0).percentage(30.0).build();
+        GradeRequestDTO b = GradeRequestDTO.builder().activityName("A").gradeValue(4.0).percentage(40.0).build();
+        assertThat(a).isNotEqualTo(b);
+    }
+
+    @Test
+    void equalsWithAllNullFields() {
+        assertThat(new GradeRequestDTO()).isEqualTo(new GradeRequestDTO());
+    }
+
+    @Test
+    void equalsWithNullActivityNameVsNonNull() {
+        GradeRequestDTO withNull = new GradeRequestDTO();
+        GradeRequestDTO withValue = GradeRequestDTO.builder().activityName("A").build();
+        assertThat(withNull).isNotEqualTo(withValue);
+        assertThat(withValue).isNotEqualTo(withNull);
+    }
+
+    @Test
+    void hashCodeWithNullFields() {
+        assertThat(new GradeRequestDTO().hashCode()).isEqualTo(new GradeRequestDTO().hashCode());
+    }
 }
