@@ -175,6 +175,7 @@ jobs:
         with:
           resourceGroup: aibert-rg
           containerAppName: aibert-academic-service-qa
+          containerAppEnvironment: aibert-qa-env
           imageToDeploy: ghcr.io/${{ env.REGISTRY_OWNER }}/dark-code-knights-academic-service:qa-latest
           registryUrl: ghcr.io
           registryUsername: ${{ github.actor }}
