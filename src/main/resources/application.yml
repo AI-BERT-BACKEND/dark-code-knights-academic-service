@@ -1,6 +1,8 @@
 spring:
   application:
     name: academic-service
+  profiles:
+    active: local
 
 server:
   port: 8080
@@ -10,6 +12,30 @@ springdoc:
     path: /api-docs
   swagger-ui:
     path: /swagger-ui.html
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+  datasource:
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password: sa
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
 
 ---
 spring:
@@ -25,17 +51,3 @@ spring:
       ddl-auto: update
     show-sql: false
     open-in-view: false
-
----
-spring:
-  config:
-    activate:
-      on-profile: test
-  datasource:
-    url: jdbc:h2:mem:testdb
-    username: sa
-    password: sa
-  jpa:
-    hibernate:
-      ddl-auto: create-drop
-    show-sql: false
