@@ -133,4 +133,66 @@ class SubjectResponseDTOTest {
         assertTrue(toString.contains("subjectName=Cálculo Diferencial"));
         assertTrue(toString.contains("credits=4"));
     }
+
+    @org.junit.jupiter.api.Test
+    void equalsWhenStudentIdDiffers() {
+        SubjectResponseDTO a = SubjectResponseDTO.builder().id(1L).studentId("A").subjectName("S").credits(4).teacherName("T").semester("2025-1").evaluationCuts(java.util.List.of()).build();
+        SubjectResponseDTO b = SubjectResponseDTO.builder().id(1L).studentId("B").subjectName("S").credits(4).teacherName("T").semester("2025-1").evaluationCuts(java.util.List.of()).build();
+        assertNotEquals(a, b);
+    }
+
+    @org.junit.jupiter.api.Test
+    void equalsWhenSubjectNameDiffers() {
+        SubjectResponseDTO a = SubjectResponseDTO.builder().id(1L).studentId("A").subjectName("S1").credits(4).teacherName("T").semester("2025-1").evaluationCuts(java.util.List.of()).build();
+        SubjectResponseDTO b = SubjectResponseDTO.builder().id(1L).studentId("A").subjectName("S2").credits(4).teacherName("T").semester("2025-1").evaluationCuts(java.util.List.of()).build();
+        assertNotEquals(a, b);
+    }
+
+    @org.junit.jupiter.api.Test
+    void equalsWhenCreditsDiffers() {
+        SubjectResponseDTO a = SubjectResponseDTO.builder().id(1L).studentId("A").subjectName("S").credits(4).teacherName("T").semester("2025-1").evaluationCuts(java.util.List.of()).build();
+        SubjectResponseDTO b = SubjectResponseDTO.builder().id(1L).studentId("A").subjectName("S").credits(5).teacherName("T").semester("2025-1").evaluationCuts(java.util.List.of()).build();
+        assertNotEquals(a, b);
+    }
+
+    @org.junit.jupiter.api.Test
+    void equalsWhenTeacherNameDiffers() {
+        SubjectResponseDTO a = SubjectResponseDTO.builder().id(1L).studentId("A").subjectName("S").credits(4).teacherName("T1").semester("2025-1").evaluationCuts(java.util.List.of()).build();
+        SubjectResponseDTO b = SubjectResponseDTO.builder().id(1L).studentId("A").subjectName("S").credits(4).teacherName("T2").semester("2025-1").evaluationCuts(java.util.List.of()).build();
+        assertNotEquals(a, b);
+    }
+
+    @org.junit.jupiter.api.Test
+    void equalsWhenSemesterDiffers() {
+        SubjectResponseDTO a = SubjectResponseDTO.builder().id(1L).studentId("A").subjectName("S").credits(4).teacherName("T").semester("2025-1").evaluationCuts(java.util.List.of()).build();
+        SubjectResponseDTO b = SubjectResponseDTO.builder().id(1L).studentId("A").subjectName("S").credits(4).teacherName("T").semester("2025-2").evaluationCuts(java.util.List.of()).build();
+        assertNotEquals(a, b);
+    }
+
+    @org.junit.jupiter.api.Test
+    void equalsWhenEvalCutsDiffer() {
+        EvaluationCutResponseDTO c1 = EvaluationCutResponseDTO.builder().id(1L).build();
+        EvaluationCutResponseDTO c2 = EvaluationCutResponseDTO.builder().id(2L).build();
+        SubjectResponseDTO a = SubjectResponseDTO.builder().id(1L).studentId("A").subjectName("S").credits(4).teacherName("T").semester("2025-1").evaluationCuts(java.util.List.of(c1)).build();
+        SubjectResponseDTO b = SubjectResponseDTO.builder().id(1L).studentId("A").subjectName("S").credits(4).teacherName("T").semester("2025-1").evaluationCuts(java.util.List.of(c2)).build();
+        assertNotEquals(a, b);
+    }
+
+    @org.junit.jupiter.api.Test
+    void equalsWithAllNullFields() {
+        assertEquals(new SubjectResponseDTO(), new SubjectResponseDTO());
+    }
+
+    @org.junit.jupiter.api.Test
+    void equalsWithNullIdVsNonNull() {
+        SubjectResponseDTO withNull = new SubjectResponseDTO();
+        SubjectResponseDTO withValue = SubjectResponseDTO.builder().id(1L).build();
+        assertNotEquals(withNull, withValue);
+        assertNotEquals(withValue, withNull);
+    }
+
+    @org.junit.jupiter.api.Test
+    void hashCodeWithNullFields() {
+        assertEquals(new SubjectResponseDTO().hashCode(), new SubjectResponseDTO().hashCode());
+    }
 }

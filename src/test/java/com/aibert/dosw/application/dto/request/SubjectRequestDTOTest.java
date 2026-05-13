@@ -126,4 +126,52 @@ class SubjectRequestDTOTest {
         assertTrue(toString.contains("subjectName=Cálculo Diferencial"));
         assertTrue(toString.contains("credits=4"));
     }
+
+    @org.junit.jupiter.api.Test
+    void equalsWhenCreditsDiffers() {
+        SubjectRequestDTO a = SubjectRequestDTO.builder().subjectName("S").credits(4).teacherName("T").semester("2025-1").evaluationCuts(java.util.List.of()).build();
+        SubjectRequestDTO b = SubjectRequestDTO.builder().subjectName("S").credits(5).teacherName("T").semester("2025-1").evaluationCuts(java.util.List.of()).build();
+        assertNotEquals(a, b);
+    }
+
+    @org.junit.jupiter.api.Test
+    void equalsWhenTeacherNameDiffers() {
+        SubjectRequestDTO a = SubjectRequestDTO.builder().subjectName("S").credits(4).teacherName("T1").semester("2025-1").evaluationCuts(java.util.List.of()).build();
+        SubjectRequestDTO b = SubjectRequestDTO.builder().subjectName("S").credits(4).teacherName("T2").semester("2025-1").evaluationCuts(java.util.List.of()).build();
+        assertNotEquals(a, b);
+    }
+
+    @org.junit.jupiter.api.Test
+    void equalsWhenSemesterDiffers() {
+        SubjectRequestDTO a = SubjectRequestDTO.builder().subjectName("S").credits(4).teacherName("T").semester("2025-1").evaluationCuts(java.util.List.of()).build();
+        SubjectRequestDTO b = SubjectRequestDTO.builder().subjectName("S").credits(4).teacherName("T").semester("2025-2").evaluationCuts(java.util.List.of()).build();
+        assertNotEquals(a, b);
+    }
+
+    @org.junit.jupiter.api.Test
+    void equalsWhenEvalCutsDiffer() {
+        EvaluationCutDTO c1 = EvaluationCutDTO.builder().cutName("A").cutPercentage(50.0).build();
+        EvaluationCutDTO c2 = EvaluationCutDTO.builder().cutName("B").cutPercentage(50.0).build();
+        SubjectRequestDTO a = SubjectRequestDTO.builder().subjectName("S").credits(4).teacherName("T").semester("2025-1").evaluationCuts(java.util.List.of(c1)).build();
+        SubjectRequestDTO b = SubjectRequestDTO.builder().subjectName("S").credits(4).teacherName("T").semester("2025-1").evaluationCuts(java.util.List.of(c2)).build();
+        assertNotEquals(a, b);
+    }
+
+    @org.junit.jupiter.api.Test
+    void equalsWithAllNullFields() {
+        assertEquals(new SubjectRequestDTO(), new SubjectRequestDTO());
+    }
+
+    @org.junit.jupiter.api.Test
+    void equalsWithNullSubjectNameVsNonNull() {
+        SubjectRequestDTO withNull = new SubjectRequestDTO();
+        SubjectRequestDTO withValue = SubjectRequestDTO.builder().subjectName("S").credits(4).teacherName("T").semester("2025-1").evaluationCuts(java.util.List.of()).build();
+        assertNotEquals(withNull, withValue);
+        assertNotEquals(withValue, withNull);
+    }
+
+    @org.junit.jupiter.api.Test
+    void hashCodeWithNullFields() {
+        assertEquals(new SubjectRequestDTO().hashCode(), new SubjectRequestDTO().hashCode());
+    }
 }

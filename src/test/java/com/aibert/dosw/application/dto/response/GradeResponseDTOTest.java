@@ -340,4 +340,50 @@ class GradeResponseDTOTest {
         assertThat(result).contains("4.0");
         assertThat(result).contains("30.0");
     }
+
+    @Test
+    void equalsWhenCutIdDiffers() {
+        GradeResponseDTO a = GradeResponseDTO.builder().id(1L).cutId(1L).activityName("A").gradeValue(4.0).percentage(30.0).build();
+        GradeResponseDTO b = GradeResponseDTO.builder().id(1L).cutId(2L).activityName("A").gradeValue(4.0).percentage(30.0).build();
+        assertThat(a).isNotEqualTo(b);
+    }
+
+    @Test
+    void equalsWhenActivityNameDiffers() {
+        GradeResponseDTO a = GradeResponseDTO.builder().id(1L).cutId(1L).activityName("A").gradeValue(4.0).percentage(30.0).build();
+        GradeResponseDTO b = GradeResponseDTO.builder().id(1L).cutId(1L).activityName("B").gradeValue(4.0).percentage(30.0).build();
+        assertThat(a).isNotEqualTo(b);
+    }
+
+    @Test
+    void equalsWhenGradeValueDiffers() {
+        GradeResponseDTO a = GradeResponseDTO.builder().id(1L).cutId(1L).activityName("A").gradeValue(4.0).percentage(30.0).build();
+        GradeResponseDTO b = GradeResponseDTO.builder().id(1L).cutId(1L).activityName("A").gradeValue(5.0).percentage(30.0).build();
+        assertThat(a).isNotEqualTo(b);
+    }
+
+    @Test
+    void equalsWhenPercentageDiffers() {
+        GradeResponseDTO a = GradeResponseDTO.builder().id(1L).cutId(1L).activityName("A").gradeValue(4.0).percentage(30.0).build();
+        GradeResponseDTO b = GradeResponseDTO.builder().id(1L).cutId(1L).activityName("A").gradeValue(4.0).percentage(40.0).build();
+        assertThat(a).isNotEqualTo(b);
+    }
+
+    @Test
+    void equalsWithAllNullFields() {
+        assertThat(new GradeResponseDTO()).isEqualTo(new GradeResponseDTO());
+    }
+
+    @Test
+    void equalsWithNullIdVsNonNull() {
+        GradeResponseDTO withNull = new GradeResponseDTO();
+        GradeResponseDTO withValue = GradeResponseDTO.builder().id(1L).build();
+        assertThat(withNull).isNotEqualTo(withValue);
+        assertThat(withValue).isNotEqualTo(withNull);
+    }
+
+    @Test
+    void hashCodeWithNullFields() {
+        assertThat(new GradeResponseDTO().hashCode()).isEqualTo(new GradeResponseDTO().hashCode());
+    }
 }

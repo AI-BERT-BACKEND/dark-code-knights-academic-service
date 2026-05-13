@@ -93,4 +93,29 @@ class EvaluationCutDTOTest {
         assertTrue(toString.contains("cutName=Corte 1"));
         assertTrue(toString.contains("cutPercentage=40.0"));
     }
+
+    @org.junit.jupiter.api.Test
+    void equalsWhenCutPercentageDiffers() {
+        EvaluationCutDTO a = EvaluationCutDTO.builder().cutName("A").cutPercentage(30.0).build();
+        EvaluationCutDTO b = EvaluationCutDTO.builder().cutName("A").cutPercentage(40.0).build();
+        assertNotEquals(a, b);
+    }
+
+    @org.junit.jupiter.api.Test
+    void equalsWithAllNullFields() {
+        assertEquals(new EvaluationCutDTO(), new EvaluationCutDTO());
+    }
+
+    @org.junit.jupiter.api.Test
+    void equalsWithNullCutNameVsNonNull() {
+        EvaluationCutDTO withNull = new EvaluationCutDTO();
+        EvaluationCutDTO withValue = EvaluationCutDTO.builder().cutName("A").build();
+        assertNotEquals(withNull, withValue);
+        assertNotEquals(withValue, withNull);
+    }
+
+    @org.junit.jupiter.api.Test
+    void hashCodeWithNullFields() {
+        assertEquals(new EvaluationCutDTO().hashCode(), new EvaluationCutDTO().hashCode());
+    }
 }

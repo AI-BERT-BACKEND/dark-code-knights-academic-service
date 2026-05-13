@@ -271,4 +271,22 @@ class SimulationRequestDTOTest {
         // Then
         assertThat(result).contains("4.0");
     }
+
+    @Test
+    void equalsWithAllNullFields() {
+        assertThat(new SimulationRequestDTO()).isEqualTo(new SimulationRequestDTO());
+    }
+
+    @Test
+    void equalsWithNullTargetGradeVsNonNull() {
+        SimulationRequestDTO withNull = new SimulationRequestDTO();
+        SimulationRequestDTO withValue = SimulationRequestDTO.builder().targetGrade(4.0).build();
+        assertThat(withNull).isNotEqualTo(withValue);
+        assertThat(withValue).isNotEqualTo(withNull);
+    }
+
+    @Test
+    void hashCodeWithNullFields() {
+        assertThat(new SimulationRequestDTO().hashCode()).isEqualTo(new SimulationRequestDTO().hashCode());
+    }
 }

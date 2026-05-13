@@ -204,7 +204,31 @@ class SubjectEntrypointMapperTest {
 
         // When - This test is removed because toRequestDto method doesn't exist in the mapper
         // SubjectRequestDTO dto = mapper.toRequestDto(subject, "student123");
-        
+
         // Then - Test is removed as the method doesn't exist
+    }
+
+    @Test
+    @DisplayName("Should handle null dto without throwing exception")
+    void shouldHandleNullDtoWithoutException() {
+        Subject result = mapper.toDomain(null, "student123");
+        org.junit.jupiter.api.Assertions.assertNotNull(result);
+        org.junit.jupiter.api.Assertions.assertNull(result.getSubjectName());
+    }
+
+    @Test
+    @DisplayName("Should map with null evaluation cuts")
+    void shouldMapWithNullEvaluationCuts() {
+        SubjectRequestDTO dto = SubjectRequestDTO.builder()
+            .subjectName("Math")
+            .credits(4)
+            .teacherName("T")
+            .semester("2025-1")
+            .evaluationCuts(null)
+            .build();
+
+        Subject domain = mapper.toDomain(dto, "student123");
+        org.junit.jupiter.api.Assertions.assertNotNull(domain);
+        org.junit.jupiter.api.Assertions.assertEquals("Math", domain.getSubjectName());
     }
 }
