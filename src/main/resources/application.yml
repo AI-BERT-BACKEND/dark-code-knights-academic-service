@@ -1,8 +1,6 @@
 spring:
   application:
     name: academic-service
-  profiles:
-    active: local
 
 server:
   port: 8080
@@ -12,16 +10,6 @@ springdoc:
     path: /api-docs
   swagger-ui:
     path: /swagger-ui.html
-
----
-spring:
-  config:
-    activate:
-      on-profile: local
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
-      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 
 ---
 spring:
@@ -41,12 +29,14 @@ spring:
 spring:
   config:
     activate:
-      on-profile: qa
+      on-profile: postgres
   datasource:
     url: ${DB_URL}
     username: ${DB_USER}
     password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
   jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
     show-sql: false
