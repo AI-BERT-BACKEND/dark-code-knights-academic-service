@@ -501,3 +501,9 @@ academic-service/
 ---
 
 > **Módulo 2 — Gestión Académica** · Equipo `dark-code-knights` · IABert Platform · 2026
+
+## Despliegue en Azure
+
+| Ambiente | URL Base                                                                               | Swagger UI                                                                                                   |
+|----------|----------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|
+| QA       | https://aibert-academic-service-qa.yellowwave-cb2d91fc.centralus.azurecontainerapps.io | https://aibert-academic-service-qa.yellowwave-cb2d91fc.centralus.azurecontainerapps.io/swagger-ui/index.html |
