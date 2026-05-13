@@ -182,7 +182,7 @@ jobs:
           registryPassword: ${{ secrets.GHCR_TOKEN }}
           targetPort: 8080
           ingress: external
-          environmentVariables: SPRING_PROFILES_ACTIVE=postgres DB_URL=${{ secrets.DB_URL_QA }} DB_USER=${{ secrets.DB_USER_QA }} DB_PASSWORD=${{ secrets.DB_PASSWORD_QA }}
+          environmentVariables: SPRING_PROFILES_ACTIVE=qa DB_URL=${{ secrets.DB_URL_QA }} DB_USER=${{ secrets.DB_USER_QA }} DB_PASSWORD=${{ secrets.DB_PASSWORD_QA }}
   deploy-prod:
     name: Deploy to PROD
     runs-on: ubuntu-latest
