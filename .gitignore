@@ -274,3 +274,6 @@ postgres_data/
 .claude/
 CLAUDE.md
 ROADMAP.md
+
+
+API_CONTRACTS.md
