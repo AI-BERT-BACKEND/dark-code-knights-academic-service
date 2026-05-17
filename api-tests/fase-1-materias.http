@@ -199,9 +199,9 @@ X-Student-Id: {{studentId}}
 
 
 # ------------------------------------------------------------------
-# CASO 12 — Eliminar materia → 200 OK
+# CASO 12 — Eliminar materia → 204 No Content
 # Sus cortes (id=3, id=4) se borran en cascada por orphanRemoval
-# Espera: { "success": true, "data": null, "message": "Materia eliminada exitosamente" }
+# Espera: 204 No Content (sin body)
 # ------------------------------------------------------------------
 ### DELETE subject id=2
 DELETE {{baseUrl}}/api/v1/subjects/2

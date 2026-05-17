@@ -108,17 +108,17 @@ public class GradeController {
             description = "Elimina una nota y recalcula automáticamente los promedios del corte y de la materia."
     )
     @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Nota eliminada exitosamente"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "204", description = "Nota eliminada exitosamente"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Nota o materia no encontrada")
     })
     @DeleteMapping("/api/v1/subjects/{subjectId}/cuts/{cutId}/grades/{gradeId}")
-    public ResponseEntity<ApiResponse<Void>> delete(
+    public ResponseEntity<Void> delete(
             @Parameter(description = "ID de la materia", required = true) @PathVariable Long subjectId,
             @Parameter(description = "ID del corte de evaluación", required = true) @PathVariable Long cutId,
             @Parameter(description = "ID de la nota", required = true) @PathVariable Long gradeId) {
 
         deleteGradeUseCase.delete(subjectId, cutId, gradeId);
-        return ResponseEntity.ok(ApiResponse.ok(null, "Nota eliminada exitosamente"));
+        return ResponseEntity.noContent().build();
     }
 
     @Operation(

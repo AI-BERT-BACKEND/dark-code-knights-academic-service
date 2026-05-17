@@ -122,14 +122,14 @@ public class SubjectController {
             description = "Elimina la materia junto con todos sus cortes y notas asociados."
     )
     @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Materia eliminada exitosamente"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "204", description = "Materia eliminada exitosamente"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Materia no encontrada")
     })
     @DeleteMapping("/{subjectId}")
-    public ResponseEntity<ApiResponse<Void>> delete(
+    public ResponseEntity<Void> delete(
             @Parameter(description = "ID de la materia", required = true)
             @PathVariable Long subjectId) {
         deleteSubjectUseCase.delete(subjectId);
-        return ResponseEntity.ok(ApiResponse.ok(null, "Materia eliminada exitosamente"));
+        return ResponseEntity.noContent().build();
     }
 }

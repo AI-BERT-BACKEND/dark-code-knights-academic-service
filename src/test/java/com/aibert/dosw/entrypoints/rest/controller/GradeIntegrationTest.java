@@ -370,10 +370,7 @@ class GradeIntegrationTest {
         Long gradeId = objectMapper.readTree(createResponse).get("data").get("id").asLong();
 
         mockMvc.perform(delete("/api/v1/subjects/{subjectId}/cuts/{cutId}/grades/{gradeId}", subjectId, cutId, gradeId))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.data").doesNotExist())
-                .andExpect(jsonPath("$.message").value("Nota eliminada exitosamente"));
+                .andExpect(status().isNoContent());
     }
 
     @Test

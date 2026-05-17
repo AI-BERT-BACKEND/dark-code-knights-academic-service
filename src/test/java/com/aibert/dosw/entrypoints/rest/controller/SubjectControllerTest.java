@@ -279,19 +279,14 @@ class SubjectControllerTest {
         doNothing().when(deleteSubjectUseCase).delete(subjectId);
 
         // When
-        ResponseEntity<ApiResponse<Void>> response = 
+        ResponseEntity<Void> response =
             subjectController.delete(subjectId);
 
         // Then
         assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        
-        ApiResponse<Void> apiResponse = response.getBody();
-        assertNotNull(apiResponse);
-        assertTrue(apiResponse.isSuccess());
-        assertEquals("Materia eliminada exitosamente", apiResponse.getMessage());
-        assertNull(apiResponse.getData());
-        
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertFalse(response.hasBody());
+
         verify(deleteSubjectUseCase, times(1)).delete(subjectId);
     }
 
@@ -432,20 +427,14 @@ class SubjectControllerTest {
         doNothing().when(deleteSubjectUseCase).delete(subjectId);
 
         // When
-        ResponseEntity<ApiResponse<Void>> response = 
+        ResponseEntity<Void> response =
             subjectController.delete(subjectId);
 
         // Then
         assertNotNull(response);
-        assertTrue(response.hasBody());
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        
-        ApiResponse<Void> apiResponse = response.getBody();
-        assertNotNull(apiResponse);
-        assertTrue(apiResponse.isSuccess());
-        assertNotNull(apiResponse.getMessage());
-        assertNull(apiResponse.getData());
-        
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertFalse(response.hasBody());
+
         verify(deleteSubjectUseCase, times(1)).delete(subjectId);
     }
 

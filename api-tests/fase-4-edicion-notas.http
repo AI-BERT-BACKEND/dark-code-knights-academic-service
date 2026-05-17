@@ -135,10 +135,10 @@ DELETE {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut1}}/grades/999
 
 
 # ------------------------------------------------------------------
-# CASO 8 — Eliminar "Quiz 1" (gradeId=2) del Corte 1 → 200 OK
+# CASO 8 — Eliminar "Quiz 1" (gradeId=2) del Corte 1 → 204 No Content
 # Recalcula Corte 1 con solo gradeId=1: (5.0*60)/60 = 5.00
 # overall = (5.00*30 + 3.50*30)/100 = 2.55
-# Espera: { "success": true, "data": null, "message": "Nota eliminada exitosamente" }
+# Espera: 204 No Content (sin body)
 # ------------------------------------------------------------------
 ### DELETE grade id=2 — "Quiz 1"
 DELETE {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut1}}/grades/2
