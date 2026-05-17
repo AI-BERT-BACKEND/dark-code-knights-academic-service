@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,6 +35,10 @@ public class SubjectRequestDTO {
     private String teacherName;
 
     @NotBlank(message = "El semestre es obligatorio")
+    @Pattern(
+            regexp = "^\\d{4}-[12]$",
+            message = "El semestre debe tener el formato YYYY-1 o YYYY-2 (ejemplo: 2025-1)"
+    )
     private String semester;
 
     @NotEmpty(message = "La materia debe tener al menos un corte evaluativo")
