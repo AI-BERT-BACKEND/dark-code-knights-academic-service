@@ -74,19 +74,35 @@ class DeleteGradeUseCaseImplTest {
     @DisplayName("Should delete grade successfully with valid data")
     void shouldDeleteGradeSuccessfully() {
         // Given
-        when(subjectRepository.findById(1L)).thenReturn(Optional.of(testSubject));
+        Subject updatedSubject = Subject.builder()
+            .id(1L)
+            .studentId("student123")
+            .subjectName("Mathematics")
+            .semester("2025-1")
+            .credits(4)
+            .teacherName("Dr. Smith")
+            .evaluationCuts(List.of(EvaluationCut.builder()
+                .id(1L).cutName("Corte 1").cutPercentage(30.0).grade(null).build()))
+            .build();
+
+        when(subjectRepository.findById(1L))
+            .thenReturn(Optional.of(testSubject))
+            .thenReturn(Optional.of(updatedSubject));
         when(gradeRepository.findById(1L)).thenReturn(Optional.of(existingGrade));
         doNothing().when(gradeRepository).deleteById(1L);
         doNothing().when(averageCalculator).recalculateCutAverage(testSubject, 1L);
+        when(averageCalculator.calculateOverallAverage(updatedSubject.getEvaluationCuts())).thenReturn(null);
 
         // When
-        assertDoesNotThrow(() -> deleteGradeUseCase.delete(1L, 1L, 1L));
+        Double result = deleteGradeUseCase.delete(1L, 1L, 1L);
 
         // Then
-        verify(subjectRepository, times(1)).findById(1L);
+        assertNull(result);
+        verify(subjectRepository, times(2)).findById(1L);
         verify(gradeRepository, times(1)).findById(1L);
         verify(gradeRepository, times(1)).deleteById(1L);
         verify(averageCalculator, times(1)).recalculateCutAverage(testSubject, 1L);
+        verify(averageCalculator, times(1)).calculateOverallAverage(updatedSubject.getEvaluationCuts());
     }
 
     @Test
@@ -182,24 +198,31 @@ class DeleteGradeUseCaseImplTest {
         Long subjectId = 999L;
         Long cutId = 888L;
         Long gradeId = 777L;
-        
-        Subject testSubject = Subject.builder()
+
+        EvaluationCut cut = EvaluationCut.builder()
+            .id(cutId).cutName("Corte 1").cutPercentage(30.0).grade(4.0).build();
+
+        Subject localSubject = Subject.builder()
             .id(subjectId)
             .studentId("student123")
             .subjectName("Mathematics")
             .semester("2025-1")
             .credits(4)
             .teacherName("Dr. Smith")
-            .evaluationCuts(List.of(
-                EvaluationCut.builder()
-                    .id(cutId)
-                    .cutName("Corte 1")
-                    .cutPercentage(30.0)
-                    .grade(null)
-                    .build()
-            ))
+            .evaluationCuts(List.of(cut))
             .build();
-            
+
+        Subject updatedSubject = Subject.builder()
+            .id(subjectId)
+            .studentId("student123")
+            .subjectName("Mathematics")
+            .semester("2025-1")
+            .credits(4)
+            .teacherName("Dr. Smith")
+            .evaluationCuts(List.of(EvaluationCut.builder()
+                .id(cutId).cutName("Corte 1").cutPercentage(30.0).grade(null).build()))
+            .build();
+
         Grade testGrade = Grade.builder()
             .id(gradeId)
             .cutId(cutId)
@@ -207,37 +230,58 @@ class DeleteGradeUseCaseImplTest {
             .gradeValue(4.0)
             .percentage(20.0)
             .build();
-        
-        when(subjectRepository.findById(subjectId)).thenReturn(Optional.of(testSubject));
+
+        when(subjectRepository.findById(subjectId))
+            .thenReturn(Optional.of(localSubject))
+            .thenReturn(Optional.of(updatedSubject));
         when(gradeRepository.findById(gradeId)).thenReturn(Optional.of(testGrade));
         doNothing().when(gradeRepository).deleteById(gradeId);
-        doNothing().when(averageCalculator).recalculateCutAverage(testSubject, cutId);
+        doNothing().when(averageCalculator).recalculateCutAverage(localSubject, cutId);
+        when(averageCalculator.calculateOverallAverage(updatedSubject.getEvaluationCuts())).thenReturn(null);
 
         // When
-        assertDoesNotThrow(() -> deleteGradeUseCase.delete(subjectId, cutId, gradeId));
+        Double result = deleteGradeUseCase.delete(subjectId, cutId, gradeId);
 
         // Then
-        verify(subjectRepository, times(1)).findById(subjectId);
+        assertNull(result);
+        verify(subjectRepository, times(2)).findById(subjectId);
         verify(gradeRepository, times(1)).findById(gradeId);
         verify(gradeRepository, times(1)).deleteById(gradeId);
-        verify(averageCalculator, times(1)).recalculateCutAverage(testSubject, cutId);
+        verify(averageCalculator, times(1)).recalculateCutAverage(localSubject, cutId);
+        verify(averageCalculator, times(1)).calculateOverallAverage(updatedSubject.getEvaluationCuts());
     }
 
     @Test
     @DisplayName("Should call deleteById exactly once when deletion is successful")
     void shouldCallDeleteByIdExactlyOnceWhenDeletionIsSuccessful() {
         // Given
-        when(subjectRepository.findById(1L)).thenReturn(Optional.of(testSubject));
+        Subject updatedSubject = Subject.builder()
+            .id(1L)
+            .studentId("student123")
+            .subjectName("Mathematics")
+            .semester("2025-1")
+            .credits(4)
+            .teacherName("Dr. Smith")
+            .evaluationCuts(List.of(EvaluationCut.builder()
+                .id(1L).cutName("Corte 1").cutPercentage(30.0).grade(4.0).build()))
+            .build();
+
+        when(subjectRepository.findById(1L))
+            .thenReturn(Optional.of(testSubject))
+            .thenReturn(Optional.of(updatedSubject));
         when(gradeRepository.findById(1L)).thenReturn(Optional.of(existingGrade));
         doNothing().when(gradeRepository).deleteById(1L);
         doNothing().when(averageCalculator).recalculateCutAverage(testSubject, 1L);
+        when(averageCalculator.calculateOverallAverage(updatedSubject.getEvaluationCuts())).thenReturn(1.2);
 
         // When
-        deleteGradeUseCase.delete(1L, 1L, 1L);
+        Double result = deleteGradeUseCase.delete(1L, 1L, 1L);
 
         // Then
+        assertEquals(1.2, result);
         verify(gradeRepository, times(1)).deleteById(1L);
         verify(averageCalculator, times(1)).recalculateCutAverage(testSubject, 1L);
+        verify(averageCalculator, times(1)).calculateOverallAverage(updatedSubject.getEvaluationCuts());
     }
 
     @Test

@@ -3,6 +3,7 @@ package com.aibert.dosw.entrypoints.rest.controller;
 import com.aibert.dosw.application.dto.request.GradeRequestDTO;
 import com.aibert.dosw.application.dto.request.UpdateGradeRequestDTO;
 import com.aibert.dosw.application.dto.response.AveragesResponseDTO;
+import com.aibert.dosw.application.dto.response.GradeDeleteResponseDTO;
 import com.aibert.dosw.application.dto.response.GradeResponseDTO;
 import com.aibert.dosw.application.mapper.GradeMapper;
 import com.aibert.dosw.application.mapper.SubjectMapper;
@@ -110,17 +111,22 @@ public class GradeController {
             description = "Deletes a grade and automatically recalculates the cut and subject averages."
     )
     @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "204", description = "Grade deleted successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Grade deleted successfully"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Grade or subject not found")
     })
     @DeleteMapping("/api/v1/subjects/{subjectId}/cuts/{cutId}/grades/{gradeId}")
-    public ResponseEntity<Void> delete(
+    public ResponseEntity<ApiResponse<GradeDeleteResponseDTO>> delete(
             @Parameter(description = "Subject ID", required = true) @PathVariable Long subjectId,
             @Parameter(description = "Evaluation cut ID", required = true) @PathVariable Long cutId,
             @Parameter(description = "Grade ID", required = true) @PathVariable Long gradeId) {
 
-        deleteGradeUseCase.delete(subjectId, cutId, gradeId);
-        return ResponseEntity.noContent().build();
+        Double updatedAverage = deleteGradeUseCase.delete(subjectId, cutId, gradeId);
+        GradeDeleteResponseDTO responseDTO = GradeDeleteResponseDTO.builder()
+                .message("Nota eliminada exitosamente!")
+                .success(true)
+                .updatedAverage(updatedAverage)
+                .build();
+        return ResponseEntity.ok(ApiResponse.ok(responseDTO));
     }
 
     @Operation(
