@@ -308,10 +308,7 @@ class SubjectIntegrationTest {
 
         mockMvc.perform(delete("/api/v1/subjects/{id}", subjectId)
                 .header("X-Student-Id", "student-test"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.data").doesNotExist())
-                .andExpect(jsonPath("$.message").value("Materia eliminada exitosamente"));
+                .andExpect(status().isNoContent());
     }
 
     @Test
