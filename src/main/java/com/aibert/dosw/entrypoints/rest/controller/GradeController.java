@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Tag(name = "Notas", description = "Registro y gestión de notas por corte de evaluación (R08, R09)")
+@Tag(name = "Grades", description = "Grade registration and management by evaluation cut (R08, R09)")
 @RestController
 @RequiredArgsConstructor
 public class GradeController {
@@ -46,19 +46,19 @@ public class GradeController {
     private final AverageCalculator averageCalculator;
 
     @Operation(
-            summary = "Registrar nota",
-            description = "Registra una actividad evaluativa en un corte. La suma de porcentajes del corte no puede superar 100."
+            summary = "Register grade",
+            description = "Registers an evaluation activity in a cut. The sum of the cut's percentages cannot exceed 100."
     )
     @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "Nota registrada exitosamente"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Datos inválidos"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Materia no encontrada"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "422", description = "Nota fuera de rango 0.0–5.0 o porcentaje del corte superaría 100%")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "Grade registered successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid data"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Subject not found"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "422", description = "Grade out of range 0.0–5.0 or cut percentage would exceed 100%")
     })
     @PostMapping("/api/v1/subjects/{subjectId}/cuts/{cutId}/grades")
     public ResponseEntity<ApiResponse<GradeResponseDTO>> register(
-            @Parameter(description = "ID de la materia", required = true) @PathVariable Long subjectId,
-            @Parameter(description = "ID del corte de evaluación", required = true) @PathVariable Long cutId,
+            @Parameter(description = "Subject ID", required = true) @PathVariable Long subjectId,
+            @Parameter(description = "Evaluation cut ID", required = true) @PathVariable Long cutId,
             @Valid @RequestBody GradeRequestDTO request) {
 
         Grade saved = registerGradeUseCase.register(subjectId, cutId, gradeMapper.toDomain(request));
@@ -68,37 +68,37 @@ public class GradeController {
     }
 
     @Operation(
-            summary = "Listar notas de un corte",
-            description = "Retorna todas las actividades evaluativas registradas en el corte indicado."
+            summary = "List grades for a cut",
+            description = "Returns all evaluation activities registered in the specified cut."
     )
     @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Lista de notas (puede ser vacía)"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Materia no encontrada")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "List of grades (may be empty)"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Subject not found")
     })
     @GetMapping("/api/v1/subjects/{subjectId}/cuts/{cutId}/grades")
     public ResponseEntity<ApiResponse<List<GradeResponseDTO>>> getGradesByCut(
-            @Parameter(description = "ID de la materia", required = true) @PathVariable Long subjectId,
-            @Parameter(description = "ID del corte de evaluación", required = true) @PathVariable Long cutId) {
+            @Parameter(description = "Subject ID", required = true) @PathVariable Long subjectId,
+            @Parameter(description = "Evaluation cut ID", required = true) @PathVariable Long cutId) {
 
         List<Grade> grades = registerGradeUseCase.getGradesByCut(subjectId, cutId);
         return ResponseEntity.ok(ApiResponse.ok(gradeMapper.toResponseDTOList(grades)));
     }
 
     @Operation(
-            summary = "Editar nota",
-            description = "Actualiza una nota existente y recalcula automáticamente el promedio del corte y de la materia."
+            summary = "Update grade",
+            description = "Updates an existing grade and automatically recalculates the cut and subject averages."
     )
     @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Nota actualizada exitosamente"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Datos inválidos"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Nota o materia no encontrada"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "422", description = "Nota fuera de rango o porcentaje inválido")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Grade updated successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid data"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Grade or subject not found"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "422", description = "Grade out of range or invalid percentage")
     })
     @PutMapping("/api/v1/subjects/{subjectId}/cuts/{cutId}/grades/{gradeId}")
     public ResponseEntity<ApiResponse<GradeResponseDTO>> update(
-            @Parameter(description = "ID de la materia", required = true) @PathVariable Long subjectId,
-            @Parameter(description = "ID del corte de evaluación", required = true) @PathVariable Long cutId,
-            @Parameter(description = "ID de la nota", required = true) @PathVariable Long gradeId,
+            @Parameter(description = "Subject ID", required = true) @PathVariable Long subjectId,
+            @Parameter(description = "Evaluation cut ID", required = true) @PathVariable Long cutId,
+            @Parameter(description = "Grade ID", required = true) @PathVariable Long gradeId,
             @Valid @RequestBody UpdateGradeRequestDTO request) {
 
         Grade updated = updateGradeUseCase.update(subjectId, cutId, gradeId, gradeMapper.toDomain(request));
@@ -106,34 +106,34 @@ public class GradeController {
     }
 
     @Operation(
-            summary = "Eliminar nota",
-            description = "Elimina una nota y recalcula automáticamente los promedios del corte y de la materia."
+            summary = "Delete grade",
+            description = "Deletes a grade and automatically recalculates the cut and subject averages."
     )
     @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "204", description = "Nota eliminada exitosamente"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Nota o materia no encontrada")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "204", description = "Grade deleted successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Grade or subject not found")
     })
     @DeleteMapping("/api/v1/subjects/{subjectId}/cuts/{cutId}/grades/{gradeId}")
     public ResponseEntity<Void> delete(
-            @Parameter(description = "ID de la materia", required = true) @PathVariable Long subjectId,
-            @Parameter(description = "ID del corte de evaluación", required = true) @PathVariable Long cutId,
-            @Parameter(description = "ID de la nota", required = true) @PathVariable Long gradeId) {
+            @Parameter(description = "Subject ID", required = true) @PathVariable Long subjectId,
+            @Parameter(description = "Evaluation cut ID", required = true) @PathVariable Long cutId,
+            @Parameter(description = "Grade ID", required = true) @PathVariable Long gradeId) {
 
         deleteGradeUseCase.delete(subjectId, cutId, gradeId);
         return ResponseEntity.noContent().build();
     }
 
     @Operation(
-            summary = "Consultar promedios de la materia",
-            description = "Retorna el promedio de cada corte y el promedio general ponderado de la materia."
+            summary = "Get subject averages",
+            description = "Returns the average for each cut and the overall weighted average of the subject."
     )
     @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Promedios calculados exitosamente"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Materia no encontrada")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Averages calculated successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Subject not found")
     })
     @GetMapping("/api/v1/subjects/{subjectId}/averages")
     public ResponseEntity<ApiResponse<AveragesResponseDTO>> getAverages(
-            @Parameter(description = "ID de la materia", required = true)
+            @Parameter(description = "Subject ID", required = true)
             @PathVariable Long subjectId) {
 
         Subject subject = getSubjectsUseCase.getById(subjectId);

@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Tag(name = "Estructura de Evaluación", description = "Configuración de cortes evaluativos de una materia (R07)")
+@Tag(name = "Evaluation Structure", description = "Configuration of evaluation cuts for a subject (R07)")
 @RestController
 @RequestMapping("/api/v1/subjects")
 @RequiredArgsConstructor
@@ -32,18 +32,18 @@ public class EvaluationStructureController {
     private final SubjectMapper subjectMapper;
 
     @Operation(
-            summary = "Configurar estructura de evaluación",
-            description = "Reemplaza completamente los cortes de la materia. Bloqueado si ya hay notas registradas."
+            summary = "Configure evaluation structure",
+            description = "Completely replaces the subject's evaluation cuts. Locked if grades have already been registered."
     )
     @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Estructura configurada exitosamente"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Suma de porcentajes ≠ 100 o lista vacía"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Materia no encontrada"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "409", description = "Estructura bloqueada porque ya existen notas registradas")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Structure configured successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Percentage sum ≠ 100 or empty list"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Subject not found"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "409", description = "Structure locked because grades have already been registered")
     })
     @PutMapping("/{subjectId}/evaluation-structure")
     public ResponseEntity<ApiResponse<EvaluationStructureResponseDTO>> configure(
-            @Parameter(description = "ID de la materia", required = true)
+            @Parameter(description = "Subject ID", required = true)
             @PathVariable Long subjectId,
             @Valid @RequestBody EvaluationStructureRequestDTO request) {
 
@@ -59,16 +59,16 @@ public class EvaluationStructureController {
     }
 
     @Operation(
-            summary = "Consultar estructura de evaluación",
-            description = "Retorna los cortes actuales de la materia con sus promedios calculados."
+            summary = "Get evaluation structure",
+            description = "Returns the subject's current evaluation cuts with their calculated averages."
     )
     @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Estructura de evaluación encontrada"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Materia no encontrada")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Evaluation structure found"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Subject not found")
     })
     @GetMapping("/{subjectId}/evaluation-structure")
     public ResponseEntity<ApiResponse<EvaluationStructureResponseDTO>> getStructure(
-            @Parameter(description = "ID de la materia", required = true)
+            @Parameter(description = "Subject ID", required = true)
             @PathVariable Long subjectId) {
 
         List<EvaluationCut> cuts = configureEvaluationStructureUseCase.getStructure(subjectId);

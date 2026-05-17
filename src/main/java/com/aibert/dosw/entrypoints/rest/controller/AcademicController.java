@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.OptionalDouble;
 
-@Tag(name = "Dashboard Académico", description = "Resumen académico del estudiante (R05)")
+@Tag(name = "Academic Dashboard", description = "Student academic summary (R05)")
 @RestController
 @RequiredArgsConstructor
 public class AcademicController {
@@ -30,15 +30,15 @@ public class AcademicController {
     private final AverageCalculator averageCalculator;
 
     @Operation(
-            summary = "Obtener resumen académico",
-            description = "Retorna todas las materias del estudiante con promedios por corte, promedio general de cada materia y GPA global."
+            summary = "Get academic summary",
+            description = "Returns all student subjects with averages per cut, overall average per subject, and global GPA."
     )
     @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Resumen académico generado (puede tener lista vacía si no hay materias)")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Academic summary generated (may have an empty list if there are no subjects)")
     })
     @GetMapping("/api/v1/academic/summary")
     public ResponseEntity<ApiResponse<AcademicSummaryDTO>> getSummary(
-            @Parameter(description = "ID del estudiante autenticado", required = true)
+            @Parameter(description = "Authenticated student ID", required = true)
             @RequestHeader("X-Student-Id") String studentId) {
 
         List<Subject> subjects = getAcademicSummaryUseCase.getSummary(studentId);

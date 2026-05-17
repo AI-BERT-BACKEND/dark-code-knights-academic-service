@@ -10,9 +10,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
     info = @Info(
         title = "Academic Service API",
         version = "1.0.0",
-        description = "Módulo 2 — Gestión Académica del sistema A.IBERT ECI Planner. " +
-                      "Permite registrar materias, configurar estructuras de evaluación, " +
-                      "registrar notas y calcular promedios automáticamente.",
+        description = "Module 2 — Academic Management for the A.IBERT ECI Planner system. " +
+                      "Allows registering subjects, configuring evaluation structures, " +
+                      "registering grades and automatically calculating averages.",
         contact = @Contact(
             name = "Dark Code Knights",
             url = "https://github.com/AI-BERT-BACKEND/dark-code-knights-academic-service"
