@@ -94,6 +94,7 @@ class ConfigureEvaluationStructureUseCaseImplTest {
             testSubject.getCredits(),
             testSubject.getTeacherName(),
             testSubject.getSemester(),
+            testSubject.getSchedule(),
             newEvaluationCuts
         );
         
@@ -163,6 +164,7 @@ class ConfigureEvaluationStructureUseCaseImplTest {
             testSubject.getCredits(),
             testSubject.getTeacherName(),
             testSubject.getSemester(),
+            testSubject.getSchedule(),
             cutsWithGrades
         );
         
@@ -305,6 +307,7 @@ class ConfigureEvaluationStructureUseCaseImplTest {
             testSubject.getCredits(),
             testSubject.getTeacherName(),
             testSubject.getSemester(),
+            testSubject.getSchedule(),
             exactCuts
         );
         
@@ -341,6 +344,7 @@ class ConfigureEvaluationStructureUseCaseImplTest {
             testSubject.getCredits(),
             testSubject.getTeacherName(),
             testSubject.getSemester(),
+            testSubject.getSchedule(),
             singleCut
         );
         
@@ -404,6 +408,7 @@ class ConfigureEvaluationStructureUseCaseImplTest {
             testSubject.getCredits(),
             testSubject.getTeacherName(),
             testSubject.getSemester(),
+            testSubject.getSchedule(),
             newEvaluationCuts
         );
         

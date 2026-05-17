@@ -151,6 +151,7 @@ class GetSubjectsUseCaseImplTest {
             3,
             "Dr. Test",
             "2025-1",
+            null,
             List.of()
         );
         when(subjectRepository.findById(testId)).thenReturn(Optional.of(testSubject));

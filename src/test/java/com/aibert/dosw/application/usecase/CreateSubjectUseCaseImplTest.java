@@ -104,6 +104,7 @@ class CreateSubjectUseCaseImplTest {
             testSubject.getCredits(),
             testSubject.getTeacherName(),
             testSubject.getSemester(),
+            testSubject.getSchedule(),
             null
         );
 
@@ -129,6 +130,7 @@ class CreateSubjectUseCaseImplTest {
             testSubject.getCredits(),
             testSubject.getTeacherName(),
             testSubject.getSemester(),
+            testSubject.getSchedule(),
             List.of()
         );
 
@@ -158,6 +160,7 @@ class CreateSubjectUseCaseImplTest {
             testSubject.getCredits(),
             testSubject.getTeacherName(),
             testSubject.getSemester(),
+            testSubject.getSchedule(),
             invalidCuts
         );
 
@@ -188,6 +191,7 @@ class CreateSubjectUseCaseImplTest {
             testSubject.getCredits(),
             testSubject.getTeacherName(),
             testSubject.getSemester(),
+            testSubject.getSchedule(),
             invalidCuts
         );
 
@@ -218,6 +222,7 @@ class CreateSubjectUseCaseImplTest {
             testSubject.getCredits(),
             testSubject.getTeacherName(),
             testSubject.getSemester(),
+            testSubject.getSchedule(),
             exactCuts
         );
         
@@ -249,6 +254,7 @@ class CreateSubjectUseCaseImplTest {
             testSubject.getCredits(),
             testSubject.getTeacherName(),
             testSubject.getSemester(),
+            testSubject.getSchedule(),
             singleCut
         );
         
@@ -284,6 +290,7 @@ class CreateSubjectUseCaseImplTest {
             testSubject.getCredits(),
             testSubject.getTeacherName(),
             testSubject.getSemester(),
+            testSubject.getSchedule(),
             closeCuts
         );
 
@@ -314,6 +321,7 @@ class CreateSubjectUseCaseImplTest {
             testSubject.getCredits(),
             testSubject.getTeacherName(),
             testSubject.getSemester(),
+            testSubject.getSchedule(),
             decimalCuts
         );
         

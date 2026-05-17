@@ -57,6 +57,7 @@ class GradeIntegrationTest {
               "credits": 4,
               "teacherName": "Prof. Ramírez",
               "semester": "2025-1",
+              "schedule": "Lunes 08:30 - 10:00",
               "evaluationCuts": [
                 { "cutName": "Corte 1", "cutPercentage": 30 },
                 { "cutName": "Corte 2", "cutPercentage": 30 },

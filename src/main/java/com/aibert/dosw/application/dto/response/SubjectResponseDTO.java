@@ -19,5 +19,6 @@ public class SubjectResponseDTO {
     private Integer credits;
     private String teacherName;
     private String semester;
+    private String schedule;
     private List<EvaluationCutResponseDTO> evaluationCuts;
 }

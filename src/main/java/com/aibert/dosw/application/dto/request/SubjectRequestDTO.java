@@ -27,7 +27,7 @@ public class SubjectRequestDTO {
 
     @NotNull(message = "Los créditos son obligatorios")
     @Min(value = 1, message = "Los créditos deben ser mínimo 1")
-    @Max(value = 10, message = "Los créditos deben ser máximo 10")
+    @Max(value = 4, message = "Los créditos deben ser máximo 4")
     private Integer credits;
 
     @NotBlank(message = "El nombre del docente es obligatorio")
@@ -40,6 +40,10 @@ public class SubjectRequestDTO {
             message = "El semestre debe tener el formato YYYY-1 o YYYY-2 (ejemplo: 2025-1)"
     )
     private String semester;
+
+    @NotBlank(message = "El horario es obligatorio")
+    @Size(min = 3, max = 100, message = "El horario debe tener entre 3 y 100 caracteres")
+    private String schedule;
 
     @NotEmpty(message = "La materia debe tener al menos un corte evaluativo")
     @Valid

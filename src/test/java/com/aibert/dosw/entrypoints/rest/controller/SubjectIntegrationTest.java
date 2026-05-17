@@ -59,6 +59,7 @@ class SubjectIntegrationTest {
               "credits": 4,
               "teacherName": "Prof. Ramírez",
               "semester": "2025-1",
+              "schedule": "Lunes 08:30 - 10:00",
               "evaluationCuts": [
                 { "cutName": "Corte 1", "cutPercentage": 40 },
                 { "cutName": "Corte 2", "cutPercentage": 60 }
@@ -76,6 +77,7 @@ class SubjectIntegrationTest {
                 .andExpect(jsonPath("$.data.credits").value(4))
                 .andExpect(jsonPath("$.data.teacherName").value("Prof. Ramírez"))
                 .andExpect(jsonPath("$.data.semester").value("2025-1"))
+                .andExpect(jsonPath("$.data.schedule").value("Lunes 08:30 - 10:00"))
                 .andExpect(jsonPath("$.data.evaluationCuts").isArray())
                 .andExpect(jsonPath("$.data.evaluationCuts", hasSize(2)))
                 .andExpect(jsonPath("$.data.evaluationCuts[0].cutName").value("Corte 1"))
@@ -94,6 +96,7 @@ class SubjectIntegrationTest {
               "credits": 3,
               "teacherName": "Prof. Error",
               "semester": "2025-1",
+              "schedule": "Lunes 08:30 - 10:00",
               "evaluationCuts": [
                 { "cutName": "Corte 1", "cutPercentage": 40 },
                 { "cutName": "Corte 2", "cutPercentage": 40 }
@@ -119,6 +122,7 @@ class SubjectIntegrationTest {
               "credits": 4,
               "teacherName": "Prof. Ramírez",
               "semester": "2025-1",
+              "schedule": "Lunes 08:30 - 10:00",
               "evaluationCuts": [
                 { "cutName": "Corte 1", "cutPercentage": 40 },
                 { "cutName": "Corte 2", "cutPercentage": 60 }
@@ -150,6 +154,7 @@ class SubjectIntegrationTest {
               "credits": 4,
               "teacherName": "Prof. Ramírez",
               "semester": "2025-1",
+              "schedule": "Lunes 08:30 - 10:00",
               "evaluationCuts": [
                 { "cutName": "Corte 1", "cutPercentage": 40 },
                 { "cutName": "Corte 2", "cutPercentage": 60 }
@@ -163,6 +168,7 @@ class SubjectIntegrationTest {
               "credits": 3,
               "teacherName": "Prof. Torres",
               "semester": "2025-1",
+              "schedule": "Martes 10:00 - 12:00",
               "evaluationCuts": [
                 { "cutName": "Corte 1", "cutPercentage": 50 },
                 { "cutName": "Corte 2", "cutPercentage": 50 }
@@ -198,6 +204,7 @@ class SubjectIntegrationTest {
               "credits": 4,
               "teacherName": "Prof. Ramírez",
               "semester": "2025-1",
+              "schedule": "Lunes 08:30 - 10:00",
               "evaluationCuts": [
                 { "cutName": "Corte 1", "cutPercentage": 40 },
                 { "cutName": "Corte 2", "cutPercentage": 60 }
@@ -243,6 +250,7 @@ class SubjectIntegrationTest {
               "credits": 3,
               "teacherName": "Prof. Torres",
               "semester": "2025-1",
+              "schedule": "Martes 10:00 - 12:00",
               "evaluationCuts": [
                 { "cutName": "Corte 1", "cutPercentage": 50 },
                 { "cutName": "Corte 2", "cutPercentage": 50 }
@@ -264,6 +272,7 @@ class SubjectIntegrationTest {
               "credits": 4,
               "teacherName": "Prof. Torres",
               "semester": "2025-1",
+              "schedule": "Jueves 14:00 - 16:00",
               "evaluationCuts": [
                 { "cutName": "Corte 1", "cutPercentage": 50 },
                 { "cutName": "Corte 2", "cutPercentage": 50 }
@@ -291,6 +300,7 @@ class SubjectIntegrationTest {
               "credits": 3,
               "teacherName": "Prof. Torres",
               "semester": "2025-1",
+              "schedule": "Martes 10:00 - 12:00",
               "evaluationCuts": [
                 { "cutName": "Corte 1", "cutPercentage": 50 },
                 { "cutName": "Corte 2", "cutPercentage": 50 }
@@ -376,6 +386,7 @@ class SubjectIntegrationTest {
               "credits": 2,
               "teacherName": "Prof. Simple",
               "semester": "2025-1",
+              "schedule": "Viernes 07:00 - 09:00",
               "evaluationCuts": [
                 { "cutName": "Corte Único", "cutPercentage": 100 }
               ]

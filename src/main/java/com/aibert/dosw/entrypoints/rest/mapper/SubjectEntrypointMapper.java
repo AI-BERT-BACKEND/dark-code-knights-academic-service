@@ -15,6 +15,7 @@ public interface SubjectEntrypointMapper {
     @Mapping(target = "credits", source = "dto.credits")
     @Mapping(target = "teacherName", source = "dto.teacherName")
     @Mapping(target = "semester", source = "dto.semester")
+    @Mapping(target = "schedule", source = "dto.schedule")
     @Mapping(target = "evaluationCuts", source = "dto.evaluationCuts")
     Subject toDomain(SubjectRequestDTO dto, String studentId);
 }

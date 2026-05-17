@@ -72,7 +72,7 @@ class SubjectEntityTest {
         List<EvaluationCutEntity> evaluationCuts = List.of();
 
         // When
-        SubjectEntity entity = new SubjectEntity(1L, "student123", "Mathematics", 4, "Dr. Smith", "2025-1", evaluationCuts);
+        SubjectEntity entity = new SubjectEntity(1L, "student123", "Mathematics", 4, "Dr. Smith", "2025-1", null, evaluationCuts);
 
         // Then
         assertThat(entity.getId()).isEqualTo(1L);
