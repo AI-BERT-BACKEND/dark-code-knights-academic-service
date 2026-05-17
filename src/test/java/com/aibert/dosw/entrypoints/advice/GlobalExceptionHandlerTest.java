@@ -3,14 +3,20 @@ package com.aibert.dosw.entrypoints.advice;
 import com.aibert.dosw.domain.exceptions.*;
 import com.aibert.dosw.entrypoints.ApiResponse;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestHeaderException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class GlobalExceptionHandlerTest {
 
@@ -126,5 +132,51 @@ class GlobalExceptionHandlerTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
         assertThat(response.getBody().isSuccess()).isFalse();
         assertThat(response.getBody().getError()).isEqualTo("Error interno del servidor");
+    }
+
+    @Test
+    @DisplayName("Should return 400 when JSON body is malformed")
+    void handleMessageNotReadable_returnsBadRequest() {
+        HttpMessageNotReadableException ex = new HttpMessageNotReadableException("Malformed JSON");
+
+        ResponseEntity<ApiResponse<Void>> response = handler.handleMessageNotReadable(ex);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getBody().isSuccess()).isFalse();
+        assertThat(response.getBody().getCode()).isEqualTo(400);
+        assertThat(response.getBody().getError())
+                .isEqualTo("El cuerpo de la petición tiene formato JSON inválido o está vacío");
+    }
+
+    @Test
+    @DisplayName("Should return 400 when path variable has wrong type")
+    void handleTypeMismatch_returnsBadRequest() {
+        MethodArgumentTypeMismatchException ex = mock(MethodArgumentTypeMismatchException.class);
+        when(ex.getName()).thenReturn("subjectId");
+        when(ex.getValue()).thenReturn("abc");
+
+        ResponseEntity<ApiResponse<Void>> response = handler.handleTypeMismatch(ex);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getBody().isSuccess()).isFalse();
+        assertThat(response.getBody().getCode()).isEqualTo(400);
+        assertThat(response.getBody().getError())
+                .contains("subjectId")
+                .contains("abc");
+    }
+
+    @Test
+    @DisplayName("Should return 400 when required header is missing")
+    void handleMissingHeader_returnsBadRequest() {
+        MissingRequestHeaderException ex = mock(MissingRequestHeaderException.class);
+        when(ex.getHeaderName()).thenReturn("X-Student-Id");
+
+        ResponseEntity<ApiResponse<Void>> response = handler.handleMissingHeader(ex);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getBody().isSuccess()).isFalse();
+        assertThat(response.getBody().getCode()).isEqualTo(400);
+        assertThat(response.getBody().getError())
+                .contains("X-Student-Id");
     }
 }
