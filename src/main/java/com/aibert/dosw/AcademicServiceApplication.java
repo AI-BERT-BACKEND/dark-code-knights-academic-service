@@ -1,8 +1,24 @@
 package com.aibert.dosw;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Contact;
+import io.swagger.v3.oas.annotations.info.Info;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+@OpenAPIDefinition(
+    info = @Info(
+        title = "Academic Service API",
+        version = "1.0.0",
+        description = "Módulo 2 — Gestión Académica del sistema A.IBERT ECI Planner. " +
+                      "Permite registrar materias, configurar estructuras de evaluación, " +
+                      "registrar notas y calcular promedios automáticamente.",
+        contact = @Contact(
+            name = "Dark Code Knights",
+            url = "https://github.com/AI-BERT-BACKEND/dark-code-knights-academic-service"
+        )
+    )
+)
 @SpringBootApplication
 public class AcademicServiceApplication {
 
