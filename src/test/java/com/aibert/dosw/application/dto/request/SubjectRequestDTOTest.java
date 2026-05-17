@@ -1,16 +1,22 @@
 package com.aibert.dosw.application.dto.request;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("SubjectRequestDTO Tests")
 class SubjectRequestDTOTest {
+
+    private final Validator validator = jakarta.validation.Validation.buildDefaultValidatorFactory().getValidator();
 
     private SubjectRequestDTO subjectRequestDTO;
     private EvaluationCutDTO evaluationCutDTO;
@@ -173,5 +179,53 @@ class SubjectRequestDTOTest {
     @org.junit.jupiter.api.Test
     void hashCodeWithNullFields() {
         assertEquals(new SubjectRequestDTO().hashCode(), new SubjectRequestDTO().hashCode());
+    }
+
+    @Test
+    @DisplayName("Should fail validation when semester has invalid format")
+    void semester_InvalidFormat_ShouldFailValidation() {
+        List<String> invalidSemesters = List.of(
+                "verano", "2025-3", "25-1", "2025", "2025-1-extra", "abc-1"
+        );
+
+        EvaluationCutDTO cut = EvaluationCutDTO.builder()
+                .cutName("Corte 1").cutPercentage(100.0).build();
+
+        invalidSemesters.forEach(invalidSemester -> {
+            SubjectRequestDTO dto = SubjectRequestDTO.builder()
+                    .subjectName("Matemáticas")
+                    .credits(3)
+                    .teacherName("Dr. García")
+                    .semester(invalidSemester)
+                    .evaluationCuts(List.of(cut))
+                    .build();
+
+            Set<ConstraintViolation<SubjectRequestDTO>> violations = validator.validate(dto);
+            assertFalse(violations.isEmpty(),
+                    "Se esperaba violación de @Pattern para semester: " + invalidSemester);
+        });
+    }
+
+    @Test
+    @DisplayName("Should pass validation with valid semester formats")
+    void semester_ValidFormat_ShouldPassValidation() {
+        List<String> validSemesters = List.of("2025-1", "2025-2", "2024-1", "2026-2");
+
+        EvaluationCutDTO cut = EvaluationCutDTO.builder()
+                .cutName("Corte 1").cutPercentage(100.0).build();
+
+        validSemesters.forEach(validSemester -> {
+            SubjectRequestDTO dto = SubjectRequestDTO.builder()
+                    .subjectName("Matemáticas")
+                    .credits(3)
+                    .teacherName("Dr. García")
+                    .semester(validSemester)
+                    .evaluationCuts(List.of(cut))
+                    .build();
+
+            Set<ConstraintViolation<SubjectRequestDTO>> violations = validator.validate(dto);
+            assertTrue(violations.isEmpty(),
+                    "No se esperaba violación para semester: " + validSemester);
+        });
     }
 }
