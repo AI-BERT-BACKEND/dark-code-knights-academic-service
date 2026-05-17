@@ -77,6 +77,7 @@ class SimulateTargetGradeUseCaseImplTest {
             testSubject.getCredits(),
             testSubject.getTeacherName(),
             testSubject.getSemester(),
+            testSubject.getSchedule(),
             cuts
         );
         when(subjectRepository.findById(1L)).thenReturn(Optional.of(subjectWithCuts));
@@ -124,6 +125,7 @@ class SimulateTargetGradeUseCaseImplTest {
             testSubject.getCredits(),
             testSubject.getTeacherName(),
             testSubject.getSemester(),
+            testSubject.getSchedule(),
             cuts
         );
         when(subjectRepository.findById(1L)).thenReturn(Optional.of(subjectWithCuts));
@@ -171,6 +173,7 @@ class SimulateTargetGradeUseCaseImplTest {
             testSubject.getCredits(),
             testSubject.getTeacherName(),
             testSubject.getSemester(),
+            testSubject.getSchedule(),
             cuts
         );
         when(subjectRepository.findById(1L)).thenReturn(Optional.of(subjectWithCuts));
@@ -240,6 +243,7 @@ class SimulateTargetGradeUseCaseImplTest {
             testSubject.getCredits(),
             testSubject.getTeacherName(),
             testSubject.getSemester(),
+            testSubject.getSchedule(),
             cuts
         );
         when(subjectRepository.findById(1L)).thenReturn(Optional.of(subjectWithAllGrades));
@@ -280,6 +284,7 @@ class SimulateTargetGradeUseCaseImplTest {
             testSubject.getCredits(),
             testSubject.getTeacherName(),
             testSubject.getSemester(),
+            testSubject.getSchedule(),
             cuts
         );
         when(subjectRepository.findById(1L)).thenReturn(Optional.of(subjectWithCuts));
@@ -333,6 +338,7 @@ class SimulateTargetGradeUseCaseImplTest {
             testSubject.getCredits(),
             testSubject.getTeacherName(),
             testSubject.getSemester(),
+            testSubject.getSchedule(),
             cuts
         );
         when(subjectRepository.findById(1L)).thenReturn(Optional.of(subjectWithAllPending));
@@ -380,6 +386,7 @@ class SimulateTargetGradeUseCaseImplTest {
             testSubject.getCredits(),
             testSubject.getTeacherName(),
             testSubject.getSemester(),
+            testSubject.getSchedule(),
             cuts
         );
         when(subjectRepository.findById(1L)).thenReturn(Optional.of(subjectWithCuts));
@@ -427,6 +434,7 @@ class SimulateTargetGradeUseCaseImplTest {
             testSubject.getCredits(),
             testSubject.getTeacherName(),
             testSubject.getSemester(),
+            testSubject.getSchedule(),
             cuts
         );
         when(subjectRepository.findById(1L)).thenReturn(Optional.of(subjectWithCuts));

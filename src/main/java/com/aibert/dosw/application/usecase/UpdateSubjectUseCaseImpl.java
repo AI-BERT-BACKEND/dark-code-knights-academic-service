@@ -39,6 +39,7 @@ public class UpdateSubjectUseCaseImpl implements UpdateSubjectUseCase {
                 .credits(subject.getCredits())
                 .teacherName(subject.getTeacherName())
                 .semester(subject.getSemester())
+                .schedule(subject.getSchedule())
                 .evaluationCuts(subject.getEvaluationCuts())
                 .build();
 

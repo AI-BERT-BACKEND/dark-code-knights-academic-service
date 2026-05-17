@@ -51,6 +51,9 @@ public class SubjectEntity {
     @Column(nullable = false)
     private String semester;
 
+    @Column(nullable = false)
+    private String schedule;
+
     @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<EvaluationCutEntity> evaluationCuts;
 }

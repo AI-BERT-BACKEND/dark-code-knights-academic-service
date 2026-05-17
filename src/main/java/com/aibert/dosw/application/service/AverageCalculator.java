@@ -66,6 +66,7 @@ public class AverageCalculator {
                 .credits(subject.getCredits())
                 .teacherName(subject.getTeacherName())
                 .semester(subject.getSemester())
+                .schedule(subject.getSchedule())
                 .evaluationCuts(updatedCuts)
                 .build());
     }

@@ -35,6 +35,7 @@ class GradeJpaRepositoryTest {
             .teacherName("Dr. Smith")
             .credits(4)
             .semester("2025-1")
+            .schedule("Lunes 08:30 - 10:00")
             .build();
         SubjectEntity savedSubject = entityManager.persistAndFlush(subject);
         
@@ -74,6 +75,7 @@ class GradeJpaRepositoryTest {
             .teacherName("Dr. Smith")
             .credits(4)
             .semester("2025-1")
+            .schedule("Lunes 08:30 - 10:00")
             .build();
         SubjectEntity savedSubject = entityManager.persistAndFlush(subject);
         
@@ -119,6 +121,7 @@ class GradeJpaRepositoryTest {
             .teacherName("Dr. Smith")
             .credits(4)
             .semester("2025-1")
+            .schedule("Lunes 08:30 - 10:00")
             .build();
         SubjectEntity savedSubject = entityManager.persistAndFlush(subject);
         
@@ -154,6 +157,7 @@ class GradeJpaRepositoryTest {
             .teacherName("Dr. Smith")
             .credits(4)
             .semester("2025-1")
+            .schedule("Lunes 08:30 - 10:00")
             .build();
         SubjectEntity savedSubject = entityManager.persistAndFlush(subject);
         
@@ -205,6 +209,7 @@ class GradeJpaRepositoryTest {
             .teacherName("Dr. Smith")
             .credits(4)
             .semester("2025-1")
+            .schedule("Lunes 08:30 - 10:00")
             .build();
         SubjectEntity savedSubject = entityManager.persistAndFlush(subject);
         
@@ -243,6 +248,7 @@ class GradeJpaRepositoryTest {
             .teacherName("Dr. Smith")
             .credits(4)
             .semester("2025-1")
+            .schedule("Lunes 08:30 - 10:00")
             .build();
         SubjectEntity savedSubject = entityManager.persistAndFlush(subject);
         
@@ -287,6 +293,7 @@ class GradeJpaRepositoryTest {
             .teacherName("Dr. Smith")
             .credits(4)
             .semester("2025-1")
+            .schedule("Lunes 08:30 - 10:00")
             .build();
         SubjectEntity savedSubject = entityManager.persistAndFlush(subject);
         
@@ -324,6 +331,7 @@ class GradeJpaRepositoryTest {
             .teacherName("Dr. Smith")
             .credits(4)
             .semester("2025-1")
+            .schedule("Lunes 08:30 - 10:00")
             .build();
         SubjectEntity savedSubject = entityManager.persistAndFlush(subject);
         

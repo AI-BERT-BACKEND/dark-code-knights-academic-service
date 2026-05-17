@@ -59,6 +59,7 @@ class SimulationIntegrationTest {
               "credits": 4,
               "teacherName": "Prof. Ramírez",
               "semester": "2025-1",
+              "schedule": "Lunes 08:30 - 10:00",
               "evaluationCuts": [
                 { "cutName": "Corte 1", "cutPercentage": 30 },
                 { "cutName": "Corte 2", "cutPercentage": 30 },
@@ -276,6 +277,7 @@ class SimulationIntegrationTest {
               "credits": 3,
               "teacherName": "Prof. García",
               "semester": "2025-1",
+              "schedule": "Miercoles 14:00 - 16:00",
               "evaluationCuts": [
                 { "cutName": "Corte 1", "cutPercentage": 50 },
                 { "cutName": "Corte 2", "cutPercentage": 50 }
@@ -317,6 +319,7 @@ class SimulationIntegrationTest {
               "credits": 2,
               "teacherName": "Prof. Simple",
               "semester": "2025-1",
+              "schedule": "Viernes 07:00 - 09:00",
               "evaluationCuts": [
                 { "cutName": "Corte 1", "cutPercentage": 60 },
                 { "cutName": "Corte 2", "cutPercentage": 40 }

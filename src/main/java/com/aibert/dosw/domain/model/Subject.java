@@ -19,5 +19,6 @@ public class Subject {
     private Integer credits;
     private String teacherName;
     private String semester;
+    private String schedule;
     private List<EvaluationCut> evaluationCuts;
 }

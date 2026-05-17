@@ -33,6 +33,7 @@ class SubjectRequestDTOTest {
             .credits(4)
             .teacherName("Prof. Ramírez")
             .semester("2025-1")
+            .schedule("Lunes 08:30 - 10:00")
             .evaluationCuts(Arrays.asList(evaluationCutDTO))
             .build();
     }
@@ -220,6 +221,7 @@ class SubjectRequestDTOTest {
                     .credits(3)
                     .teacherName("Dr. García")
                     .semester(validSemester)
+                    .schedule("Lunes 08:30 - 10:00")
                     .evaluationCuts(List.of(cut))
                     .build();
 
@@ -227,5 +229,26 @@ class SubjectRequestDTOTest {
             assertTrue(violations.isEmpty(),
                     "No se esperaba violación para semester: " + validSemester);
         });
+    }
+
+    @Test
+    @DisplayName("Should fail validation when credits exceed maximum of 4")
+    void shouldFailValidationWhenCreditsExceedMaximum() {
+        EvaluationCutDTO cut = EvaluationCutDTO.builder()
+                .cutName("Corte 1").cutPercentage(100.0).build();
+
+        SubjectRequestDTO dto = SubjectRequestDTO.builder()
+                .subjectName("Matemáticas")
+                .credits(5)
+                .teacherName("Dr. García")
+                .semester("2025-1")
+                .schedule("Lunes 08:30 - 10:00")
+                .evaluationCuts(List.of(cut))
+                .build();
+
+        Set<ConstraintViolation<SubjectRequestDTO>> violations = validator.validate(dto);
+        assertFalse(violations.isEmpty(), "Se esperaba violación de @Max para credits=5");
+        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("credits")),
+                "La violación debe ser en el campo credits");
     }
 }
