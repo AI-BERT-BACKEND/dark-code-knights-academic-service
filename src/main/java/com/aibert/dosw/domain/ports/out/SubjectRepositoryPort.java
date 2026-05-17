@@ -15,5 +15,7 @@ public interface SubjectRepositoryPort {
 
     boolean existsByStudentIdAndSubjectNameAndSemester(String studentId, String subjectName, String semester);
 
+    Optional<Subject> findByIdAndStudentId(Long id, String studentId);
+
     void deleteById(Long id);
 }

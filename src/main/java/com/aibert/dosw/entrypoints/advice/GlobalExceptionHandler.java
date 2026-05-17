@@ -8,6 +8,7 @@ import com.aibert.dosw.domain.exceptions.GradeOutOfRangeException;
 import com.aibert.dosw.domain.exceptions.InvalidEvaluationStructureException;
 import com.aibert.dosw.domain.exceptions.NoPendingCutsException;
 import com.aibert.dosw.domain.exceptions.SubjectNotFoundException;
+import com.aibert.dosw.domain.exceptions.SubjectNotOwnedException;
 import com.aibert.dosw.entrypoints.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -81,6 +82,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .body(ApiResponse.error(ex.getMessage(), HttpStatus.CONFLICT.value()));
+    }
+
+    @ExceptionHandler(SubjectNotOwnedException.class)
+    public ResponseEntity<ApiResponse<Void>> handleSubjectNotOwned(SubjectNotOwnedException ex) {
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(ApiResponse.error(ex.getMessage(), HttpStatus.FORBIDDEN.value()));
     }
 
     @ExceptionHandler(NoPendingCutsException.class)

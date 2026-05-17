@@ -9,4 +9,6 @@ public interface GetSubjectsUseCase {
     List<Subject> getAllByStudent(String studentId);
 
     Subject getById(Long id);
+
+    Subject getByIdAndStudent(Long id, String studentId);
 }

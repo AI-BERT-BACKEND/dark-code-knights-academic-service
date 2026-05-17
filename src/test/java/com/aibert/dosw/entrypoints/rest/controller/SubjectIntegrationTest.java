@@ -225,13 +225,13 @@ class SubjectIntegrationTest {
     }
 
     @Test
-    @DisplayName("Should return 404 when getting non-existent subject")
-    void shouldReturn404WhenGettingNonExistentSubject() throws Exception {
+    @DisplayName("Should return 403 when getting subject not owned by student")
+    void shouldReturn403WhenGettingNonExistentSubject() throws Exception {
         mockMvc.perform(get("/api/v1/subjects/{id}", 999)
                 .header("X-Student-Id", "student-test"))
-                .andExpect(status().isNotFound())
+                .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.error").value(containsString("Materia con id 999 no encontrada")));
+                .andExpect(jsonPath("$.error").value(containsString("No tienes acceso a la materia con id 999")));
     }
 
     @Test
@@ -312,13 +312,13 @@ class SubjectIntegrationTest {
     }
 
     @Test
-    @DisplayName("Should return 404 when deleting non-existent subject")
-    void shouldReturn404WhenDeletingNonExistentSubject() throws Exception {
+    @DisplayName("Should return 403 when deleting subject not owned by student")
+    void shouldReturn403WhenDeletingNonExistentSubject() throws Exception {
         mockMvc.perform(delete("/api/v1/subjects/{id}", 999)
                 .header("X-Student-Id", "student-test"))
-                .andExpect(status().isNotFound())
+                .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.error").value(containsString("Materia con id 999 no encontrada")));
+                .andExpect(jsonPath("$.error").value(containsString("No tienes acceso a la materia con id 999")));
     }
 
     @Test

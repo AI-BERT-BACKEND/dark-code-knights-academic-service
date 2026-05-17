@@ -181,32 +181,32 @@ class SubjectControllerTest {
     }
 
     @Test
-    @DisplayName("Should get subject by ID")
+    @DisplayName("Should get subject by ID and student ID")
     void shouldGetSubjectById() {
         // Given
         Long subjectId = 1L;
-        when(getSubjectsUseCase.getById(subjectId)).thenReturn(testSubject);
+        when(getSubjectsUseCase.getByIdAndStudent(subjectId, testStudentId)).thenReturn(testSubject);
         when(subjectMapper.toResponseDTO(testSubject)).thenReturn(testResponse);
 
         // When
-        ResponseEntity<ApiResponse<SubjectResponseDTO>> response = 
-            subjectController.getById(subjectId);
+        ResponseEntity<ApiResponse<SubjectResponseDTO>> response =
+            subjectController.getById(testStudentId, subjectId);
 
         // Then
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        
+
         ApiResponse<SubjectResponseDTO> apiResponse = response.getBody();
         assertNotNull(apiResponse);
         assertTrue(apiResponse.isSuccess());
         assertEquals("ok", apiResponse.getMessage());
-        
+
         SubjectResponseDTO responseData = apiResponse.getData();
         assertNotNull(responseData);
         assertEquals(1L, responseData.getId());
         assertEquals("Mathematics", responseData.getSubjectName());
-        
-        verify(getSubjectsUseCase, times(1)).getById(subjectId);
+
+        verify(getSubjectsUseCase, times(1)).getByIdAndStudent(subjectId, testStudentId);
         verify(subjectMapper, times(1)).toResponseDTO(testSubject);
     }
 
@@ -276,18 +276,18 @@ class SubjectControllerTest {
     void shouldDeleteSubjectSuccessfully() {
         // Given
         Long subjectId = 1L;
-        doNothing().when(deleteSubjectUseCase).delete(subjectId);
+        doNothing().when(deleteSubjectUseCase).delete(subjectId, testStudentId);
 
         // When
         ResponseEntity<Void> response =
-            subjectController.delete(subjectId);
+            subjectController.delete(testStudentId, subjectId);
 
         // Then
         assertNotNull(response);
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         assertFalse(response.hasBody());
 
-        verify(deleteSubjectUseCase, times(1)).delete(subjectId);
+        verify(deleteSubjectUseCase, times(1)).delete(subjectId, testStudentId);
     }
 
     @Test
@@ -424,18 +424,18 @@ class SubjectControllerTest {
     void shouldVerifyResponseStructureForDeleteOperation() {
         // Given
         Long subjectId = 1L;
-        doNothing().when(deleteSubjectUseCase).delete(subjectId);
+        doNothing().when(deleteSubjectUseCase).delete(subjectId, testStudentId);
 
         // When
         ResponseEntity<Void> response =
-            subjectController.delete(subjectId);
+            subjectController.delete(testStudentId, subjectId);
 
         // Then
         assertNotNull(response);
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         assertFalse(response.hasBody());
 
-        verify(deleteSubjectUseCase, times(1)).delete(subjectId);
+        verify(deleteSubjectUseCase, times(1)).delete(subjectId, testStudentId);
     }
 
     @Test
