@@ -18,6 +18,28 @@ public class AverageCalculator {
     private final SubjectRepositoryPort subjectRepository;
     private final GradeRepositoryPort gradeRepository;
 
+    /**
+     * Calcula el promedio general ponderado de la materia.
+     * Fórmula: Σ(cut.grade × cut.cutPercentage) / 100.0
+     * Solo considera cortes que ya tienen nota calculada (grade != null).
+     *
+     * @param evaluationCuts lista completa de cortes de la materia
+     * @return promedio ponderado, o null si ningún corte tiene nota
+     */
+    public Double calculateOverallAverage(List<EvaluationCut> evaluationCuts) {
+        boolean anyGraded = evaluationCuts.stream()
+                .anyMatch(cut -> cut.getGrade() != null);
+
+        if (!anyGraded) {
+            return null;
+        }
+
+        return evaluationCuts.stream()
+                .filter(cut -> cut.getGrade() != null)
+                .mapToDouble(cut -> cut.getGrade() * cut.getCutPercentage())
+                .sum() / 100.0;
+    }
+
     public void recalculateCutAverage(Subject subject, Long cutId) {
         List<Grade> grades = gradeRepository.findByCutId(cutId);
 

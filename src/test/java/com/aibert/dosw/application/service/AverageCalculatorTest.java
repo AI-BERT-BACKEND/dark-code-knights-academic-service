@@ -17,6 +17,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -202,6 +204,58 @@ class AverageCalculatorTest {
 
         verify(gradeRepository).findByCutId(1L);
         verify(subjectRepository).save(any(Subject.class));
+    }
+
+    @Test
+    @DisplayName("Should return null when no cuts have grade")
+    void calculateOverallAverage_NoCutsWithGrade_ShouldReturnNull() {
+        // Given
+        List<EvaluationCut> cuts = List.of(
+            EvaluationCut.builder().id(1L).cutName("Corte 1").cutPercentage(50.0).grade(null).build(),
+            EvaluationCut.builder().id(2L).cutName("Corte 2").cutPercentage(50.0).grade(null).build()
+        );
+
+        // When
+        Double result = averageCalculator.calculateOverallAverage(cuts);
+
+        // Then
+        assertNull(result);
+    }
+
+    @Test
+    @DisplayName("Should calculate overall average considering only graded cuts")
+    void calculateOverallAverage_PartialCutsGraded_ShouldCalculateCorrectly() {
+        // Given — Corte 1: 35% con nota 4.5 → overallAverage = (4.5 × 35) / 100 = 1.575
+        List<EvaluationCut> cuts = List.of(
+            EvaluationCut.builder().id(1L).cutName("Corte 1").cutPercentage(35.0).grade(4.5).build(),
+            EvaluationCut.builder().id(2L).cutName("Corte 2").cutPercentage(35.0).grade(null).build(),
+            EvaluationCut.builder().id(3L).cutName("Corte 3").cutPercentage(30.0).grade(null).build()
+        );
+
+        // When
+        Double result = averageCalculator.calculateOverallAverage(cuts);
+
+        // Then
+        assertNotNull(result);
+        assertEquals(1.575, result, 0.001);
+    }
+
+    @Test
+    @DisplayName("Should calculate full overall average when all cuts are graded")
+    void calculateOverallAverage_AllCutsGraded_ShouldCalculateFullAverage() {
+        // Given — (4.0×30 + 3.5×40 + 5.0×30) / 100 = (120 + 140 + 150) / 100 = 4.1
+        List<EvaluationCut> cuts = List.of(
+            EvaluationCut.builder().id(1L).cutName("Corte 1").cutPercentage(30.0).grade(4.0).build(),
+            EvaluationCut.builder().id(2L).cutName("Corte 2").cutPercentage(40.0).grade(3.5).build(),
+            EvaluationCut.builder().id(3L).cutName("Corte 3").cutPercentage(30.0).grade(5.0).build()
+        );
+
+        // When
+        Double result = averageCalculator.calculateOverallAverage(cuts);
+
+        // Then
+        assertNotNull(result);
+        assertEquals(4.1, result, 0.001);
     }
 
     private void assertEquals(double expected, double actual, double delta) {
