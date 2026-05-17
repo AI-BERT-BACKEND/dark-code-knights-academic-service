@@ -3,6 +3,7 @@ package com.aibert.dosw.entrypoints.rest.controller;
 import com.aibert.dosw.application.dto.response.AcademicSummaryDTO;
 import com.aibert.dosw.application.dto.response.AveragesResponseDTO;
 import com.aibert.dosw.application.mapper.SubjectMapper;
+import com.aibert.dosw.application.service.AverageCalculator;
 import com.aibert.dosw.domain.model.Subject;
 import com.aibert.dosw.domain.ports.in.GetAcademicSummaryUseCase;
 import com.aibert.dosw.entrypoints.ApiResponse;
@@ -26,6 +27,7 @@ public class AcademicController {
 
     private final GetAcademicSummaryUseCase getAcademicSummaryUseCase;
     private final SubjectMapper subjectMapper;
+    private final AverageCalculator averageCalculator;
 
     @Operation(
             summary = "Obtener resumen académico",
@@ -43,14 +45,7 @@ public class AcademicController {
 
         List<AveragesResponseDTO> subjectSummaries = subjects.stream()
                 .map(subject -> {
-                    boolean anyGraded = subject.getEvaluationCuts().stream()
-                            .anyMatch(c -> c.getGrade() != null);
-                    Double overallAverage = anyGraded
-                            ? subject.getEvaluationCuts().stream()
-                                    .filter(c -> c.getGrade() != null)
-                                    .mapToDouble(c -> c.getGrade() * c.getCutPercentage())
-                                    .sum() / 100.0
-                            : null;
+                    Double overallAverage = averageCalculator.calculateOverallAverage(subject.getEvaluationCuts());
                     return AveragesResponseDTO.builder()
                             .subjectId(subject.getId())
                             .subjectName(subject.getSubjectName())

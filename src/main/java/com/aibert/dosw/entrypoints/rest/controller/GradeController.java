@@ -12,6 +12,7 @@ import com.aibert.dosw.domain.ports.in.DeleteGradeUseCase;
 import com.aibert.dosw.domain.ports.in.GetSubjectsUseCase;
 import com.aibert.dosw.domain.ports.in.RegisterGradeUseCase;
 import com.aibert.dosw.domain.ports.in.UpdateGradeUseCase;
+import com.aibert.dosw.application.service.AverageCalculator;
 import com.aibert.dosw.entrypoints.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -42,6 +43,7 @@ public class GradeController {
     private final GetSubjectsUseCase getSubjectsUseCase;
     private final GradeMapper gradeMapper;
     private final SubjectMapper subjectMapper;
+    private final AverageCalculator averageCalculator;
 
     @Operation(
             summary = "Registrar nota",
@@ -136,14 +138,7 @@ public class GradeController {
 
         Subject subject = getSubjectsUseCase.getById(subjectId);
 
-        boolean anyGraded = subject.getEvaluationCuts().stream()
-                .anyMatch(c -> c.getGrade() != null);
-        Double overallAverage = anyGraded
-                ? subject.getEvaluationCuts().stream()
-                        .filter(c -> c.getGrade() != null)
-                        .mapToDouble(c -> c.getGrade() * c.getCutPercentage())
-                        .sum() / 100.0
-                : null;
+        Double overallAverage = averageCalculator.calculateOverallAverage(subject.getEvaluationCuts());
 
         AveragesResponseDTO response = AveragesResponseDTO.builder()
                 .subjectId(subject.getId())
