@@ -49,6 +49,7 @@ public class SimulateTargetGradeUseCaseImpl implements SimulateTargetGradeUseCas
                 .requiredGrade(requiredGrade)
                 .achievable(achievable)
                 .pendingPercentage(pendingPercentage)
+                .pendingCuts(pendingCuts)
                 .build();
     }
 }

@@ -5,18 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SimulationResponseDTO {
+public class PendingCutSimulationDTO {
 
-    private Double targetGrade;
+    private Long cutId;
+    private String cutName;
+    private Double cutPercentage;
     private Double requiredGrade;
-    private boolean achievable;
-    private Double pendingCutsPercentage;
-    private String message;
-    private List<PendingCutSimulationDTO> pendingCuts;
 }

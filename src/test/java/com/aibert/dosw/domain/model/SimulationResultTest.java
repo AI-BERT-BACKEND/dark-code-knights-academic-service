@@ -1,11 +1,14 @@
 package com.aibert.dosw.domain.model;
 
+import com.aibert.dosw.domain.model.EvaluationCut;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -49,7 +52,7 @@ class SimulationResultTest {
     @DisplayName("Should create SimulationResult using all-args constructor")
     void shouldCreateSimulationResultUsingAllArgsConstructor() {
         // When
-        SimulationResult result = new SimulationResult(3.5, 3.0, false, 40.0);
+        SimulationResult result = new SimulationResult(3.5, 3.0, false, 40.0, null);
 
         // Then
         assertNotNull(result);
@@ -57,6 +60,7 @@ class SimulationResultTest {
         assertEquals(3.0, result.getRequiredGrade());
         assertFalse(result.isAchievable());
         assertEquals(40.0, result.getPendingPercentage());
+        assertNull(result.getPendingCuts());
     }
 
     @Test
@@ -71,6 +75,50 @@ class SimulationResultTest {
         assertNull(result.getRequiredGrade());
         assertFalse(result.isAchievable());
         assertNull(result.getPendingPercentage());
+        assertNull(result.getPendingCuts());
+    }
+
+    @Test
+    @DisplayName("Should store pendingCuts in builder")
+    void shouldStorePendingCutsInBuilder() {
+        // Given
+        List<EvaluationCut> cuts = List.of(
+            EvaluationCut.builder().id(1L).cutName("Corte 2").cutPercentage(40.0).grade(null).build(),
+            EvaluationCut.builder().id(2L).cutName("Corte 3").cutPercentage(30.0).grade(null).build()
+        );
+
+        // When
+        SimulationResult result = SimulationResult.builder()
+            .targetGrade(4.0)
+            .requiredGrade(3.5)
+            .achievable(true)
+            .pendingPercentage(70.0)
+            .pendingCuts(cuts)
+            .build();
+
+        // Then
+        assertNotNull(result.getPendingCuts());
+        assertEquals(2, result.getPendingCuts().size());
+        assertEquals("Corte 2", result.getPendingCuts().get(0).getCutName());
+        assertEquals(40.0, result.getPendingCuts().get(0).getCutPercentage());
+        assertEquals("Corte 3", result.getPendingCuts().get(1).getCutName());
+    }
+
+    @Test
+    @DisplayName("Should store empty pendingCuts list")
+    void shouldStoreEmptyPendingCutsList() {
+        // When
+        SimulationResult result = SimulationResult.builder()
+            .targetGrade(4.0)
+            .requiredGrade(3.5)
+            .achievable(true)
+            .pendingPercentage(70.0)
+            .pendingCuts(Collections.emptyList())
+            .build();
+
+        // Then
+        assertNotNull(result.getPendingCuts());
+        assertTrue(result.getPendingCuts().isEmpty());
     }
 
     @Test
