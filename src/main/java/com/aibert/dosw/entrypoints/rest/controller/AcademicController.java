@@ -6,6 +6,10 @@ import com.aibert.dosw.application.mapper.SubjectMapper;
 import com.aibert.dosw.domain.model.Subject;
 import com.aibert.dosw.domain.ports.in.GetAcademicSummaryUseCase;
 import com.aibert.dosw.entrypoints.ApiResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.OptionalDouble;
 
+@Tag(name = "Dashboard Académico", description = "Resumen académico del estudiante (R05)")
 @RestController
 @RequiredArgsConstructor
 public class AcademicController {
@@ -22,8 +27,16 @@ public class AcademicController {
     private final GetAcademicSummaryUseCase getAcademicSummaryUseCase;
     private final SubjectMapper subjectMapper;
 
+    @Operation(
+            summary = "Obtener resumen académico",
+            description = "Retorna todas las materias del estudiante con promedios por corte, promedio general de cada materia y GPA global."
+    )
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Resumen académico generado (puede tener lista vacía si no hay materias)")
+    })
     @GetMapping("/api/v1/academic/summary")
     public ResponseEntity<ApiResponse<AcademicSummaryDTO>> getSummary(
+            @Parameter(description = "ID del estudiante autenticado", required = true)
             @RequestHeader("X-Student-Id") String studentId) {
 
         List<Subject> subjects = getAcademicSummaryUseCase.getSummary(studentId);
