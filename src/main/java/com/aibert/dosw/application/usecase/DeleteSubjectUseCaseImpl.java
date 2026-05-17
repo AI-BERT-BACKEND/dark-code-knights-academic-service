@@ -1,6 +1,6 @@
 package com.aibert.dosw.application.usecase;
 
-import com.aibert.dosw.domain.exceptions.SubjectNotFoundException;
+import com.aibert.dosw.domain.exceptions.SubjectNotOwnedException;
 import com.aibert.dosw.domain.ports.in.DeleteSubjectUseCase;
 import com.aibert.dosw.domain.ports.out.SubjectRepositoryPort;
 import lombok.RequiredArgsConstructor;
@@ -13,9 +13,9 @@ public class DeleteSubjectUseCaseImpl implements DeleteSubjectUseCase {
     private final SubjectRepositoryPort subjectRepository;
 
     @Override
-    public void delete(Long id) {
-        subjectRepository.findById(id)
-                .orElseThrow(() -> new SubjectNotFoundException(id));
+    public void delete(Long id, String studentId) {
+        subjectRepository.findByIdAndStudentId(id, studentId)
+                .orElseThrow(() -> new SubjectNotOwnedException(id));
         subjectRepository.deleteById(id);
     }
 }

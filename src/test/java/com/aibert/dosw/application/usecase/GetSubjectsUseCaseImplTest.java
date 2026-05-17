@@ -1,6 +1,7 @@
 package com.aibert.dosw.application.usecase;
 
 import com.aibert.dosw.domain.exceptions.SubjectNotFoundException;
+import com.aibert.dosw.domain.exceptions.SubjectNotOwnedException;
 import com.aibert.dosw.domain.model.Subject;
 import com.aibert.dosw.domain.ports.out.SubjectRepositoryPort;
 import org.junit.jupiter.api.BeforeEach;
@@ -211,6 +212,50 @@ class GetSubjectsUseCaseImplTest {
         assertNotNull(exception.getMessage());
         assertTrue(exception.getMessage().contains(String.valueOf(testId)));
         verify(subjectRepository, times(1)).findById(testId);
+    }
+
+    @Test
+    @DisplayName("Should get subject by ID and student ID successfully")
+    void shouldGetSubjectByIdAndStudentIdSuccessfully() {
+        // Given
+        when(subjectRepository.findByIdAndStudentId(1L, "student123")).thenReturn(Optional.of(testSubject1));
+
+        // When
+        Subject result = getSubjectsUseCase.getByIdAndStudent(1L, "student123");
+
+        // Then
+        assertNotNull(result);
+        assertEquals(1L, result.getId());
+        assertEquals("Mathematics", result.getSubjectName());
+        verify(subjectRepository, times(1)).findByIdAndStudentId(1L, "student123");
+    }
+
+    @Test
+    @DisplayName("Should throw SubjectNotOwnedException when subject does not belong to student")
+    void getByIdAndStudent_WrongStudent_ShouldThrowException() {
+        // Given
+        when(subjectRepository.findByIdAndStudentId(1L, "otherStudent")).thenReturn(Optional.empty());
+
+        // When & Then
+        SubjectNotOwnedException exception = assertThrows(
+            SubjectNotOwnedException.class,
+            () -> getSubjectsUseCase.getByIdAndStudent(1L, "otherStudent")
+        );
+
+        assertTrue(exception.getMessage().contains("1"));
+        verify(subjectRepository, times(1)).findByIdAndStudentId(1L, "otherStudent");
+    }
+
+    @Test
+    @DisplayName("Should throw SubjectNotOwnedException when subject does not exist")
+    void getByIdAndStudent_SubjectNotFound_ShouldThrowException() {
+        // Given
+        when(subjectRepository.findByIdAndStudentId(999L, "student123")).thenReturn(Optional.empty());
+
+        // When & Then
+        assertThrows(SubjectNotOwnedException.class,
+                () -> getSubjectsUseCase.getByIdAndStudent(999L, "student123"));
+        verify(subjectRepository, times(1)).findByIdAndStudentId(999L, "student123");
     }
 
     @Test

@@ -54,6 +54,12 @@ public class SubjectRepositoryAdapter implements SubjectRepositoryPort {
     }
 
     @Override
+    public Optional<Subject> findByIdAndStudentId(Long id, String studentId) {
+        return subjectJpaRepository.findByIdAndStudentId(id, studentId)
+                .map(persistenceMapper::toDomain);
+    }
+
+    @Override
     public void deleteById(Long id) {
         subjectJpaRepository.deleteById(id);
     }

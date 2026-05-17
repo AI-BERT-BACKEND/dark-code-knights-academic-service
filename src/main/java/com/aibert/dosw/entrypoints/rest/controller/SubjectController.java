@@ -89,9 +89,11 @@ public class SubjectController {
     })
     @GetMapping("/{subjectId}")
     public ResponseEntity<ApiResponse<SubjectResponseDTO>> getById(
+            @Parameter(description = "ID del estudiante autenticado", required = true)
+            @RequestHeader("X-Student-Id") String studentId,
             @Parameter(description = "ID de la materia", required = true)
             @PathVariable Long subjectId) {
-        Subject subject = getSubjectsUseCase.getById(subjectId);
+        Subject subject = getSubjectsUseCase.getByIdAndStudent(subjectId, studentId);
         return ResponseEntity.ok(ApiResponse.ok(subjectMapper.toResponseDTO(subject)));
     }
 
@@ -127,9 +129,11 @@ public class SubjectController {
     })
     @DeleteMapping("/{subjectId}")
     public ResponseEntity<Void> delete(
+            @Parameter(description = "ID del estudiante autenticado", required = true)
+            @RequestHeader("X-Student-Id") String studentId,
             @Parameter(description = "ID de la materia", required = true)
             @PathVariable Long subjectId) {
-        deleteSubjectUseCase.delete(subjectId);
+        deleteSubjectUseCase.delete(subjectId, studentId);
         return ResponseEntity.noContent().build();
     }
 }

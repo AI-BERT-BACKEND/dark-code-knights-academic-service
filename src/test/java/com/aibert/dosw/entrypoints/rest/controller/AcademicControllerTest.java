@@ -3,10 +3,12 @@ package com.aibert.dosw.entrypoints.rest.controller;
 import com.aibert.dosw.application.dto.response.AcademicSummaryDTO;
 import com.aibert.dosw.application.dto.response.AveragesResponseDTO;
 import com.aibert.dosw.application.mapper.SubjectMapper;
+import com.aibert.dosw.application.service.AverageCalculator;
 import com.aibert.dosw.domain.model.EvaluationCut;
 import com.aibert.dosw.domain.model.Subject;
 import com.aibert.dosw.domain.ports.in.GetAcademicSummaryUseCase;
 import com.aibert.dosw.entrypoints.ApiResponse;
+import org.mockito.Mockito;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,6 +33,9 @@ class AcademicControllerTest {
 
     @Mock
     private SubjectMapper subjectMapper;
+
+    @Mock
+    private AverageCalculator averageCalculator;
 
     @InjectMocks
     private AcademicController academicController;
@@ -78,6 +83,17 @@ class AcademicControllerTest {
             .teacherName("Dr. Johnson")
             .evaluationCuts(List.of())
             .build();
+
+        // Stub averageCalculator to apply the real formula without injected dependencies
+        Mockito.lenient().when(averageCalculator.calculateOverallAverage(Mockito.any())).thenAnswer(invocation -> {
+            java.util.List<EvaluationCut> cuts = invocation.getArgument(0);
+            boolean anyGraded = cuts.stream().anyMatch(c -> c.getGrade() != null);
+            if (!anyGraded) return null;
+            return cuts.stream()
+                    .filter(c -> c.getGrade() != null)
+                    .mapToDouble(c -> c.getGrade() * c.getCutPercentage())
+                    .sum() / 100.0;
+        });
     }
 
     @Test

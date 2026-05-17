@@ -1,6 +1,6 @@
 package com.aibert.dosw.application.usecase;
 
-import com.aibert.dosw.domain.exceptions.SubjectNotFoundException;
+import com.aibert.dosw.domain.exceptions.SubjectNotOwnedException;
 import com.aibert.dosw.domain.model.Subject;
 import com.aibert.dosw.domain.ports.out.SubjectRepositoryPort;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,69 +42,71 @@ class DeleteSubjectUseCaseImplTest {
             .build();
     }
 
+    private static final String STUDENT_ID = "student123";
+
     @Test
-    @DisplayName("Should delete subject successfully when subject exists")
+    @DisplayName("Should delete subject successfully when subject exists and belongs to student")
     void shouldDeleteSubjectSuccessfully() {
         // Given
-        when(subjectRepository.findById(1L)).thenReturn(Optional.of(existingSubject));
+        when(subjectRepository.findByIdAndStudentId(1L, STUDENT_ID)).thenReturn(Optional.of(existingSubject));
         doNothing().when(subjectRepository).deleteById(1L);
 
         // When
-        assertDoesNotThrow(() -> deleteSubjectUseCase.delete(1L));
+        assertDoesNotThrow(() -> deleteSubjectUseCase.delete(1L, STUDENT_ID));
 
         // Then
-        verify(subjectRepository, times(1)).findById(1L);
+        verify(subjectRepository, times(1)).findByIdAndStudentId(1L, STUDENT_ID);
         verify(subjectRepository, times(1)).deleteById(1L);
     }
 
     @Test
-    @DisplayName("Should throw SubjectNotFoundException when subject not found")
-    void shouldThrowSubjectNotFoundExceptionWhenSubjectNotFound() {
+    @DisplayName("Should throw SubjectNotOwnedException when subject not found or wrong student")
+    void shouldThrowSubjectNotOwnedExceptionWhenSubjectNotFound() {
         // Given
-        when(subjectRepository.findById(1L)).thenReturn(Optional.empty());
+        when(subjectRepository.findByIdAndStudentId(1L, STUDENT_ID)).thenReturn(Optional.empty());
 
         // When & Then
-        SubjectNotFoundException exception = assertThrows(
-            SubjectNotFoundException.class,
-            () -> deleteSubjectUseCase.delete(1L)
+        SubjectNotOwnedException exception = assertThrows(
+            SubjectNotOwnedException.class,
+            () -> deleteSubjectUseCase.delete(1L, STUDENT_ID)
         );
-        
+
         assertTrue(exception.getMessage().contains("1"));
-        verify(subjectRepository, times(1)).findById(1L);
+        verify(subjectRepository, times(1)).findByIdAndStudentId(1L, STUDENT_ID);
         verify(subjectRepository, never()).deleteById(any());
     }
 
     @Test
-    @DisplayName("Should not call deleteById when subject not found")
-    void shouldNotCallDeleteByIdWhenSubjectNotFound() {
+    @DisplayName("Should not call deleteById when subject not owned")
+    void shouldNotCallDeleteByIdWhenSubjectNotOwned() {
         // Given
-        when(subjectRepository.findById(1L)).thenReturn(Optional.empty());
+        when(subjectRepository.findByIdAndStudentId(1L, STUDENT_ID)).thenReturn(Optional.empty());
 
         // When & Then
-        assertThrows(SubjectNotFoundException.class, () -> deleteSubjectUseCase.delete(1L));
+        assertThrows(SubjectNotOwnedException.class, () -> deleteSubjectUseCase.delete(1L, STUDENT_ID));
 
         // Then
-        verify(subjectRepository, times(1)).findById(1L);
+        verify(subjectRepository, times(1)).findByIdAndStudentId(1L, STUDENT_ID);
         verify(subjectRepository, never()).deleteById(any());
     }
 
     @Test
-    @DisplayName("Should call deleteById exactly once when subject exists")
+    @DisplayName("Should call deleteById exactly once when subject exists and is owned")
     void shouldCallDeleteByIdExactlyOnceWhenSubjectExists() {
         // Given
-        when(subjectRepository.findById(1L)).thenReturn(Optional.of(existingSubject));
+        when(subjectRepository.findByIdAndStudentId(1L, STUDENT_ID)).thenReturn(Optional.of(existingSubject));
         doNothing().when(subjectRepository).deleteById(1L);
 
         // When
-        deleteSubjectUseCase.delete(1L);
+        deleteSubjectUseCase.delete(1L, STUDENT_ID);
 
         // Then
         verify(subjectRepository, times(1)).deleteById(1L);
-        verify(subjectRepository, times(1)).findById(1L);
+        verify(subjectRepository, times(1)).findByIdAndStudentId(1L, STUDENT_ID);
     }
 
     @Test
-    @DisplayName("Should delete subject with any valid ID")
+    @DisplayName("Should delete subject with any valid ID when owned by student")
     void shouldDeleteSubjectWithAnyValidId() {
         // Given
         Long testId = 999L;
@@ -117,14 +119,14 @@ class DeleteSubjectUseCaseImplTest {
             existingSubject.getSemester(),
             existingSubject.getEvaluationCuts()
         );
-        when(subjectRepository.findById(testId)).thenReturn(Optional.of(testSubject));
+        when(subjectRepository.findByIdAndStudentId(testId, STUDENT_ID)).thenReturn(Optional.of(testSubject));
         doNothing().when(subjectRepository).deleteById(testId);
 
         // When
-        assertDoesNotThrow(() -> deleteSubjectUseCase.delete(testId));
+        assertDoesNotThrow(() -> deleteSubjectUseCase.delete(testId, STUDENT_ID));
 
         // Then
-        verify(subjectRepository, times(1)).findById(testId);
+        verify(subjectRepository, times(1)).findByIdAndStudentId(testId, STUDENT_ID);
         verify(subjectRepository, times(1)).deleteById(testId);
     }
 
@@ -132,32 +134,44 @@ class DeleteSubjectUseCaseImplTest {
     @DisplayName("Should not throw any exception when deletion is successful")
     void shouldNotThrowAnyExceptionWhenDeletionIsSuccessful() {
         // Given
-        when(subjectRepository.findById(1L)).thenReturn(Optional.of(existingSubject));
+        when(subjectRepository.findByIdAndStudentId(1L, STUDENT_ID)).thenReturn(Optional.of(existingSubject));
         doNothing().when(subjectRepository).deleteById(1L);
 
         // When & Then
-        assertDoesNotThrow(() -> deleteSubjectUseCase.delete(1L));
-        verify(subjectRepository, times(1)).findById(1L);
+        assertDoesNotThrow(() -> deleteSubjectUseCase.delete(1L, STUDENT_ID));
+        verify(subjectRepository, times(1)).findByIdAndStudentId(1L, STUDENT_ID);
         verify(subjectRepository, times(1)).deleteById(1L);
     }
 
     @Test
-    @DisplayName("Should throw SubjectNotFoundException with correct message")
-    void shouldThrowSubjectNotFoundExceptionWithCorrectMessage() {
+    @DisplayName("Should throw SubjectNotOwnedException with correct message")
+    void shouldThrowSubjectNotOwnedExceptionWithCorrectMessage() {
         // Given
         Long testId = 42L;
-        when(subjectRepository.findById(testId)).thenReturn(Optional.empty());
+        when(subjectRepository.findByIdAndStudentId(testId, STUDENT_ID)).thenReturn(Optional.empty());
 
         // When
-        SubjectNotFoundException exception = assertThrows(
-            SubjectNotFoundException.class,
-            () -> deleteSubjectUseCase.delete(testId)
+        SubjectNotOwnedException exception = assertThrows(
+            SubjectNotOwnedException.class,
+            () -> deleteSubjectUseCase.delete(testId, STUDENT_ID)
         );
 
         // Then
         assertNotNull(exception.getMessage());
         assertTrue(exception.getMessage().contains(String.valueOf(testId)));
-        verify(subjectRepository, times(1)).findById(testId);
+        verify(subjectRepository, times(1)).findByIdAndStudentId(testId, STUDENT_ID);
+        verify(subjectRepository, never()).deleteById(any());
+    }
+
+    @Test
+    @DisplayName("Should throw SubjectNotOwnedException when student ID does not match")
+    void shouldThrowSubjectNotOwnedExceptionWhenStudentIdDoesNotMatch() {
+        // Given
+        when(subjectRepository.findByIdAndStudentId(1L, "otherStudent")).thenReturn(Optional.empty());
+
+        // When & Then
+        assertThrows(SubjectNotOwnedException.class,
+                () -> deleteSubjectUseCase.delete(1L, "otherStudent"));
         verify(subjectRepository, never()).deleteById(any());
     }
 }
