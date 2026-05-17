@@ -11,10 +11,13 @@ import com.aibert.dosw.domain.exceptions.SubjectNotFoundException;
 import com.aibert.dosw.entrypoints.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.stream.Collectors;
 
@@ -92,6 +95,47 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ApiResponse.error(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
+    }
+
+    /**
+     * Maneja body JSON malformado o tipo de contenido incorrecto.
+     * Ejemplo: enviar "{ invalid json }" como body.
+     */
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiResponse<Void>> handleMessageNotReadable(HttpMessageNotReadableException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error(
+                        "El cuerpo de la petición tiene formato JSON inválido o está vacío",
+                        HttpStatus.BAD_REQUEST.value()));
+    }
+
+    /**
+     * Maneja path variables con tipo incorrecto.
+     * Ejemplo: GET /api/v1/subjects/abc (donde 'abc' no es un Long válido).
+     */
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ApiResponse<Void>> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+        String mensaje = String.format(
+                "El parámetro '%s' recibió el valor '%s' que no es del tipo esperado",
+                ex.getName(), ex.getValue());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error(mensaje, HttpStatus.BAD_REQUEST.value()));
+    }
+
+    /**
+     * Maneja headers requeridos ausentes.
+     * Ejemplo: llamar a POST /api/v1/subjects sin enviar X-Student-Id.
+     */
+    @ExceptionHandler(MissingRequestHeaderException.class)
+    public ResponseEntity<ApiResponse<Void>> handleMissingHeader(MissingRequestHeaderException ex) {
+        String mensaje = String.format(
+                "El header requerido '%s' no fue enviado en la petición",
+                ex.getHeaderName());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error(mensaje, HttpStatus.BAD_REQUEST.value()));
     }
 
     @ExceptionHandler(Exception.class)
