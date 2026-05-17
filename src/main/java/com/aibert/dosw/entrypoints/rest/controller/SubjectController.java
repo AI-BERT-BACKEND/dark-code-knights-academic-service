@@ -10,6 +10,10 @@ import com.aibert.dosw.domain.ports.in.GetSubjectsUseCase;
 import com.aibert.dosw.domain.ports.in.UpdateSubjectUseCase;
 import com.aibert.dosw.entrypoints.ApiResponse;
 import com.aibert.dosw.entrypoints.rest.mapper.SubjectEntrypointMapper;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Tag(name = "Materias", description = "Gestión de materias académicas del estudiante (R06)")
 @RestController
 @RequestMapping("/api/v1/subjects")
 @RequiredArgsConstructor
@@ -38,8 +43,18 @@ public class SubjectController {
     private final SubjectEntrypointMapper entrypointMapper;
     private final SubjectMapper subjectMapper;
 
+    @Operation(
+            summary = "Crear materia",
+            description = "Crea una nueva materia con sus cortes de evaluación. La suma de cutPercentage debe ser exactamente 100."
+    )
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "Materia creada exitosamente"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Datos inválidos o suma de porcentajes incorrecta"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "409", description = "Ya existe una materia con ese nombre en el mismo semestre")
+    })
     @PostMapping
     public ResponseEntity<ApiResponse<SubjectResponseDTO>> create(
+            @Parameter(description = "ID del estudiante autenticado", required = true)
             @RequestHeader("X-Student-Id") String studentId,
             @Valid @RequestBody SubjectRequestDTO request) {
         Subject subject = entrypointMapper.toDomain(request, studentId);
@@ -49,23 +64,52 @@ public class SubjectController {
                 .body(ApiResponse.ok(subjectMapper.toResponseDTO(created)));
     }
 
+    @Operation(
+            summary = "Listar materias del estudiante",
+            description = "Retorna todas las materias registradas por el estudiante autenticado."
+    )
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Lista de materias (puede ser vacía)")
+    })
     @GetMapping
     public ResponseEntity<ApiResponse<List<SubjectResponseDTO>>> getAll(
+            @Parameter(description = "ID del estudiante autenticado", required = true)
             @RequestHeader("X-Student-Id") String studentId) {
         List<Subject> subjects = getSubjectsUseCase.getAllByStudent(studentId);
         return ResponseEntity.ok(ApiResponse.ok(subjectMapper.toResponseDTOList(subjects)));
     }
 
+    @Operation(
+            summary = "Obtener materia por ID",
+            description = "Retorna el detalle completo de una materia, incluyendo sus cortes y promedios."
+    )
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Materia encontrada"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Materia no encontrada")
+    })
     @GetMapping("/{subjectId}")
     public ResponseEntity<ApiResponse<SubjectResponseDTO>> getById(
+            @Parameter(description = "ID de la materia", required = true)
             @PathVariable Long subjectId) {
         Subject subject = getSubjectsUseCase.getById(subjectId);
         return ResponseEntity.ok(ApiResponse.ok(subjectMapper.toResponseDTO(subject)));
     }
 
+    @Operation(
+            summary = "Actualizar materia",
+            description = "Actualiza los datos de una materia existente. Reemplaza también sus cortes de evaluación."
+    )
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Materia actualizada exitosamente"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Datos inválidos o porcentajes incorrectos"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Materia no encontrada"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "409", description = "Nombre de materia duplicado en el semestre")
+    })
     @PutMapping("/{subjectId}")
     public ResponseEntity<ApiResponse<SubjectResponseDTO>> update(
+            @Parameter(description = "ID de la materia", required = true)
             @PathVariable Long subjectId,
+            @Parameter(description = "ID del estudiante autenticado", required = true)
             @RequestHeader("X-Student-Id") String studentId,
             @Valid @RequestBody SubjectRequestDTO request) {
         Subject subject = entrypointMapper.toDomain(request, studentId);
@@ -73,8 +117,18 @@ public class SubjectController {
         return ResponseEntity.ok(ApiResponse.ok(subjectMapper.toResponseDTO(updated)));
     }
 
+    @Operation(
+            summary = "Eliminar materia",
+            description = "Elimina la materia junto con todos sus cortes y notas asociados."
+    )
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Materia eliminada exitosamente"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Materia no encontrada")
+    })
     @DeleteMapping("/{subjectId}")
-    public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long subjectId) {
+    public ResponseEntity<ApiResponse<Void>> delete(
+            @Parameter(description = "ID de la materia", required = true)
+            @PathVariable Long subjectId) {
         deleteSubjectUseCase.delete(subjectId);
         return ResponseEntity.ok(ApiResponse.ok(null, "Materia eliminada exitosamente"));
     }
