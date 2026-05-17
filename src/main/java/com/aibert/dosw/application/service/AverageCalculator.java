@@ -46,7 +46,7 @@ public class AverageCalculator {
         double totalPercentage = grades.stream().mapToDouble(Grade::getPercentage).sum();
         Double average = totalPercentage == 0 ? null
                 : grades.stream().mapToDouble(g -> g.getGradeValue() * g.getPercentage()).sum()
-                  / totalPercentage;
+                  / 100.0;
 
         List<EvaluationCut> updatedCuts = subject.getEvaluationCuts().stream()
                 .map(cut -> cut.getId().equals(cutId)

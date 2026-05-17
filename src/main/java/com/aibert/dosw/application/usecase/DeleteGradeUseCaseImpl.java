@@ -20,7 +20,7 @@ public class DeleteGradeUseCaseImpl implements DeleteGradeUseCase {
     private final AverageCalculator averageCalculator;
 
     @Override
-    public void delete(Long subjectId, Long cutId, Long gradeId) {
+    public Double delete(Long subjectId, Long cutId, Long gradeId) {
         Subject subject = subjectRepository.findById(subjectId)
                 .orElseThrow(() -> new SubjectNotFoundException(subjectId));
 
@@ -35,6 +35,11 @@ public class DeleteGradeUseCaseImpl implements DeleteGradeUseCase {
 
         gradeRepository.deleteById(gradeId);
         averageCalculator.recalculateCutAverage(subject, cutId);
+
+        Subject updated = subjectRepository.findById(subjectId)
+                .orElseThrow(() -> new SubjectNotFoundException(subjectId));
+
+        return averageCalculator.calculateOverallAverage(updated.getEvaluationCuts());
     }
 
     private void resolveCut(Subject subject, Long cutId) {
