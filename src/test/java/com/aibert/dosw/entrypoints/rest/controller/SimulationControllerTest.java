@@ -1,7 +1,9 @@
 package com.aibert.dosw.entrypoints.rest.controller;
 
 import com.aibert.dosw.application.dto.request.SimulationRequestDTO;
+import com.aibert.dosw.application.dto.response.PendingCutSimulationDTO;
 import com.aibert.dosw.application.dto.response.SimulationResponseDTO;
+import com.aibert.dosw.domain.model.EvaluationCut;
 import com.aibert.dosw.domain.model.SimulationResult;
 import com.aibert.dosw.domain.ports.in.SimulateTargetGradeUseCase;
 import com.aibert.dosw.entrypoints.ApiResponse;
@@ -15,6 +17,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.http.ResponseEntity;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -45,13 +49,18 @@ class SimulationControllerTest {
     @DisplayName("Should simulate successfully with achievable grade")
     void shouldSimulateSuccessfullyWithAchievableGrade() {
         // Given
+        List<EvaluationCut> pendingCuts = List.of(
+            EvaluationCut.builder().id(2L).cutName("Corte 2").cutPercentage(40.0).grade(null).build(),
+            EvaluationCut.builder().id(3L).cutName("Corte 3").cutPercentage(30.0).grade(null).build()
+        );
         SimulationResult result = SimulationResult.builder()
             .targetGrade(4.0)
             .requiredGrade(3.5)
             .achievable(true)
             .pendingPercentage(70.0)
+            .pendingCuts(pendingCuts)
             .build();
-        
+
         when(simulateTargetGradeUseCase.simulate(testSubjectId, 4.0)).thenReturn(result);
 
         // When
@@ -73,9 +82,16 @@ class SimulationControllerTest {
         assertEquals(3.5, responseData.getRequiredGrade());
         assertTrue(responseData.isAchievable());
         assertEquals(70.0, responseData.getPendingCutsPercentage());
-        assertEquals("Para alcanzar 4,0 necesitas obtener 3,50 o más en los cortes pendientes (70% restante).", 
+        assertEquals("Para alcanzar 4,0 necesitas obtener 3,50 o más en los cortes pendientes (70% restante).",
                      responseData.getMessage());
-        
+        assertNotNull(responseData.getPendingCuts());
+        assertEquals(2, responseData.getPendingCuts().size());
+        assertEquals("Corte 2", responseData.getPendingCuts().get(0).getCutName());
+        assertEquals(40.0, responseData.getPendingCuts().get(0).getCutPercentage());
+        assertEquals(3.5, responseData.getPendingCuts().get(0).getRequiredGrade());
+        assertEquals("Corte 3", responseData.getPendingCuts().get(1).getCutName());
+        assertEquals(3.5, responseData.getPendingCuts().get(1).getRequiredGrade());
+
         verify(simulateTargetGradeUseCase, times(1)).simulate(testSubjectId, 4.0);
     }
 
@@ -83,11 +99,15 @@ class SimulationControllerTest {
     @DisplayName("Should simulate successfully with unachievable grade")
     void shouldSimulateSuccessfullyWithUnachievableGrade() {
         // Given
+        List<EvaluationCut> pendingCuts = List.of(
+            EvaluationCut.builder().id(2L).cutName("Corte Final").cutPercentage(50.0).grade(null).build()
+        );
         SimulationResult result = SimulationResult.builder()
             .targetGrade(5.0)
             .requiredGrade(6.0)
             .achievable(false)
             .pendingPercentage(50.0)
+            .pendingCuts(pendingCuts)
             .build();
         
         when(simulateTargetGradeUseCase.simulate(testSubjectId, 5.0)).thenReturn(result);
@@ -113,9 +133,13 @@ class SimulationControllerTest {
         assertEquals(6.0, responseData.getRequiredGrade());
         assertFalse(responseData.isAchievable());
         assertEquals(50.0, responseData.getPendingCutsPercentage());
-        assertEquals("No es posible alcanzar 5,0. La nota requerida (6,00) supera el máximo permitido (5.0).", 
+        assertEquals("No es posible alcanzar 5,0. La nota requerida (6,00) supera el máximo permitido (5.0).",
                      responseData.getMessage());
-        
+        assertNotNull(responseData.getPendingCuts());
+        assertEquals(1, responseData.getPendingCuts().size());
+        assertEquals("Corte Final", responseData.getPendingCuts().get(0).getCutName());
+        assertEquals(6.0, responseData.getPendingCuts().get(0).getRequiredGrade());
+
         verify(simulateTargetGradeUseCase, times(1)).simulate(testSubjectId, 5.0);
     }
 
@@ -128,6 +152,7 @@ class SimulationControllerTest {
             .requiredGrade(0.0)
             .achievable(true)
             .pendingPercentage(30.0)
+            .pendingCuts(List.of(EvaluationCut.builder().id(3L).cutName("Corte 3").cutPercentage(30.0).grade(null).build()))
             .build();
         
         when(simulateTargetGradeUseCase.simulate(testSubjectId, 3.0)).thenReturn(result);
@@ -172,8 +197,9 @@ class SimulationControllerTest {
             .requiredGrade(0.0)
             .achievable(true)
             .pendingPercentage(100.0)
+            .pendingCuts(List.of(EvaluationCut.builder().id(1L).cutName("Corte 1").cutPercentage(100.0).grade(null).build()))
             .build();
-        
+
         when(simulateTargetGradeUseCase.simulate(testSubjectId, 0.0)).thenReturn(result);
 
         // When
@@ -209,8 +235,9 @@ class SimulationControllerTest {
             .requiredGrade(5.0)
             .achievable(true)
             .pendingPercentage(25.0)
+            .pendingCuts(List.of(EvaluationCut.builder().id(4L).cutName("Corte 4").cutPercentage(25.0).grade(null).build()))
             .build();
-        
+
         when(simulateTargetGradeUseCase.simulate(testSubjectId, 5.0)).thenReturn(result);
 
         // When
@@ -246,8 +273,9 @@ class SimulationControllerTest {
             .requiredGrade(4.25)
             .achievable(true)
             .pendingPercentage(45.5)
+            .pendingCuts(List.of(EvaluationCut.builder().id(2L).cutName("Corte 2").cutPercentage(45.5).grade(null).build()))
             .build();
-        
+
         when(simulateTargetGradeUseCase.simulate(testSubjectId, 3.7)).thenReturn(result);
 
         // When
@@ -280,8 +308,9 @@ class SimulationControllerTest {
             .requiredGrade(3.5)
             .achievable(true)
             .pendingPercentage(70.0)
+            .pendingCuts(List.of(EvaluationCut.builder().id(2L).cutName("Corte 2").cutPercentage(70.0).grade(null).build()))
             .build();
-        
+
         when(simulateTargetGradeUseCase.simulate(differentSubjectId, 4.0)).thenReturn(result);
 
         // When
@@ -304,12 +333,13 @@ class SimulationControllerTest {
             .requiredGrade(3.5)
             .achievable(true)
             .pendingPercentage(70.0)
+            .pendingCuts(List.of(EvaluationCut.builder().id(2L).cutName("Corte 2").cutPercentage(70.0).grade(null).build()))
             .build();
-        
+
         when(simulateTargetGradeUseCase.simulate(testSubjectId, 4.0)).thenReturn(result);
 
         // When
-        ResponseEntity<ApiResponse<SimulationResponseDTO>> response = 
+        ResponseEntity<ApiResponse<SimulationResponseDTO>> response =
             simulationController.simulate(testSubjectId, testRequest);
 
         // Then
@@ -339,6 +369,7 @@ class SimulationControllerTest {
             .requiredGrade(0.01)
             .achievable(true)
             .pendingPercentage(20.0)
+            .pendingCuts(List.of(EvaluationCut.builder().id(2L).cutName("Corte 2").cutPercentage(20.0).grade(null).build()))
             .build();
         
         when(simulateTargetGradeUseCase.simulate(testSubjectId, 1.0)).thenReturn(result);
@@ -368,6 +399,7 @@ class SimulationControllerTest {
             .requiredGrade(10.5)
             .achievable(false)
             .pendingPercentage(60.0)
+            .pendingCuts(List.of(EvaluationCut.builder().id(2L).cutName("Corte 2").cutPercentage(60.0).grade(null).build()))
             .build();
         
         when(simulateTargetGradeUseCase.simulate(testSubjectId, 4.5)).thenReturn(unachievableResult);
@@ -387,6 +419,7 @@ class SimulationControllerTest {
             .requiredGrade(0.0)
             .achievable(true)
             .pendingPercentage(15.0)
+            .pendingCuts(List.of(EvaluationCut.builder().id(3L).cutName("Corte 3").cutPercentage(15.0).grade(null).build()))
             .build();
         
         when(simulateTargetGradeUseCase.simulate(testSubjectId, 2.0)).thenReturn(zeroResult);

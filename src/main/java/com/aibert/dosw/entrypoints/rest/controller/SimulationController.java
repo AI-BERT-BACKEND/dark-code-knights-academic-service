@@ -1,6 +1,7 @@
 package com.aibert.dosw.entrypoints.rest.controller;
 
 import com.aibert.dosw.application.dto.request.SimulationRequestDTO;
+import com.aibert.dosw.application.dto.response.PendingCutSimulationDTO;
 import com.aibert.dosw.application.dto.response.SimulationResponseDTO;
 import com.aibert.dosw.domain.model.SimulationResult;
 import com.aibert.dosw.domain.ports.in.SimulateTargetGradeUseCase;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Locale;
 
 @Tag(name = "Simulation", description = "Target grade simulation for pending evaluation cuts (R10)")
@@ -62,12 +64,22 @@ public class SimulationController {
                     result.getTargetGrade(), result.getRequiredGrade(), result.getPendingPercentage());
         }
 
+        List<PendingCutSimulationDTO> pendingCutDTOs = result.getPendingCuts().stream()
+                .map(cut -> PendingCutSimulationDTO.builder()
+                        .cutId(cut.getId())
+                        .cutName(cut.getCutName())
+                        .cutPercentage(cut.getCutPercentage())
+                        .requiredGrade(result.getRequiredGrade())
+                        .build())
+                .toList();
+
         SimulationResponseDTO response = SimulationResponseDTO.builder()
                 .targetGrade(result.getTargetGrade())
                 .requiredGrade(result.getRequiredGrade())
                 .achievable(result.isAchievable())
                 .pendingCutsPercentage(result.getPendingPercentage())
                 .message(message)
+                .pendingCuts(pendingCutDTOs)
                 .build();
 
         return ResponseEntity.ok(ApiResponse.ok(response));

@@ -127,6 +127,11 @@ class SimulationIntegrationTest {
                 .andExpect(jsonPath("$.data.requiredGrade").value(3.625))
                 .andExpect(jsonPath("$.data.achievable").value(true))
                 .andExpect(jsonPath("$.data.pendingCutsPercentage").value(40.0))
+                .andExpect(jsonPath("$.data.pendingCuts").isArray())
+                .andExpect(jsonPath("$.data.pendingCuts", hasSize(1)))
+                .andExpect(jsonPath("$.data.pendingCuts[0].cutName").value("Corte 3"))
+                .andExpect(jsonPath("$.data.pendingCuts[0].cutPercentage").value(40.0))
+                .andExpect(jsonPath("$.data.pendingCuts[0].requiredGrade").value(3.625))
                 .andExpect(jsonPath("$.message").value("ok"));
     }
 
@@ -148,6 +153,9 @@ class SimulationIntegrationTest {
                 .andExpect(jsonPath("$.data.requiredGrade").value(6.125))
                 .andExpect(jsonPath("$.data.achievable").value(false))
                 .andExpect(jsonPath("$.data.pendingCutsPercentage").value(40.0))
+                .andExpect(jsonPath("$.data.pendingCuts").isArray())
+                .andExpect(jsonPath("$.data.pendingCuts", hasSize(1)))
+                .andExpect(jsonPath("$.data.pendingCuts[0].requiredGrade").value(6.125))
                 .andExpect(jsonPath("$.message").value("ok"));
     }
 
@@ -169,6 +177,9 @@ class SimulationIntegrationTest {
                 .andExpect(jsonPath("$.data.requiredGrade").value(0.0))
                 .andExpect(jsonPath("$.data.achievable").value(true))
                 .andExpect(jsonPath("$.data.pendingCutsPercentage").value(40.0))
+                .andExpect(jsonPath("$.data.pendingCuts").isArray())
+                .andExpect(jsonPath("$.data.pendingCuts", hasSize(1)))
+                .andExpect(jsonPath("$.data.pendingCuts[0].requiredGrade").value(0.0))
                 .andExpect(jsonPath("$.message").value("ok"));
     }
 
@@ -307,7 +318,9 @@ class SimulationIntegrationTest {
                 .andExpect(jsonPath("$.data.targetGrade").value(3.5))
                 .andExpect(jsonPath("$.data.requiredGrade").value(3.5))
                 .andExpect(jsonPath("$.data.achievable").value(true))
-                .andExpect(jsonPath("$.data.pendingCutsPercentage").value(100.0));
+                .andExpect(jsonPath("$.data.pendingCutsPercentage").value(100.0))
+                .andExpect(jsonPath("$.data.pendingCuts").isArray())
+                .andExpect(jsonPath("$.data.pendingCuts", hasSize(2)));
     }
 
     @Test
@@ -362,7 +375,10 @@ class SimulationIntegrationTest {
                 .andExpect(jsonPath("$.data.targetGrade").value(3.5))
                 .andExpect(jsonPath("$.data.requiredGrade").value(2.75))
                 .andExpect(jsonPath("$.data.achievable").value(true))
-                .andExpect(jsonPath("$.data.pendingCutsPercentage").value(40.0));
+                .andExpect(jsonPath("$.data.pendingCutsPercentage").value(40.0))
+                .andExpect(jsonPath("$.data.pendingCuts").isArray())
+                .andExpect(jsonPath("$.data.pendingCuts", hasSize(1)))
+                .andExpect(jsonPath("$.data.pendingCuts[0].requiredGrade").value(2.75));
     }
 
     @Test

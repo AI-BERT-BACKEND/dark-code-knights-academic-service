@@ -46,7 +46,7 @@ class SimulationResponseDTOTest {
     @DisplayName("Should create with all-args constructor")
     void shouldCreateWithAllArgsConstructor() {
         // When
-        SimulationResponseDTO dto = new SimulationResponseDTO(4.0, 3.5, true, 70.0, "Test message");
+        SimulationResponseDTO dto = new SimulationResponseDTO(4.0, 3.5, true, 70.0, "Test message", null);
 
         // Then
         assertThat(dto.getTargetGrade()).isEqualTo(4.0);
@@ -54,6 +54,7 @@ class SimulationResponseDTOTest {
         assertThat(dto.isAchievable()).isTrue();
         assertThat(dto.getPendingCutsPercentage()).isEqualTo(70.0);
         assertThat(dto.getMessage()).isEqualTo("Test message");
+        assertThat(dto.getPendingCuts()).isNull();
     }
 
     @Test
