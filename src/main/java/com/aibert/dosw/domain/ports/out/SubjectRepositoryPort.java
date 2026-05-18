@@ -18,6 +18,4 @@ public interface SubjectRepositoryPort {
     Optional<Subject> findByIdAndStudentId(Long id, String studentId);
 
     void deleteById(Long id);
-
-    List<Subject> findByStudentIdAndSemester(String studentId, String semester);
 }

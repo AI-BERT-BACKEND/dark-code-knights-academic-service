@@ -1,17 +1,17 @@
-package com.aibert.dosw.application.dto.response;
+package com.aibert.dosw.domain.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Data
+@Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ScheduleAvailabilityResponseDTO {
+public class ScheduleAvailability {
 
-    private Long configId;
+    private Long id;
     private String studentId;
     private Double freeTimeHours;
     private Double restHours;

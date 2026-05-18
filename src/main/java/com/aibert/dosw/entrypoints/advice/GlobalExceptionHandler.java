@@ -4,6 +4,8 @@ import com.aibert.dosw.domain.exceptions.CutCapacityExceededException;
 import com.aibert.dosw.domain.exceptions.DuplicateSubjectException;
 import com.aibert.dosw.domain.exceptions.GoalNotFoundException;
 import com.aibert.dosw.domain.exceptions.GradeNotFoundException;
+import com.aibert.dosw.domain.exceptions.ScheduleAvailabilityNotFoundException;
+import com.aibert.dosw.domain.exceptions.ScheduleHoursExceedDayException;
 import com.aibert.dosw.domain.exceptions.StudyPreferencesNotFoundException;
 import com.aibert.dosw.domain.exceptions.EvaluationStructureLockedException;
 import com.aibert.dosw.domain.exceptions.GradeOutOfRangeException;
@@ -36,6 +38,21 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ApiResponse.error(errors, HttpStatus.BAD_REQUEST.value()));
+    }
+
+    @ExceptionHandler(ScheduleAvailabilityNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleScheduleAvailabilityNotFound(
+            ScheduleAvailabilityNotFoundException ex) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ApiResponse.error(ex.getMessage(), HttpStatus.NOT_FOUND.value()));
+    }
+
+    @ExceptionHandler(ScheduleHoursExceedDayException.class)
+    public ResponseEntity<ApiResponse<Void>> handleScheduleHoursExceedDay(ScheduleHoursExceedDayException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
     }
 
     @ExceptionHandler(GoalNotFoundException.class)
@@ -166,7 +183,6 @@ public class GlobalExceptionHandler {
 
     /**
      * Maneja parámetros de query requeridos ausentes.
-     * Ejemplo: GET /api/v1/academic/schedule-conflicts sin enviar ?semester=...
      */
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<ApiResponse<Void>> handleMissingRequestParam(MissingServletRequestParameterException ex) {
