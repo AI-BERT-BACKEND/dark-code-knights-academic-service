@@ -14,8 +14,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("GetStudyPreferencesUseCaseImpl Tests")
@@ -35,9 +43,7 @@ class GetStudyPreferencesUseCaseImplTest {
                 .studentId(studentId)
                 .preferredStudyTime(StudyTime.AFTERNOON)
                 .preferredStudyMethod(StudyMethod.MIXED)
-                .weeklyStudyHoursGoal(15)
                 .preferredStudyLocation("Biblioteca")
-                .notificationsEnabled(true)
                 .build();
     }
 
@@ -56,9 +62,7 @@ class GetStudyPreferencesUseCaseImplTest {
         assertEquals(STUDENT_ID, result.getStudentId());
         assertEquals(StudyTime.AFTERNOON, result.getPreferredStudyTime());
         assertEquals(StudyMethod.MIXED, result.getPreferredStudyMethod());
-        assertEquals(15, result.getWeeklyStudyHoursGoal());
         assertEquals("Biblioteca", result.getPreferredStudyLocation());
-        assertTrue(result.isNotificationsEnabled());
     }
 
     @Test
@@ -74,22 +78,18 @@ class GetStudyPreferencesUseCaseImplTest {
     }
 
     @Test
-    @DisplayName("Should return preferences with notificationsEnabled=false")
-    void shouldReturnPreferencesWithNotificationsDisabled() {
-        StudyPreferences prefs = StudyPreferences.builder()
-                .id(5L).studentId(STUDENT_ID)
-                .preferredStudyTime(StudyTime.NIGHT)
-                .preferredStudyMethod(StudyMethod.INDIVIDUAL)
-                .weeklyStudyHoursGoal(3)
-                .preferredStudyLocation("Casa")
-                .notificationsEnabled(false)
-                .build();
+    @DisplayName("Should return preferences with all fields null (stored as empty config)")
+    void shouldReturnPreferencesWithAllNullFields() {
+        StudyPreferences empty = StudyPreferences.builder()
+                .id(5L).studentId(STUDENT_ID).build();
 
-        when(preferencesRepository.findByStudentId(STUDENT_ID)).thenReturn(Optional.of(prefs));
+        when(preferencesRepository.findByStudentId(STUDENT_ID)).thenReturn(Optional.of(empty));
 
         StudyPreferences result = useCase.get(STUDENT_ID);
 
-        assertFalse(result.isNotificationsEnabled());
+        assertNull(result.getPreferredStudyTime());
+        assertNull(result.getPreferredStudyMethod());
+        assertNull(result.getPreferredStudyLocation());
     }
 
     // ─── Error paths ──────────────────────────────────────────────────────────

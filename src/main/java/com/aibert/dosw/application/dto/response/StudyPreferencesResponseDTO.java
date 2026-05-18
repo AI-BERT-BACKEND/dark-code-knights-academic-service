@@ -17,7 +17,5 @@ public class StudyPreferencesResponseDTO {
     private String studentId;
     private StudyTime preferredStudyTime;
     private StudyMethod preferredStudyMethod;
-    private Integer weeklyStudyHoursGoal;
     private String preferredStudyLocation;
-    private boolean notificationsEnabled;
 }

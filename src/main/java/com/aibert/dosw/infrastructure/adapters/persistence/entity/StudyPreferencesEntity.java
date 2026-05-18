@@ -37,19 +37,13 @@ public class StudyPreferencesEntity {
     private String studentId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "preferred_study_time", nullable = false, length = 20)
+    @Column(name = "preferred_study_time", length = 20)
     private StudyTime preferredStudyTime;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "preferred_study_method", nullable = false, length = 20)
+    @Column(name = "preferred_study_method", length = 20)
     private StudyMethod preferredStudyMethod;
 
-    @Column(name = "weekly_study_hours_goal", nullable = false)
-    private Integer weeklyStudyHoursGoal;
-
-    @Column(name = "preferred_study_location", nullable = false, length = 100)
+    @Column(name = "preferred_study_location", length = 100)
     private String preferredStudyLocation;
-
-    @Column(name = "notifications_enabled", nullable = false)
-    private boolean notificationsEnabled;
 }

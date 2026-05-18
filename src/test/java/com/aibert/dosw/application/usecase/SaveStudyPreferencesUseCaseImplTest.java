@@ -13,10 +13,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("SaveStudyPreferencesUseCaseImpl Tests")
@@ -30,14 +34,12 @@ class SaveStudyPreferencesUseCaseImplTest {
 
     private static final String STUDENT_ID = "student123";
 
-    private StudyPreferences buildInput(String studentId) {
+    private StudyPreferences buildInput(StudyTime time, StudyMethod method, String location) {
         return StudyPreferences.builder()
-                .studentId(studentId)
-                .preferredStudyTime(StudyTime.MORNING)
-                .preferredStudyMethod(StudyMethod.INDIVIDUAL)
-                .weeklyStudyHoursGoal(10)
-                .preferredStudyLocation("Biblioteca")
-                .notificationsEnabled(true)
+                .studentId(STUDENT_ID)
+                .preferredStudyTime(time)
+                .preferredStudyMethod(method)
+                .preferredStudyLocation(location)
                 .build();
     }
 
@@ -46,14 +48,12 @@ class SaveStudyPreferencesUseCaseImplTest {
     @Test
     @DisplayName("Should create preferences with null id when no record exists")
     void shouldCreatePreferencesWhenNoneExist() {
-        StudyPreferences input = buildInput(STUDENT_ID);
+        StudyPreferences input = buildInput(StudyTime.MORNING, StudyMethod.INDIVIDUAL, "Biblioteca");
         StudyPreferences saved = StudyPreferences.builder()
                 .id(1L).studentId(STUDENT_ID)
                 .preferredStudyTime(StudyTime.MORNING)
                 .preferredStudyMethod(StudyMethod.INDIVIDUAL)
-                .weeklyStudyHoursGoal(10)
                 .preferredStudyLocation("Biblioteca")
-                .notificationsEnabled(true)
                 .build();
 
         when(preferencesRepository.findByStudentId(STUDENT_ID)).thenReturn(Optional.empty());
@@ -72,14 +72,13 @@ class SaveStudyPreferencesUseCaseImplTest {
         when(preferencesRepository.findByStudentId(STUDENT_ID)).thenReturn(Optional.empty());
         when(preferencesRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
-        StudyPreferences result = useCase.save(buildInput(STUDENT_ID));
+        StudyPreferences result = useCase.save(
+                buildInput(StudyTime.MORNING, StudyMethod.INDIVIDUAL, "Biblioteca"));
 
         assertEquals(STUDENT_ID, result.getStudentId());
         assertEquals(StudyTime.MORNING, result.getPreferredStudyTime());
         assertEquals(StudyMethod.INDIVIDUAL, result.getPreferredStudyMethod());
-        assertEquals(10, result.getWeeklyStudyHoursGoal());
         assertEquals("Biblioteca", result.getPreferredStudyLocation());
-        assertTrue(result.isNotificationsEnabled());
     }
 
     // ─── Update (existing record) ─────────────────────────────────────────────
@@ -91,19 +90,10 @@ class SaveStudyPreferencesUseCaseImplTest {
                 .id(42L).studentId(STUDENT_ID)
                 .preferredStudyTime(StudyTime.AFTERNOON)
                 .preferredStudyMethod(StudyMethod.GROUP)
-                .weeklyStudyHoursGoal(5)
                 .preferredStudyLocation("Casa")
-                .notificationsEnabled(false)
                 .build();
 
-        StudyPreferences input = StudyPreferences.builder()
-                .studentId(STUDENT_ID)
-                .preferredStudyTime(StudyTime.NIGHT)
-                .preferredStudyMethod(StudyMethod.MIXED)
-                .weeklyStudyHoursGoal(20)
-                .preferredStudyLocation("Cafetería")
-                .notificationsEnabled(true)
-                .build();
+        StudyPreferences input = buildInput(StudyTime.NIGHT, StudyMethod.MIXED, "Cafetería");
 
         when(preferencesRepository.findByStudentId(STUDENT_ID)).thenReturn(Optional.of(existing));
         when(preferencesRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
@@ -113,9 +103,7 @@ class SaveStudyPreferencesUseCaseImplTest {
         assertEquals(42L, result.getId());
         assertEquals(StudyTime.NIGHT, result.getPreferredStudyTime());
         assertEquals(StudyMethod.MIXED, result.getPreferredStudyMethod());
-        assertEquals(20, result.getWeeklyStudyHoursGoal());
         assertEquals("Cafetería", result.getPreferredStudyLocation());
-        assertTrue(result.isNotificationsEnabled());
     }
 
     @Test
@@ -124,7 +112,7 @@ class SaveStudyPreferencesUseCaseImplTest {
         when(preferencesRepository.findByStudentId(STUDENT_ID)).thenReturn(Optional.empty());
         when(preferencesRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
-        useCase.save(buildInput(STUDENT_ID));
+        useCase.save(buildInput(StudyTime.MORNING, StudyMethod.INDIVIDUAL, "Casa"));
 
         verify(preferencesRepository, times(1)).save(any());
     }
@@ -135,31 +123,38 @@ class SaveStudyPreferencesUseCaseImplTest {
         when(preferencesRepository.findByStudentId(STUDENT_ID)).thenReturn(Optional.empty());
         when(preferencesRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
-        useCase.save(buildInput(STUDENT_ID));
+        useCase.save(buildInput(StudyTime.MORNING, StudyMethod.INDIVIDUAL, "Casa"));
 
         verify(preferencesRepository, times(1)).findByStudentId(STUDENT_ID);
     }
 
-    // ─── notificationsEnabled = false ────────────────────────────────────────
+    // ─── Null fields (all optional) ───────────────────────────────────────────
 
     @Test
-    @DisplayName("Should persist notificationsEnabled=false correctly")
-    void shouldPersistNotificationsDisabled() {
-        StudyPreferences input = StudyPreferences.builder()
-                .studentId(STUDENT_ID)
-                .preferredStudyTime(StudyTime.EVENING)
-                .preferredStudyMethod(StudyMethod.GROUP)
-                .weeklyStudyHoursGoal(8)
-                .preferredStudyLocation("Casa")
-                .notificationsEnabled(false)
-                .build();
-
+    @DisplayName("Should save with all preference fields null")
+    void shouldSaveWithAllFieldsNull() {
         when(preferencesRepository.findByStudentId(STUDENT_ID)).thenReturn(Optional.empty());
         when(preferencesRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
-        StudyPreferences result = useCase.save(input);
+        StudyPreferences result = useCase.save(buildInput(null, null, null));
 
-        assertFalse(result.isNotificationsEnabled());
+        assertNotNull(result);
+        assertEquals(STUDENT_ID, result.getStudentId());
+        assertNull(result.getPreferredStudyTime());
+        assertNull(result.getPreferredStudyMethod());
+        assertNull(result.getPreferredStudyLocation());
+    }
+
+    @Test
+    @DisplayName("Should save with only some fields provided")
+    void shouldSaveWithPartialFields() {
+        when(preferencesRepository.findByStudentId(STUDENT_ID)).thenReturn(Optional.empty());
+        when(preferencesRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+
+        StudyPreferences result = useCase.save(buildInput(StudyTime.EVENING, null, "Casa"));
+
+        assertEquals(StudyTime.EVENING, result.getPreferredStudyTime());
+        assertNull(result.getPreferredStudyMethod());
     }
 
     // ─── All StudyTime + StudyMethod combinations ─────────────────────────────
@@ -168,11 +163,7 @@ class SaveStudyPreferencesUseCaseImplTest {
     @DisplayName("Should accept all valid StudyTime values")
     void shouldAcceptAllStudyTimeValues() {
         for (StudyTime time : StudyTime.values()) {
-            StudyPreferences input = StudyPreferences.builder()
-                    .studentId(STUDENT_ID).preferredStudyTime(time)
-                    .preferredStudyMethod(StudyMethod.INDIVIDUAL)
-                    .weeklyStudyHoursGoal(5).preferredStudyLocation("Casa")
-                    .notificationsEnabled(false).build();
+            StudyPreferences input = buildInput(time, StudyMethod.INDIVIDUAL, "Casa");
 
             when(preferencesRepository.findByStudentId(STUDENT_ID)).thenReturn(Optional.empty());
             when(preferencesRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
@@ -186,11 +177,7 @@ class SaveStudyPreferencesUseCaseImplTest {
     @DisplayName("Should accept all valid StudyMethod values")
     void shouldAcceptAllStudyMethodValues() {
         for (StudyMethod method : StudyMethod.values()) {
-            StudyPreferences input = StudyPreferences.builder()
-                    .studentId(STUDENT_ID).preferredStudyTime(StudyTime.MORNING)
-                    .preferredStudyMethod(method)
-                    .weeklyStudyHoursGoal(5).preferredStudyLocation("Casa")
-                    .notificationsEnabled(false).build();
+            StudyPreferences input = buildInput(StudyTime.MORNING, method, "Casa");
 
             when(preferencesRepository.findByStudentId(STUDENT_ID)).thenReturn(Optional.empty());
             when(preferencesRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));

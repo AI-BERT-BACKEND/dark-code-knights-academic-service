@@ -24,9 +24,7 @@ public class SaveStudyPreferencesUseCaseImpl implements SaveStudyPreferencesUseC
                 .studentId(preferences.getStudentId())
                 .preferredStudyTime(preferences.getPreferredStudyTime())
                 .preferredStudyMethod(preferences.getPreferredStudyMethod())
-                .weeklyStudyHoursGoal(preferences.getWeeklyStudyHoursGoal())
                 .preferredStudyLocation(preferences.getPreferredStudyLocation())
-                .notificationsEnabled(preferences.isNotificationsEnabled())
                 .build();
 
         return preferencesRepository.save(toSave);
