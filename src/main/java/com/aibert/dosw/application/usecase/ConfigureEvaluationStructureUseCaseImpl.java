@@ -38,6 +38,7 @@ public class ConfigureEvaluationStructureUseCaseImpl implements ConfigureEvaluat
                 .credits(existing.getCredits())
                 .teacherName(existing.getTeacherName())
                 .semester(existing.getSemester())
+                .schedule(existing.getSchedule())
                 .evaluationCuts(newCuts)
                 .build();
 
