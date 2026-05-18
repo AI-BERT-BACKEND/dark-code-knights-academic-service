@@ -2,6 +2,7 @@ package com.aibert.dosw.entrypoints.advice;
 
 import com.aibert.dosw.domain.exceptions.CutCapacityExceededException;
 import com.aibert.dosw.domain.exceptions.DuplicateSubjectException;
+import com.aibert.dosw.domain.exceptions.GoalNotFoundException;
 import com.aibert.dosw.domain.exceptions.GradeNotFoundException;
 import com.aibert.dosw.domain.exceptions.EvaluationStructureLockedException;
 import com.aibert.dosw.domain.exceptions.GradeOutOfRangeException;
@@ -34,6 +35,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ApiResponse.error(errors, HttpStatus.BAD_REQUEST.value()));
+    }
+
+    @ExceptionHandler(GoalNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleGoalNotFound(GoalNotFoundException ex) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ApiResponse.error(ex.getMessage(), HttpStatus.NOT_FOUND.value()));
     }
 
     @ExceptionHandler(GradeNotFoundException.class)
