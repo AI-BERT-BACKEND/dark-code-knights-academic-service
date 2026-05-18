@@ -4,6 +4,7 @@ import com.aibert.dosw.domain.exceptions.CutCapacityExceededException;
 import com.aibert.dosw.domain.exceptions.DuplicateSubjectException;
 import com.aibert.dosw.domain.exceptions.GoalNotFoundException;
 import com.aibert.dosw.domain.exceptions.GradeNotFoundException;
+import com.aibert.dosw.domain.exceptions.StudyPreferencesNotFoundException;
 import com.aibert.dosw.domain.exceptions.EvaluationStructureLockedException;
 import com.aibert.dosw.domain.exceptions.GradeOutOfRangeException;
 import com.aibert.dosw.domain.exceptions.InvalidEvaluationStructureException;
@@ -39,6 +40,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(GoalNotFoundException.class)
     public ResponseEntity<ApiResponse<Void>> handleGoalNotFound(GoalNotFoundException ex) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ApiResponse.error(ex.getMessage(), HttpStatus.NOT_FOUND.value()));
+    }
+
+    @ExceptionHandler(StudyPreferencesNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleStudyPreferencesNotFound(
+            StudyPreferencesNotFoundException ex) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(ApiResponse.error(ex.getMessage(), HttpStatus.NOT_FOUND.value()));
