@@ -16,6 +16,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -141,6 +142,20 @@ public class GlobalExceptionHandler {
         String mensaje = String.format(
                 "El header requerido '%s' no fue enviado en la petición",
                 ex.getHeaderName());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error(mensaje, HttpStatus.BAD_REQUEST.value()));
+    }
+
+    /**
+     * Maneja parámetros de query requeridos ausentes.
+     * Ejemplo: GET /api/v1/academic/schedule-conflicts sin enviar ?semester=...
+     */
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ApiResponse<Void>> handleMissingRequestParam(MissingServletRequestParameterException ex) {
+        String mensaje = String.format(
+                "El parámetro requerido '%s' no fue enviado en la petición",
+                ex.getParameterName());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ApiResponse.error(mensaje, HttpStatus.BAD_REQUEST.value()));
