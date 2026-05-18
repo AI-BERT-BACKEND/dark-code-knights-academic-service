@@ -12,7 +12,8 @@ import lombok.NoArgsConstructor;
 public class AcademicGoal {
 
     private Long id;
-    private Long subjectId;
     private String studentId;
+    private String goalName;
     private Double targetGrade;
+    private Long subjectId; // optional — null means a general (non-subject) goal
 }

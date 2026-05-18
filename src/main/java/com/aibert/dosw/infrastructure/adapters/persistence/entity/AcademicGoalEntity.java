@@ -16,7 +16,7 @@ import lombok.Setter;
 @Entity
 @Table(
         name = "academic_goals",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"subject_id", "student_id"})
+        uniqueConstraints = @UniqueConstraint(columnNames = {"student_id", "goal_name"})
 )
 @Getter
 @Setter
@@ -29,12 +29,15 @@ public class AcademicGoalEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "subject_id", nullable = false)
-    private Long subjectId;
-
     @Column(name = "student_id", nullable = false)
     private String studentId;
 
+    @Column(name = "goal_name", nullable = false, length = 100)
+    private String goalName;
+
     @Column(name = "target_grade", nullable = false)
     private Double targetGrade;
+
+    @Column(name = "subject_id")
+    private Long subjectId;
 }

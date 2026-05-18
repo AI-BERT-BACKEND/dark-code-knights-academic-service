@@ -8,8 +8,6 @@ import com.aibert.dosw.domain.ports.out.SubjectRepositoryPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class SetAcademicGoalUseCaseImpl implements SetAcademicGoalUseCase {
@@ -18,19 +16,22 @@ public class SetAcademicGoalUseCaseImpl implements SetAcademicGoalUseCase {
     private final AcademicGoalRepositoryPort goalRepository;
 
     @Override
-    public AcademicGoal set(Long subjectId, String studentId, Double targetGrade) {
-        // Validate subject exists and belongs to the student
-        subjectRepository.findByIdAndStudentId(subjectId, studentId)
-                .orElseThrow(() -> new SubjectNotFoundException(subjectId));
+    public AcademicGoal set(String studentId, String goalName, Double targetGrade, Long subjectId) {
+        if (subjectId != null) {
+            subjectRepository.findByIdAndStudentId(subjectId, studentId)
+                    .orElseThrow(() -> new SubjectNotFoundException(subjectId));
+        }
 
-        Optional<AcademicGoal> existing =
-                goalRepository.findBySubjectIdAndStudentId(subjectId, studentId);
+        Long existingId = goalRepository.findByStudentIdAndGoalName(studentId, goalName)
+                .map(AcademicGoal::getId)
+                .orElse(null);
 
         AcademicGoal goal = AcademicGoal.builder()
-                .id(existing.map(AcademicGoal::getId).orElse(null))
-                .subjectId(subjectId)
+                .id(existingId)
                 .studentId(studentId)
+                .goalName(goalName)
                 .targetGrade(targetGrade)
+                .subjectId(subjectId)
                 .build();
 
         return goalRepository.save(goal);

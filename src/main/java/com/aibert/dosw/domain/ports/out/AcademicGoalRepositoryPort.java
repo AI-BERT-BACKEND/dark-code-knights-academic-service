@@ -9,7 +9,9 @@ public interface AcademicGoalRepositoryPort {
 
     AcademicGoal save(AcademicGoal goal);
 
-    Optional<AcademicGoal> findBySubjectIdAndStudentId(Long subjectId, String studentId);
+    Optional<AcademicGoal> findById(Long id);
+
+    Optional<AcademicGoal> findByStudentIdAndGoalName(String studentId, String goalName);
 
     List<AcademicGoal> findByStudentId(String studentId);
 }

@@ -24,14 +24,18 @@ public class AcademicGoalRepositoryAdapter implements AcademicGoalRepositoryPort
     }
 
     @Override
-    public Optional<AcademicGoal> findBySubjectIdAndStudentId(Long subjectId, String studentId) {
-        return goalJpaRepository.findBySubjectIdAndStudentId(subjectId, studentId)
+    public Optional<AcademicGoal> findById(Long id) {
+        return goalJpaRepository.findById(id).map(persistenceMapper::toDomain);
+    }
+
+    @Override
+    public Optional<AcademicGoal> findByStudentIdAndGoalName(String studentId, String goalName) {
+        return goalJpaRepository.findByStudentIdAndGoalName(studentId, goalName)
                 .map(persistenceMapper::toDomain);
     }
 
     @Override
     public List<AcademicGoal> findByStudentId(String studentId) {
-        return persistenceMapper.toDomainList(
-                goalJpaRepository.findByStudentId(studentId));
+        return persistenceMapper.toDomainList(goalJpaRepository.findByStudentId(studentId));
     }
 }

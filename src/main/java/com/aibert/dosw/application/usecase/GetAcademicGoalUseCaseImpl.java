@@ -2,7 +2,6 @@ package com.aibert.dosw.application.usecase;
 
 import com.aibert.dosw.application.service.AverageCalculator;
 import com.aibert.dosw.domain.exceptions.GoalNotFoundException;
-import com.aibert.dosw.domain.exceptions.SubjectNotFoundException;
 import com.aibert.dosw.domain.model.AcademicGoal;
 import com.aibert.dosw.domain.model.AcademicGoalProgress;
 import com.aibert.dosw.domain.model.EvaluationCut;
@@ -25,14 +24,12 @@ public class GetAcademicGoalUseCaseImpl implements GetAcademicGoalUseCase {
     private final AverageCalculator averageCalculator;
 
     @Override
-    public AcademicGoalProgress getProgress(Long subjectId, String studentId) {
-        AcademicGoal goal = goalRepository.findBySubjectIdAndStudentId(subjectId, studentId)
-                .orElseThrow(() -> new GoalNotFoundException(subjectId));
+    public AcademicGoalProgress getById(Long goalId, String studentId) {
+        AcademicGoal goal = goalRepository.findById(goalId)
+                .filter(g -> studentId.equals(g.getStudentId()))
+                .orElseThrow(() -> new GoalNotFoundException(goalId));
 
-        Subject subject = subjectRepository.findByIdAndStudentId(subjectId, studentId)
-                .orElseThrow(() -> new SubjectNotFoundException(subjectId));
-
-        return buildProgress(goal, subject);
+        return buildProgress(goal);
     }
 
     @Override
@@ -41,19 +38,43 @@ public class GetAcademicGoalUseCaseImpl implements GetAcademicGoalUseCase {
         List<AcademicGoalProgress> result = new ArrayList<>();
 
         for (AcademicGoal goal : goals) {
-            subjectRepository.findById(goal.getSubjectId()).ifPresent(subject -> {
-                if (semester == null || semester.equals(subject.getSemester())) {
-                    result.add(buildProgress(goal, subject));
-                }
-            });
+            if (goal.getSubjectId() != null) {
+                subjectRepository.findById(goal.getSubjectId()).ifPresent(subject -> {
+                    if (semester == null || semester.equals(subject.getSemester())) {
+                        result.add(buildProgressWithSubject(goal, subject));
+                    }
+                });
+            } else if (semester == null) {
+                result.add(buildProgress(goal));
+            }
         }
 
         return result;
     }
 
-    // ─── Progress calculation ─────────────────────────────────────────────────
+    // ─── Progress builders ────────────────────────────────────────────────────
 
-    private AcademicGoalProgress buildProgress(AcademicGoal goal, Subject subject) {
+    private AcademicGoalProgress buildProgress(AcademicGoal goal) {
+        if (goal.getSubjectId() == null) {
+            return AcademicGoalProgress.builder()
+                    .goalId(goal.getId())
+                    .goalName(goal.getGoalName())
+                    .targetGrade(goal.getTargetGrade())
+                    .isAchievable(false)
+                    .build();
+        }
+        return subjectRepository.findById(goal.getSubjectId())
+                .map(subject -> buildProgressWithSubject(goal, subject))
+                .orElseGet(() -> AcademicGoalProgress.builder()
+                        .goalId(goal.getId())
+                        .goalName(goal.getGoalName())
+                        .subjectId(goal.getSubjectId())
+                        .targetGrade(goal.getTargetGrade())
+                        .isAchievable(false)
+                        .build());
+    }
+
+    private AcademicGoalProgress buildProgressWithSubject(AcademicGoal goal, Subject subject) {
         List<EvaluationCut> cuts = subject.getEvaluationCuts();
 
         double pendingPercentage = cuts.stream()
@@ -77,12 +98,12 @@ public class GetAcademicGoalUseCaseImpl implements GetAcademicGoalUseCase {
             requiredGrade = Math.round(raw * 1000.0) / 1000.0;
             isAchievable = requiredGrade <= 5.0;
         } else {
-            // All cuts are graded — target is achievable only if current average meets it
             isAchievable = currentAverage != null && currentAverage >= goal.getTargetGrade();
         }
 
         return AcademicGoalProgress.builder()
                 .goalId(goal.getId())
+                .goalName(goal.getGoalName())
                 .subjectId(subject.getId())
                 .subjectName(subject.getSubjectName())
                 .semester(subject.getSemester())

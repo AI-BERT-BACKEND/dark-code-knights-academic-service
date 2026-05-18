@@ -2,11 +2,9 @@ package com.aibert.dosw.application.usecase;
 
 import com.aibert.dosw.domain.exceptions.SubjectNotFoundException;
 import com.aibert.dosw.domain.model.AcademicGoal;
-import com.aibert.dosw.domain.model.EvaluationCut;
 import com.aibert.dosw.domain.model.Subject;
 import com.aibert.dosw.domain.ports.out.AcademicGoalRepositoryPort;
 import com.aibert.dosw.domain.ports.out.SubjectRepositoryPort;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,12 +12,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("SetAcademicGoalUseCaseImpl Tests")
@@ -35,155 +39,118 @@ class SetAcademicGoalUseCaseImplTest {
     private SetAcademicGoalUseCaseImpl useCase;
 
     private static final String STUDENT_ID = "student123";
-    private static final Long SUBJECT_ID = 1L;
+    private static final String GOAL_NAME = "Aprobar Cálculo";
+    private static final Long SUBJECT_ID = 10L;
+    private static final Double TARGET = 4.0;
 
-    private Subject testSubject;
-
-    @BeforeEach
-    void setUp() {
-        testSubject = Subject.builder()
-                .id(SUBJECT_ID)
-                .studentId(STUDENT_ID)
-                .subjectName("Matemáticas")
-                .credits(3)
-                .teacherName("Prof. Test")
-                .semester("2025-1")
-                .schedule("LUNES 08:00-10:00")
-                .evaluationCuts(List.of(EvaluationCut.builder()
-                        .id(1L).cutName("Corte 1").cutPercentage(100.0).build()))
-                .build();
-    }
-
-    // ─── Create (no existing goal) ────────────────────────────────────────────
+    // ─── General goal (no subject) ────────────────────────────────────────────
 
     @Test
-    @DisplayName("Should create a new goal when none exists for the subject")
-    void shouldCreateGoalWhenNoneExists() {
-        AcademicGoal saved = AcademicGoal.builder()
-                .id(10L).subjectId(SUBJECT_ID).studentId(STUDENT_ID).targetGrade(4.0).build();
+    @DisplayName("Should create a general goal (no subjectId) without touching subjectRepository")
+    void shouldCreateGeneralGoalWithoutSubject() {
+        when(goalRepository.findByStudentIdAndGoalName(STUDENT_ID, GOAL_NAME))
+                .thenReturn(Optional.empty());
+        when(goalRepository.save(any())).thenAnswer(inv -> {
+            AcademicGoal g = inv.getArgument(0);
+            return AcademicGoal.builder().id(1L).studentId(g.getStudentId())
+                    .goalName(g.getGoalName()).targetGrade(g.getTargetGrade()).build();
+        });
+
+        AcademicGoal result = useCase.set(STUDENT_ID, GOAL_NAME, TARGET, null);
+
+        assertNotNull(result);
+        assertEquals(GOAL_NAME, result.getGoalName());
+        assertEquals(TARGET, result.getTargetGrade());
+        assertNull(result.getSubjectId());
+        verify(subjectRepository, never()).findByIdAndStudentId(any(), any());
+    }
+
+    // ─── Subject-linked goal ──────────────────────────────────────────────────
+
+    @Test
+    @DisplayName("Should create a subject-linked goal when subject belongs to student")
+    void shouldCreateSubjectLinkedGoal() {
+        Subject subject = Subject.builder().id(SUBJECT_ID).studentId(STUDENT_ID).build();
 
         when(subjectRepository.findByIdAndStudentId(SUBJECT_ID, STUDENT_ID))
-                .thenReturn(Optional.of(testSubject));
-        when(goalRepository.findBySubjectIdAndStudentId(SUBJECT_ID, STUDENT_ID))
+                .thenReturn(Optional.of(subject));
+        when(goalRepository.findByStudentIdAndGoalName(STUDENT_ID, GOAL_NAME))
                 .thenReturn(Optional.empty());
-        when(goalRepository.save(any(AcademicGoal.class))).thenReturn(saved);
+        when(goalRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
-        AcademicGoal result = useCase.set(SUBJECT_ID, STUDENT_ID, 4.0);
+        AcademicGoal result = useCase.set(STUDENT_ID, GOAL_NAME, TARGET, SUBJECT_ID);
 
-        assertEquals(10L, result.getId());
-        assertEquals(4.0, result.getTargetGrade());
-        verify(goalRepository, times(1)).save(any(AcademicGoal.class));
+        assertEquals(SUBJECT_ID, result.getSubjectId());
+        assertEquals(GOAL_NAME, result.getGoalName());
     }
 
     @Test
-    @DisplayName("Should save goal with null id so JPA generates it on first creation")
-    void shouldSaveWithNullIdOnFirstCreation() {
+    @DisplayName("Should throw SubjectNotFoundException when subject does not belong to student")
+    void shouldThrowWhenSubjectNotOwnedByStudent() {
         when(subjectRepository.findByIdAndStudentId(SUBJECT_ID, STUDENT_ID))
-                .thenReturn(Optional.of(testSubject));
-        when(goalRepository.findBySubjectIdAndStudentId(SUBJECT_ID, STUDENT_ID))
                 .thenReturn(Optional.empty());
-        when(goalRepository.save(any(AcademicGoal.class))).thenAnswer(inv -> inv.getArgument(0));
 
-        AcademicGoal result = useCase.set(SUBJECT_ID, STUDENT_ID, 3.5);
+        assertThrows(SubjectNotFoundException.class,
+                () -> useCase.set(STUDENT_ID, GOAL_NAME, TARGET, SUBJECT_ID));
 
-        assertNull(result.getId());
-        assertEquals(3.5, result.getTargetGrade());
+        verify(goalRepository, never()).save(any());
     }
 
-    // ─── Update (existing goal) ───────────────────────────────────────────────
+    // ─── Upsert by (studentId, goalName) ─────────────────────────────────────
 
     @Test
-    @DisplayName("Should update the existing goal preserving its id")
-    void shouldUpdateExistingGoalPreservingId() {
+    @DisplayName("Should create with null id when no existing goal for that name")
+    void shouldCreateWithNullIdWhenNoExistingGoal() {
+        when(goalRepository.findByStudentIdAndGoalName(STUDENT_ID, GOAL_NAME))
+                .thenReturn(Optional.empty());
+        when(goalRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+
+        useCase.set(STUDENT_ID, GOAL_NAME, TARGET, null);
+
+        verify(goalRepository).save(argThat(g -> g.getId() == null));
+    }
+
+    @Test
+    @DisplayName("Should reuse existing id when goal name already exists for student")
+    void shouldReuseExistingIdWhenGoalExists() {
         AcademicGoal existing = AcademicGoal.builder()
-                .id(99L).subjectId(SUBJECT_ID).studentId(STUDENT_ID).targetGrade(3.0).build();
-        AcademicGoal updated = AcademicGoal.builder()
-                .id(99L).subjectId(SUBJECT_ID).studentId(STUDENT_ID).targetGrade(4.5).build();
+                .id(42L).studentId(STUDENT_ID).goalName(GOAL_NAME).targetGrade(3.0).build();
 
-        when(subjectRepository.findByIdAndStudentId(SUBJECT_ID, STUDENT_ID))
-                .thenReturn(Optional.of(testSubject));
-        when(goalRepository.findBySubjectIdAndStudentId(SUBJECT_ID, STUDENT_ID))
+        when(goalRepository.findByStudentIdAndGoalName(STUDENT_ID, GOAL_NAME))
                 .thenReturn(Optional.of(existing));
-        when(goalRepository.save(any(AcademicGoal.class))).thenReturn(updated);
+        when(goalRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
-        AcademicGoal result = useCase.set(SUBJECT_ID, STUDENT_ID, 4.5);
+        AcademicGoal result = useCase.set(STUDENT_ID, GOAL_NAME, 4.5, null);
 
-        assertEquals(99L, result.getId());
+        assertEquals(42L, result.getId());
         assertEquals(4.5, result.getTargetGrade());
-        verify(goalRepository, times(1)).save(argThat(g -> g.getId().equals(99L)));
     }
 
-    // ─── Error paths ──────────────────────────────────────────────────────────
+    // ─── Field persistence ────────────────────────────────────────────────────
 
     @Test
-    @DisplayName("Should throw SubjectNotFoundException when subject not found")
-    void shouldThrowWhenSubjectNotFound() {
-        when(subjectRepository.findByIdAndStudentId(SUBJECT_ID, STUDENT_ID))
+    @DisplayName("Should persist all fields correctly")
+    void shouldPersistAllFields() {
+        when(goalRepository.findByStudentIdAndGoalName(STUDENT_ID, GOAL_NAME))
                 .thenReturn(Optional.empty());
+        when(goalRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
-        assertThrows(SubjectNotFoundException.class,
-                () -> useCase.set(SUBJECT_ID, STUDENT_ID, 4.0));
+        AcademicGoal result = useCase.set(STUDENT_ID, GOAL_NAME, TARGET, null);
 
-        verify(goalRepository, never()).save(any());
-    }
-
-    @Test
-    @DisplayName("Should throw SubjectNotFoundException when subject belongs to another student")
-    void shouldThrowWhenSubjectBelongsToAnotherStudent() {
-        when(subjectRepository.findByIdAndStudentId(SUBJECT_ID, "other-student"))
-                .thenReturn(Optional.empty());
-
-        assertThrows(SubjectNotFoundException.class,
-                () -> useCase.set(SUBJECT_ID, "other-student", 4.0));
-
-        verify(goalRepository, never()).save(any());
+        assertEquals(STUDENT_ID, result.getStudentId());
+        assertEquals(GOAL_NAME, result.getGoalName());
+        assertEquals(TARGET, result.getTargetGrade());
     }
 
     @Test
-    @DisplayName("Should validate subject before checking existing goal")
-    void shouldValidateSubjectBeforeCheckingExistingGoal() {
-        when(subjectRepository.findByIdAndStudentId(SUBJECT_ID, STUDENT_ID))
+    @DisplayName("Should call goalRepository.save exactly once")
+    void shouldCallSaveExactlyOnce() {
+        when(goalRepository.findByStudentIdAndGoalName(STUDENT_ID, GOAL_NAME))
                 .thenReturn(Optional.empty());
+        when(goalRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
-        assertThrows(SubjectNotFoundException.class,
-                () -> useCase.set(SUBJECT_ID, STUDENT_ID, 4.0));
+        useCase.set(STUDENT_ID, GOAL_NAME, TARGET, null);
 
-        verify(goalRepository, never()).findBySubjectIdAndStudentId(any(), any());
-    }
-
-    // ─── Boundary grades ──────────────────────────────────────────────────────
-
-    @Test
-    @DisplayName("Should accept targetGrade of 0.0")
-    void shouldAcceptMinimumTargetGrade() {
-        AcademicGoal saved = AcademicGoal.builder()
-                .id(1L).subjectId(SUBJECT_ID).studentId(STUDENT_ID).targetGrade(0.0).build();
-
-        when(subjectRepository.findByIdAndStudentId(SUBJECT_ID, STUDENT_ID))
-                .thenReturn(Optional.of(testSubject));
-        when(goalRepository.findBySubjectIdAndStudentId(SUBJECT_ID, STUDENT_ID))
-                .thenReturn(Optional.empty());
-        when(goalRepository.save(any())).thenReturn(saved);
-
-        AcademicGoal result = useCase.set(SUBJECT_ID, STUDENT_ID, 0.0);
-
-        assertEquals(0.0, result.getTargetGrade());
-    }
-
-    @Test
-    @DisplayName("Should accept targetGrade of 5.0")
-    void shouldAcceptMaximumTargetGrade() {
-        AcademicGoal saved = AcademicGoal.builder()
-                .id(1L).subjectId(SUBJECT_ID).studentId(STUDENT_ID).targetGrade(5.0).build();
-
-        when(subjectRepository.findByIdAndStudentId(SUBJECT_ID, STUDENT_ID))
-                .thenReturn(Optional.of(testSubject));
-        when(goalRepository.findBySubjectIdAndStudentId(SUBJECT_ID, STUDENT_ID))
-                .thenReturn(Optional.empty());
-        when(goalRepository.save(any())).thenReturn(saved);
-
-        AcademicGoal result = useCase.set(SUBJECT_ID, STUDENT_ID, 5.0);
-
-        assertEquals(5.0, result.getTargetGrade());
+        verify(goalRepository, times(1)).save(any());
     }
 }
