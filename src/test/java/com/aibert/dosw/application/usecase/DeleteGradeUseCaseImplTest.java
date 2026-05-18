@@ -361,4 +361,27 @@ class DeleteGradeUseCaseImplTest {
         // Then
         verify(averageCalculator, never()).recalculateCutAverage(any(), any());
     }
+
+    @Test
+    @DisplayName("Should throw SubjectNotFoundException when subject disappears after deletion")
+    void shouldThrowSubjectNotFoundExceptionWhenSubjectDisappearsAfterDeletion() {
+        // Given — subject exists for the first findById, vanishes for the second (re-fetch)
+        when(subjectRepository.findById(1L))
+            .thenReturn(Optional.of(testSubject))
+            .thenReturn(Optional.empty());
+        when(gradeRepository.findById(1L)).thenReturn(Optional.of(existingGrade));
+        doNothing().when(gradeRepository).deleteById(1L);
+        doNothing().when(averageCalculator).recalculateCutAverage(testSubject, 1L);
+
+        // When & Then
+        SubjectNotFoundException ex = assertThrows(
+            SubjectNotFoundException.class,
+            () -> deleteGradeUseCase.delete(1L, 1L, 1L)
+        );
+
+        assertTrue(ex.getMessage().contains("1"));
+        verify(gradeRepository, times(1)).deleteById(1L);
+        verify(averageCalculator, times(1)).recalculateCutAverage(testSubject, 1L);
+        verify(subjectRepository, times(2)).findById(1L);
+    }
 }
