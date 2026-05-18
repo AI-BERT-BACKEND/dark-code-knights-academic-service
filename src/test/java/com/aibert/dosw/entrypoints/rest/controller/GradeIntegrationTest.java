@@ -100,6 +100,26 @@ class GradeIntegrationTest {
     }
 
     @Test
+    @DisplayName("Should return 400 when activityName exceeds 100 characters")
+    void shouldReturn400WhenActivityNameExceeds100Characters() throws Exception {
+        String longName = "A".repeat(101);
+        String gradeJson = String.format("""
+            {
+              "activityName": "%s",
+              "gradeValue": 4.0,
+              "percentage": 50
+            }
+            """, longName);
+
+        mockMvc.perform(post("/api/v1/subjects/{subjectId}/cuts/{cutId}/grades", subjectId, cutId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(gradeJson))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.error").value(containsString("El nombre de la actividad no puede superar 100 caracteres")));
+    }
+
+    @Test
     @DisplayName("Should return 400 when grade exceeds maximum")
     void shouldReturn400WhenGradeExceedsMaximum() throws Exception {
         String gradeJson = """
