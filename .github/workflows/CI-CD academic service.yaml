@@ -180,7 +180,7 @@ jobs:
           registryUrl: ghcr.io
           registryUsername: ${{ github.actor }}
           registryPassword: ${{ secrets.GHCR_TOKEN }}
-          targetPort: 8080
+          targetPort: 1502
           ingress: external
           environmentVariables: SPRING_PROFILES_ACTIVE=qa DB_URL=${{ secrets.DB_URL_QA }} DB_USER=${{ secrets.DB_USER_QA }} DB_PASSWORD=${{ secrets.DB_PASSWORD_QA }}
   deploy-prod:

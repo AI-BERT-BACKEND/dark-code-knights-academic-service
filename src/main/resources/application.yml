@@ -13,7 +13,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 server:
-  port: 8080
+  port: 1502
 springdoc:
   api-docs:
     path: /api-docs
@@ -33,3 +33,5 @@ spring:
       ddl-auto: update
     show-sql: false
     open-in-view: false
+server:
+  port: 1502
