@@ -82,8 +82,6 @@ public class AcademicGoalController {
                 .goalId(p.getGoalId())
                 .goalName(p.getGoalName())
                 .subjectId(p.getSubjectId())
-                .subjectName(p.getSubjectName())
-                .semester(p.getSemester())
                 .targetGrade(p.getTargetGrade())
                 .currentAverage(p.getCurrentAverage())
                 .requiredGrade(p.getRequiredGrade())

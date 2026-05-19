@@ -64,7 +64,6 @@ class ScheduleAvailabilityIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data.configId", notNullValue()))
-                .andExpect(jsonPath("$.data.studentId").value(STUDENT_ID))
                 .andExpect(jsonPath("$.data.freeTimeHours").value(4.0))
                 .andExpect(jsonPath("$.data.restHours").value(8.0))
                 .andExpect(jsonPath("$.data.maxStudyHoursPerDay").value(6.0));

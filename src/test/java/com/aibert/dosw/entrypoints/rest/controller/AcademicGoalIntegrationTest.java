@@ -122,8 +122,6 @@ class AcademicGoalIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.goalName").value("Aprobar Cálculo"))
                 .andExpect(jsonPath("$.data.subjectId").value(subjectId.intValue()))
-                .andExpect(jsonPath("$.data.subjectName").value("Cálculo Integral"))
-                .andExpect(jsonPath("$.data.semester").value(SEMESTER))
                 .andExpect(jsonPath("$.data.requiredGrade").value(4.0))
                 .andExpect(jsonPath("$.data.achievable").value(true));
     }
@@ -327,8 +325,7 @@ class AcademicGoalIntegrationTest {
                         .header("X-Student-Id", STUDENT_ID)
                         .param("semester", SEMESTER))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data", hasSize(1)))
-                .andExpect(jsonPath("$.data[0].semester").value(SEMESTER));
+                .andExpect(jsonPath("$.data", hasSize(1)));
     }
 
     // ─── Progress after partial grading ──────────────────────────────────────

@@ -105,8 +105,6 @@ public class GetAcademicGoalUseCaseImpl implements GetAcademicGoalUseCase {
                 .goalId(goal.getId())
                 .goalName(goal.getGoalName())
                 .subjectId(subject.getId())
-                .subjectName(subject.getSubjectName())
-                .semester(subject.getSemester())
                 .targetGrade(goal.getTargetGrade())
                 .currentAverage(currentAverage)
                 .requiredGrade(requiredGrade)

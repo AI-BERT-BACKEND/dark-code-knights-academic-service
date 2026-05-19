@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 public class ScheduleAvailabilityResponseDTO {
 
     private Long configId;
-    private String studentId;
     private Double freeTimeHours;
     private Double restHours;
     private Double personalTimeHours;

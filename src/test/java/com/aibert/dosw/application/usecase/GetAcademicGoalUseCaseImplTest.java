@@ -86,7 +86,6 @@ class GetAcademicGoalUseCaseImplTest {
         assertNotNull(result);
         assertEquals(GOAL_ID, result.getGoalId());
         assertEquals("Aprobar Cálculo", result.getGoalName());
-        assertEquals("Cálculo", result.getSubjectName());
         assertEquals(2.0, result.getCurrentAverage());
     }
 
@@ -98,7 +97,6 @@ class GetAcademicGoalUseCaseImplTest {
         AcademicGoalProgress result = useCase.getById(GOAL_ID, STUDENT_ID);
 
         assertEquals("Meta general", result.getGoalName());
-        assertNull(result.getSubjectName());
         assertNull(result.getCurrentAverage());
         assertFalse(result.isAchievable());
     }
