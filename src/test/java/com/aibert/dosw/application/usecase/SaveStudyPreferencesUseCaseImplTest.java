@@ -1,8 +1,6 @@
 package com.aibert.dosw.application.usecase;
 
-import com.aibert.dosw.domain.model.StudyMethod;
 import com.aibert.dosw.domain.model.StudyPreferences;
-import com.aibert.dosw.domain.model.StudyTime;
 import com.aibert.dosw.domain.ports.out.StudyPreferencesRepositoryPort;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,12 +32,12 @@ class SaveStudyPreferencesUseCaseImplTest {
 
     private static final String STUDENT_ID = "student123";
 
-    private StudyPreferences buildInput(StudyTime time, StudyMethod method, String location) {
+    private StudyPreferences buildInput(String modality, String environment, String method) {
         return StudyPreferences.builder()
                 .studentId(STUDENT_ID)
-                .preferredStudyTime(time)
-                .preferredStudyMethod(method)
-                .preferredStudyLocation(location)
+                .studyModality(modality)
+                .studyEnvironment(environment)
+                .studyMethod(method)
                 .build();
     }
 
@@ -48,12 +46,10 @@ class SaveStudyPreferencesUseCaseImplTest {
     @Test
     @DisplayName("Should create preferences with null id when no record exists")
     void shouldCreatePreferencesWhenNoneExist() {
-        StudyPreferences input = buildInput(StudyTime.MORNING, StudyMethod.INDIVIDUAL, "Biblioteca");
+        StudyPreferences input = buildInput("VISUAL", "BIBLIOTECA", "INDIVIDUAL");
         StudyPreferences saved = StudyPreferences.builder()
                 .id(1L).studentId(STUDENT_ID)
-                .preferredStudyTime(StudyTime.MORNING)
-                .preferredStudyMethod(StudyMethod.INDIVIDUAL)
-                .preferredStudyLocation("Biblioteca")
+                .studyModality("VISUAL").studyEnvironment("BIBLIOTECA").studyMethod("INDIVIDUAL")
                 .build();
 
         when(preferencesRepository.findByStudentId(STUDENT_ID)).thenReturn(Optional.empty());
@@ -72,13 +68,12 @@ class SaveStudyPreferencesUseCaseImplTest {
         when(preferencesRepository.findByStudentId(STUDENT_ID)).thenReturn(Optional.empty());
         when(preferencesRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
-        StudyPreferences result = useCase.save(
-                buildInput(StudyTime.MORNING, StudyMethod.INDIVIDUAL, "Biblioteca"));
+        StudyPreferences result = useCase.save(buildInput("VISUAL", "BIBLIOTECA", "INDIVIDUAL"));
 
         assertEquals(STUDENT_ID, result.getStudentId());
-        assertEquals(StudyTime.MORNING, result.getPreferredStudyTime());
-        assertEquals(StudyMethod.INDIVIDUAL, result.getPreferredStudyMethod());
-        assertEquals("Biblioteca", result.getPreferredStudyLocation());
+        assertEquals("VISUAL", result.getStudyModality());
+        assertEquals("BIBLIOTECA", result.getStudyEnvironment());
+        assertEquals("INDIVIDUAL", result.getStudyMethod());
     }
 
     // ─── Update (existing record) ─────────────────────────────────────────────
@@ -88,12 +83,10 @@ class SaveStudyPreferencesUseCaseImplTest {
     void shouldUpdateExistingPreferencesPreservingId() {
         StudyPreferences existing = StudyPreferences.builder()
                 .id(42L).studentId(STUDENT_ID)
-                .preferredStudyTime(StudyTime.AFTERNOON)
-                .preferredStudyMethod(StudyMethod.GROUP)
-                .preferredStudyLocation("Casa")
+                .studyModality("AUDITIVO").studyEnvironment("CASA").studyMethod("GRUPO")
                 .build();
 
-        StudyPreferences input = buildInput(StudyTime.NIGHT, StudyMethod.MIXED, "Cafetería");
+        StudyPreferences input = buildInput("VISUAL", "CAFETERIA", "MIXTO");
 
         when(preferencesRepository.findByStudentId(STUDENT_ID)).thenReturn(Optional.of(existing));
         when(preferencesRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
@@ -101,9 +94,9 @@ class SaveStudyPreferencesUseCaseImplTest {
         StudyPreferences result = useCase.save(input);
 
         assertEquals(42L, result.getId());
-        assertEquals(StudyTime.NIGHT, result.getPreferredStudyTime());
-        assertEquals(StudyMethod.MIXED, result.getPreferredStudyMethod());
-        assertEquals("Cafetería", result.getPreferredStudyLocation());
+        assertEquals("VISUAL", result.getStudyModality());
+        assertEquals("CAFETERIA", result.getStudyEnvironment());
+        assertEquals("MIXTO", result.getStudyMethod());
     }
 
     @Test
@@ -112,7 +105,7 @@ class SaveStudyPreferencesUseCaseImplTest {
         when(preferencesRepository.findByStudentId(STUDENT_ID)).thenReturn(Optional.empty());
         when(preferencesRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
-        useCase.save(buildInput(StudyTime.MORNING, StudyMethod.INDIVIDUAL, "Casa"));
+        useCase.save(buildInput("VISUAL", "BIBLIOTECA", "INDIVIDUAL"));
 
         verify(preferencesRepository, times(1)).save(any());
     }
@@ -123,7 +116,7 @@ class SaveStudyPreferencesUseCaseImplTest {
         when(preferencesRepository.findByStudentId(STUDENT_ID)).thenReturn(Optional.empty());
         when(preferencesRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
-        useCase.save(buildInput(StudyTime.MORNING, StudyMethod.INDIVIDUAL, "Casa"));
+        useCase.save(buildInput("VISUAL", "BIBLIOTECA", "INDIVIDUAL"));
 
         verify(preferencesRepository, times(1)).findByStudentId(STUDENT_ID);
     }
@@ -140,9 +133,9 @@ class SaveStudyPreferencesUseCaseImplTest {
 
         assertNotNull(result);
         assertEquals(STUDENT_ID, result.getStudentId());
-        assertNull(result.getPreferredStudyTime());
-        assertNull(result.getPreferredStudyMethod());
-        assertNull(result.getPreferredStudyLocation());
+        assertNull(result.getStudyModality());
+        assertNull(result.getStudyEnvironment());
+        assertNull(result.getStudyMethod());
     }
 
     @Test
@@ -151,39 +144,10 @@ class SaveStudyPreferencesUseCaseImplTest {
         when(preferencesRepository.findByStudentId(STUDENT_ID)).thenReturn(Optional.empty());
         when(preferencesRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
-        StudyPreferences result = useCase.save(buildInput(StudyTime.EVENING, null, "Casa"));
+        StudyPreferences result = useCase.save(buildInput("VISUAL", null, null));
 
-        assertEquals(StudyTime.EVENING, result.getPreferredStudyTime());
-        assertNull(result.getPreferredStudyMethod());
-    }
-
-    // ─── All StudyTime + StudyMethod combinations ─────────────────────────────
-
-    @Test
-    @DisplayName("Should accept all valid StudyTime values")
-    void shouldAcceptAllStudyTimeValues() {
-        for (StudyTime time : StudyTime.values()) {
-            StudyPreferences input = buildInput(time, StudyMethod.INDIVIDUAL, "Casa");
-
-            when(preferencesRepository.findByStudentId(STUDENT_ID)).thenReturn(Optional.empty());
-            when(preferencesRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
-
-            StudyPreferences result = useCase.save(input);
-            assertEquals(time, result.getPreferredStudyTime());
-        }
-    }
-
-    @Test
-    @DisplayName("Should accept all valid StudyMethod values")
-    void shouldAcceptAllStudyMethodValues() {
-        for (StudyMethod method : StudyMethod.values()) {
-            StudyPreferences input = buildInput(StudyTime.MORNING, method, "Casa");
-
-            when(preferencesRepository.findByStudentId(STUDENT_ID)).thenReturn(Optional.empty());
-            when(preferencesRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
-
-            StudyPreferences result = useCase.save(input);
-            assertEquals(method, result.getPreferredStudyMethod());
-        }
+        assertEquals("VISUAL", result.getStudyModality());
+        assertNull(result.getStudyEnvironment());
+        assertNull(result.getStudyMethod());
     }
 }

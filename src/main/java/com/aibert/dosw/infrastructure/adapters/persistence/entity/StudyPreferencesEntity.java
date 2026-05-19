@@ -1,11 +1,7 @@
 package com.aibert.dosw.infrastructure.adapters.persistence.entity;
 
-import com.aibert.dosw.domain.model.StudyMethod;
-import com.aibert.dosw.domain.model.StudyTime;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -36,14 +32,12 @@ public class StudyPreferencesEntity {
     @Column(name = "student_id", nullable = false, unique = true)
     private String studentId;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "preferred_study_time", length = 20)
-    private StudyTime preferredStudyTime;
+    @Column(name = "study_modality", length = 100)
+    private String studyModality;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "preferred_study_method", length = 20)
-    private StudyMethod preferredStudyMethod;
+    @Column(name = "study_environment", length = 100)
+    private String studyEnvironment;
 
-    @Column(name = "preferred_study_location", length = 100)
-    private String preferredStudyLocation;
+    @Column(name = "study_method", length = 100)
+    private String studyMethod;
 }

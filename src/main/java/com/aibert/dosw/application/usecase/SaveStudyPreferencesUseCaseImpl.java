@@ -22,9 +22,9 @@ public class SaveStudyPreferencesUseCaseImpl implements SaveStudyPreferencesUseC
         StudyPreferences toSave = StudyPreferences.builder()
                 .id(existing.map(StudyPreferences::getId).orElse(null))
                 .studentId(preferences.getStudentId())
-                .preferredStudyTime(preferences.getPreferredStudyTime())
-                .preferredStudyMethod(preferences.getPreferredStudyMethod())
-                .preferredStudyLocation(preferences.getPreferredStudyLocation())
+                .studyModality(preferences.getStudyModality())
+                .studyEnvironment(preferences.getStudyEnvironment())
+                .studyMethod(preferences.getStudyMethod())
                 .build();
 
         return preferencesRepository.save(toSave);

@@ -1,9 +1,7 @@
 package com.aibert.dosw.application.usecase;
 
 import com.aibert.dosw.domain.exceptions.StudyPreferencesNotFoundException;
-import com.aibert.dosw.domain.model.StudyMethod;
 import com.aibert.dosw.domain.model.StudyPreferences;
-import com.aibert.dosw.domain.model.StudyTime;
 import com.aibert.dosw.domain.ports.out.StudyPreferencesRepositoryPort;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,9 +39,9 @@ class GetStudyPreferencesUseCaseImplTest {
         return StudyPreferences.builder()
                 .id(1L)
                 .studentId(studentId)
-                .preferredStudyTime(StudyTime.AFTERNOON)
-                .preferredStudyMethod(StudyMethod.MIXED)
-                .preferredStudyLocation("Biblioteca")
+                .studyModality("VISUAL")
+                .studyEnvironment("BIBLIOTECA")
+                .studyMethod("INDIVIDUAL")
                 .build();
     }
 
@@ -60,9 +58,9 @@ class GetStudyPreferencesUseCaseImplTest {
         assertNotNull(result);
         assertEquals(1L, result.getId());
         assertEquals(STUDENT_ID, result.getStudentId());
-        assertEquals(StudyTime.AFTERNOON, result.getPreferredStudyTime());
-        assertEquals(StudyMethod.MIXED, result.getPreferredStudyMethod());
-        assertEquals("Biblioteca", result.getPreferredStudyLocation());
+        assertEquals("VISUAL", result.getStudyModality());
+        assertEquals("BIBLIOTECA", result.getStudyEnvironment());
+        assertEquals("INDIVIDUAL", result.getStudyMethod());
     }
 
     @Test
@@ -87,9 +85,9 @@ class GetStudyPreferencesUseCaseImplTest {
 
         StudyPreferences result = useCase.get(STUDENT_ID);
 
-        assertNull(result.getPreferredStudyTime());
-        assertNull(result.getPreferredStudyMethod());
-        assertNull(result.getPreferredStudyLocation());
+        assertNull(result.getStudyModality());
+        assertNull(result.getStudyEnvironment());
+        assertNull(result.getStudyMethod());
     }
 
     // ─── Error paths ──────────────────────────────────────────────────────────

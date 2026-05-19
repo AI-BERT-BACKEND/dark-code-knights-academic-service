@@ -35,9 +35,9 @@ public class StudyPreferencesController {
 
         StudyPreferences domain = StudyPreferences.builder()
                 .studentId(studentId)
-                .preferredStudyTime(request.getPreferredStudyTime())
-                .preferredStudyMethod(request.getPreferredStudyMethod())
-                .preferredStudyLocation(request.getPreferredStudyLocation())
+                .studyModality(request.getStudyModality())
+                .studyEnvironment(request.getStudyEnvironment())
+                .studyMethod(request.getStudyMethod())
                 .build();
 
         StudyPreferences saved = saveStudyPreferencesUseCase.save(domain);
@@ -57,11 +57,10 @@ public class StudyPreferencesController {
 
     private StudyPreferencesResponseDTO toDTO(StudyPreferences p) {
         return StudyPreferencesResponseDTO.builder()
-                .id(p.getId())
-                .studentId(p.getStudentId())
-                .preferredStudyTime(p.getPreferredStudyTime())
-                .preferredStudyMethod(p.getPreferredStudyMethod())
-                .preferredStudyLocation(p.getPreferredStudyLocation())
+                .preferenceId(p.getId())
+                .studyModality(p.getStudyModality())
+                .studyEnvironment(p.getStudyEnvironment())
+                .studyMethod(p.getStudyMethod())
                 .build();
     }
 }

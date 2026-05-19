@@ -55,19 +55,18 @@ class StudyPreferencesIntegrationTest {
                         .header("X-Student-Id", STUDENT_ID)
                         .content("""
                                 {
-                                  "preferredStudyTime": "MORNING",
-                                  "preferredStudyMethod": "INDIVIDUAL",
-                                  "preferredStudyLocation": "Biblioteca Central"
+                                  "studyModality": "VISUAL",
+                                  "studyEnvironment": "BIBLIOTECA",
+                                  "studyMethod": "INDIVIDUAL"
                                 }
                                 """))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.message").value("Preferencias de estudio guardadas exitosamente"))
-                .andExpect(jsonPath("$.data.studentId").value(STUDENT_ID))
-                .andExpect(jsonPath("$.data.preferredStudyTime").value("MORNING"))
-                .andExpect(jsonPath("$.data.preferredStudyMethod").value("INDIVIDUAL"))
-                .andExpect(jsonPath("$.data.preferredStudyLocation").value("Biblioteca Central"))
-                .andExpect(jsonPath("$.data.id").isNumber());
+                .andExpect(jsonPath("$.data.preferenceId").isNumber())
+                .andExpect(jsonPath("$.data.studyModality").value("VISUAL"))
+                .andExpect(jsonPath("$.data.studyEnvironment").value("BIBLIOTECA"))
+                .andExpect(jsonPath("$.data.studyMethod").value("INDIVIDUAL"));
     }
 
     @Test
@@ -82,48 +81,16 @@ class StudyPreferencesIntegrationTest {
     }
 
     @Test
-    @DisplayName("Should create preferences with only studyMethod")
+    @DisplayName("Should create preferences with only studyModality")
     void shouldCreatePreferencesWithPartialFields() throws Exception {
         mockMvc.perform(put(URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("X-Student-Id", STUDENT_ID)
                         .content("""
-                                {"preferredStudyMethod": "GROUP"}
+                                {"studyModality": "AUDITIVO"}
                                 """))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.preferredStudyMethod").value("GROUP"));
-    }
-
-    @Test
-    @DisplayName("Should accept all valid StudyTime values")
-    void shouldAcceptAllStudyTimeValues() throws Exception {
-        for (String time : new String[]{"MORNING", "AFTERNOON", "EVENING", "NIGHT"}) {
-            studyPreferencesJpaRepository.deleteAll();
-            mockMvc.perform(put(URL)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("X-Student-Id", STUDENT_ID)
-                            .content("""
-                                    {"preferredStudyTime": "%s"}
-                                    """.formatted(time)))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data.preferredStudyTime").value(time));
-        }
-    }
-
-    @Test
-    @DisplayName("Should accept all valid StudyMethod values")
-    void shouldAcceptAllStudyMethodValues() throws Exception {
-        for (String method : new String[]{"INDIVIDUAL", "GROUP", "MIXED"}) {
-            studyPreferencesJpaRepository.deleteAll();
-            mockMvc.perform(put(URL)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("X-Student-Id", STUDENT_ID)
-                            .content("""
-                                    {"preferredStudyMethod": "%s"}
-                                    """.formatted(method)))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data.preferredStudyMethod").value(method));
-        }
+                .andExpect(jsonPath("$.data.studyModality").value("AUDITIVO"));
     }
 
     // ─── PUT — update (upsert) ────────────────────────────────────────────────
@@ -135,7 +102,7 @@ class StudyPreferencesIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("X-Student-Id", STUDENT_ID)
                         .content("""
-                                {"preferredStudyTime": "MORNING", "preferredStudyMethod": "INDIVIDUAL"}
+                                {"studyModality": "VISUAL", "studyMethod": "INDIVIDUAL"}
                                 """))
                 .andExpect(status().isOk());
 
@@ -143,13 +110,12 @@ class StudyPreferencesIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("X-Student-Id", STUDENT_ID)
                         .content("""
-                                {"preferredStudyTime": "EVENING", "preferredStudyMethod": "MIXED",
-                                 "preferredStudyLocation": "Cafetería"}
+                                {"studyModality": "AUDITIVO", "studyEnvironment": "CAFETERIA", "studyMethod": "GRUPO"}
                                 """))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.preferredStudyTime").value("EVENING"))
-                .andExpect(jsonPath("$.data.preferredStudyMethod").value("MIXED"))
-                .andExpect(jsonPath("$.data.preferredStudyLocation").value("Cafetería"));
+                .andExpect(jsonPath("$.data.studyModality").value("AUDITIVO"))
+                .andExpect(jsonPath("$.data.studyEnvironment").value("CAFETERIA"))
+                .andExpect(jsonPath("$.data.studyMethod").value("GRUPO"));
 
         assertEquals(1L, studyPreferencesJpaRepository.count());
     }
@@ -157,40 +123,16 @@ class StudyPreferencesIntegrationTest {
     // ─── PUT — validation ─────────────────────────────────────────────────────
 
     @Test
-    @DisplayName("Should return 400 when preferredStudyLocation exceeds 100 characters")
-    void shouldReturn400WhenLocationExceeds100Characters() throws Exception {
+    @DisplayName("Should return 400 when studyMethod exceeds 100 characters")
+    void shouldReturn400WhenStudyMethodExceeds100Characters() throws Exception {
         mockMvc.perform(put(URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("X-Student-Id", STUDENT_ID)
                         .content("""
-                                {"preferredStudyLocation": "%s"}
+                                {"studyMethod": "%s"}
                                 """.formatted("A".repeat(101))))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error", containsString("100")));
-    }
-
-    @Test
-    @DisplayName("Should return 400 when an invalid enum value is sent for preferredStudyTime")
-    void shouldReturn400WhenInvalidStudyTimeEnum() throws Exception {
-        mockMvc.perform(put(URL)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
-                        .content("""
-                                {"preferredStudyTime": "INVALID_TIME"}
-                                """))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("Should return 400 when an invalid enum value is sent for preferredStudyMethod")
-    void shouldReturn400WhenInvalidStudyMethodEnum() throws Exception {
-        mockMvc.perform(put(URL)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
-                        .content("""
-                                {"preferredStudyMethod": "SOLO"}
-                                """))
-                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -212,9 +154,9 @@ class StudyPreferencesIntegrationTest {
                         .header("X-Student-Id", STUDENT_ID)
                         .content("""
                                 {
-                                  "preferredStudyTime": "AFTERNOON",
-                                  "preferredStudyMethod": "MIXED",
-                                  "preferredStudyLocation": "Sala de estudio"
+                                  "studyModality": "KINESTESICO",
+                                  "studyEnvironment": "SALA DE ESTUDIO",
+                                  "studyMethod": "MIXTO"
                                 }
                                 """))
                 .andExpect(status().isOk());
@@ -223,10 +165,10 @@ class StudyPreferencesIntegrationTest {
                         .header("X-Student-Id", STUDENT_ID))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.data.preferredStudyTime").value("AFTERNOON"))
-                .andExpect(jsonPath("$.data.preferredStudyMethod").value("MIXED"))
-                .andExpect(jsonPath("$.data.preferredStudyLocation").value("Sala de estudio"))
-                .andExpect(jsonPath("$.data.studentId").value(STUDENT_ID));
+                .andExpect(jsonPath("$.data.studyModality").value("KINESTESICO"))
+                .andExpect(jsonPath("$.data.studyEnvironment").value("SALA DE ESTUDIO"))
+                .andExpect(jsonPath("$.data.studyMethod").value("MIXTO"))
+                .andExpect(jsonPath("$.data.preferenceId").isNumber());
     }
 
     @Test
@@ -249,16 +191,16 @@ class StudyPreferencesIntegrationTest {
     // ─── Boundary values ─────────────────────────────────────────────────────
 
     @Test
-    @DisplayName("Should accept preferredStudyLocation of exactly 100 characters")
-    void shouldAcceptLocationOf100Characters() throws Exception {
+    @DisplayName("Should accept studyMethod of exactly 100 characters")
+    void shouldAcceptStudyMethodOf100Characters() throws Exception {
         mockMvc.perform(put(URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("X-Student-Id", STUDENT_ID)
                         .content("""
-                                {"preferredStudyLocation": "%s"}
+                                {"studyMethod": "%s"}
                                 """.formatted("A".repeat(100))))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.preferredStudyLocation", hasLength(100)));
+                .andExpect(jsonPath("$.data.studyMethod", hasLength(100)));
     }
 
     // ─── Student isolation ────────────────────────────────────────────────────
@@ -270,7 +212,7 @@ class StudyPreferencesIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("X-Student-Id", "studentA")
                         .content("""
-                                {"preferredStudyTime": "MORNING", "preferredStudyMethod": "INDIVIDUAL"}
+                                {"studyModality": "VISUAL", "studyMethod": "INDIVIDUAL"}
                                 """))
                 .andExpect(status().isOk());
 
@@ -278,17 +220,17 @@ class StudyPreferencesIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("X-Student-Id", "studentB")
                         .content("""
-                                {"preferredStudyTime": "NIGHT", "preferredStudyMethod": "GROUP"}
+                                {"studyModality": "AUDITIVO", "studyMethod": "GRUPO"}
                                 """))
                 .andExpect(status().isOk());
 
         mockMvc.perform(get(URL).header("X-Student-Id", "studentA"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.preferredStudyTime").value("MORNING"));
+                .andExpect(jsonPath("$.data.studyModality").value("VISUAL"));
 
         mockMvc.perform(get(URL).header("X-Student-Id", "studentB"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.preferredStudyTime").value("NIGHT"));
+                .andExpect(jsonPath("$.data.studyModality").value("AUDITIVO"));
 
         assertEquals(2L, studyPreferencesJpaRepository.count());
     }

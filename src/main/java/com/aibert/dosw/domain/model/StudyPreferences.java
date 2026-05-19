@@ -13,7 +13,7 @@ public class StudyPreferences {
 
     private Long id;
     private String studentId;
-    private StudyTime preferredStudyTime;
-    private StudyMethod preferredStudyMethod;
-    private String preferredStudyLocation;
+    private String studyModality;
+    private String studyEnvironment;
+    private String studyMethod;
 }

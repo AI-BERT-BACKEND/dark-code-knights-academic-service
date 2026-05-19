@@ -1,7 +1,5 @@
 package com.aibert.dosw.application.dto.request;
 
-import com.aibert.dosw.domain.model.StudyMethod;
-import com.aibert.dosw.domain.model.StudyTime;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,10 +12,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class StudyPreferencesRequestDTO {
 
-    private StudyTime preferredStudyTime;
+    private String studyModality;
 
-    private StudyMethod preferredStudyMethod;
+    private String studyEnvironment;
 
-    @Size(max = 100, message = "El lugar de estudio no puede superar 100 caracteres")
-    private String preferredStudyLocation;
+    @Size(max = 100, message = "El método de estudio no puede superar 100 caracteres")
+    private String studyMethod;
 }
