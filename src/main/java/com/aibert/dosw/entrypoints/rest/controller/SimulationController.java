@@ -74,10 +74,8 @@ public class SimulationController {
                 .toList();
 
         SimulationResponseDTO response = SimulationResponseDTO.builder()
-                .targetGrade(result.getTargetGrade())
                 .requiredGrade(result.getRequiredGrade())
-                .achievable(result.isAchievable())
-                .pendingCutsPercentage(result.getPendingPercentage())
+                .isAchievable(result.isAchievable())
                 .message(message)
                 .pendingCuts(pendingCutDTOs)
                 .build();

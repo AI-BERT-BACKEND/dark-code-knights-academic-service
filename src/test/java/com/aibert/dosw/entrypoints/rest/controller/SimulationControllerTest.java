@@ -78,10 +78,8 @@ class SimulationControllerTest {
         
         SimulationResponseDTO responseData = apiResponse.getData();
         assertNotNull(responseData);
-        assertEquals(4.0, responseData.getTargetGrade());
         assertEquals(3.5, responseData.getRequiredGrade());
-        assertTrue(responseData.isAchievable());
-        assertEquals(70.0, responseData.getPendingCutsPercentage());
+        assertTrue(responseData.getIsAchievable());
         assertEquals("Para alcanzar 4,0 necesitas obtener 3,50 o más en los cortes pendientes (70% restante).",
                      responseData.getMessage());
         assertNotNull(responseData.getPendingCuts());
@@ -129,10 +127,8 @@ class SimulationControllerTest {
         
         SimulationResponseDTO responseData = apiResponse.getData();
         assertNotNull(responseData);
-        assertEquals(5.0, responseData.getTargetGrade());
         assertEquals(6.0, responseData.getRequiredGrade());
-        assertFalse(responseData.isAchievable());
-        assertEquals(50.0, responseData.getPendingCutsPercentage());
+        assertFalse(responseData.getIsAchievable());
         assertEquals("No es posible alcanzar 5,0. La nota requerida (6,00) supera el máximo permitido (5.0).",
                      responseData.getMessage());
         assertNotNull(responseData.getPendingCuts());
@@ -174,11 +170,9 @@ class SimulationControllerTest {
         
         SimulationResponseDTO responseData = apiResponse.getData();
         assertNotNull(responseData);
-        assertEquals(3.0, responseData.getTargetGrade());
         assertEquals(0.0, responseData.getRequiredGrade());
-        assertTrue(responseData.isAchievable());
-        assertEquals(30.0, responseData.getPendingCutsPercentage());
-        assertEquals("¡Ya tienes asegurado superar tu meta! Con cualquier nota en los cortes pendientes alcanzarás 3,0.", 
+        assertTrue(responseData.getIsAchievable());
+        assertEquals("¡Ya tienes asegurado superar tu meta! Con cualquier nota en los cortes pendientes alcanzarás 3,0.",
                      responseData.getMessage());
         
         verify(simulateTargetGradeUseCase, times(1)).simulate(testSubjectId, 3.0);
@@ -212,11 +206,9 @@ class SimulationControllerTest {
         
         SimulationResponseDTO responseData = response.getBody().getData();
         assertNotNull(responseData);
-        assertEquals(0.0, responseData.getTargetGrade());
         assertEquals(0.0, responseData.getRequiredGrade());
-        assertTrue(responseData.isAchievable());
-        assertEquals(100.0, responseData.getPendingCutsPercentage());
-        assertEquals("¡Ya tienes asegurado superar tu meta! Con cualquier nota en los cortes pendientes alcanzarás 0,0.", 
+        assertTrue(responseData.getIsAchievable());
+        assertEquals("¡Ya tienes asegurado superar tu meta! Con cualquier nota en los cortes pendientes alcanzarás 0,0.",
                      responseData.getMessage());
         
         verify(simulateTargetGradeUseCase, times(1)).simulate(testSubjectId, 0.0);
@@ -250,11 +242,9 @@ class SimulationControllerTest {
         
         SimulationResponseDTO responseData = response.getBody().getData();
         assertNotNull(responseData);
-        assertEquals(5.0, responseData.getTargetGrade());
         assertEquals(5.0, responseData.getRequiredGrade());
-        assertTrue(responseData.isAchievable());
-        assertEquals(25.0, responseData.getPendingCutsPercentage());
-        assertEquals("Para alcanzar 5,0 necesitas obtener 5,00 o más en los cortes pendientes (25% restante).", 
+        assertTrue(responseData.getIsAchievable());
+        assertEquals("Para alcanzar 5,0 necesitas obtener 5,00 o más en los cortes pendientes (25% restante).",
                      responseData.getMessage());
         
         verify(simulateTargetGradeUseCase, times(1)).simulate(testSubjectId, 5.0);
@@ -288,11 +278,9 @@ class SimulationControllerTest {
         
         SimulationResponseDTO responseData = response.getBody().getData();
         assertNotNull(responseData);
-        assertEquals(3.7, responseData.getTargetGrade());
         assertEquals(4.25, responseData.getRequiredGrade());
-        assertTrue(responseData.isAchievable());
-        assertEquals(45.5, responseData.getPendingCutsPercentage());
-        assertEquals("Para alcanzar 3,7 necesitas obtener 4,25 o más en los cortes pendientes (46% restante).", 
+        assertTrue(responseData.getIsAchievable());
+        assertEquals("Para alcanzar 3,7 necesitas obtener 4,25 o más en los cortes pendientes (46% restante).",
                      responseData.getMessage());
         
         verify(simulateTargetGradeUseCase, times(1)).simulate(testSubjectId, 3.7);
@@ -353,7 +341,6 @@ class SimulationControllerTest {
         assertNotNull(apiResponse.getMessage());
         
         SimulationResponseDTO responseData = apiResponse.getData();
-        assertNotNull(responseData.getTargetGrade());
         assertNotNull(responseData.getRequiredGrade());
         assertNotNull(responseData.getMessage());
         
