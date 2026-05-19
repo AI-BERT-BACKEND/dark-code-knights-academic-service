@@ -78,6 +78,7 @@ class SimulateTargetGradeUseCaseImplTest {
             testSubject.getTeacherName(),
             testSubject.getSemester(),
             testSubject.getSchedule(),
+                null,
             cuts
         );
         when(subjectRepository.findById(1L)).thenReturn(Optional.of(subjectWithCuts));
@@ -130,6 +131,7 @@ class SimulateTargetGradeUseCaseImplTest {
             testSubject.getTeacherName(),
             testSubject.getSemester(),
             testSubject.getSchedule(),
+                null,
             cuts
         );
         when(subjectRepository.findById(1L)).thenReturn(Optional.of(subjectWithCuts));
@@ -182,6 +184,7 @@ class SimulateTargetGradeUseCaseImplTest {
             testSubject.getTeacherName(),
             testSubject.getSemester(),
             testSubject.getSchedule(),
+                null,
             cuts
         );
         when(subjectRepository.findById(1L)).thenReturn(Optional.of(subjectWithCuts));
@@ -255,6 +258,7 @@ class SimulateTargetGradeUseCaseImplTest {
             testSubject.getTeacherName(),
             testSubject.getSemester(),
             testSubject.getSchedule(),
+                null,
             cuts
         );
         when(subjectRepository.findById(1L)).thenReturn(Optional.of(subjectWithAllGrades));
@@ -296,6 +300,7 @@ class SimulateTargetGradeUseCaseImplTest {
             testSubject.getTeacherName(),
             testSubject.getSemester(),
             testSubject.getSchedule(),
+                null,
             cuts
         );
         when(subjectRepository.findById(1L)).thenReturn(Optional.of(subjectWithCuts));
@@ -353,6 +358,7 @@ class SimulateTargetGradeUseCaseImplTest {
             testSubject.getTeacherName(),
             testSubject.getSemester(),
             testSubject.getSchedule(),
+                null,
             cuts
         );
         when(subjectRepository.findById(1L)).thenReturn(Optional.of(subjectWithAllPending));
@@ -404,6 +410,7 @@ class SimulateTargetGradeUseCaseImplTest {
             testSubject.getTeacherName(),
             testSubject.getSemester(),
             testSubject.getSchedule(),
+                null,
             cuts
         );
         when(subjectRepository.findById(1L)).thenReturn(Optional.of(subjectWithCuts));
@@ -455,6 +462,7 @@ class SimulateTargetGradeUseCaseImplTest {
             testSubject.getTeacherName(),
             testSubject.getSemester(),
             testSubject.getSchedule(),
+                null,
             cuts
         );
         when(subjectRepository.findById(1L)).thenReturn(Optional.of(subjectWithCuts));

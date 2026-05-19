@@ -20,5 +20,6 @@ public class Subject {
     private String teacherName;
     private String semester;
     private String schedule;
+    private Double overallAverage;
     private List<EvaluationCut> evaluationCuts;
 }

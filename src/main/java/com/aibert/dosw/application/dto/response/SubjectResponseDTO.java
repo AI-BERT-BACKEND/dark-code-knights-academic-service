@@ -20,5 +20,6 @@ public class SubjectResponseDTO {
     private String teacherName;
     private String semester;
     private String schedule;
+    private Double overallAverage;
     private List<EvaluationCutResponseDTO> evaluationCuts;
 }

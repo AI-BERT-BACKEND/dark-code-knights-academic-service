@@ -105,6 +105,7 @@ class CreateSubjectUseCaseImplTest {
             testSubject.getTeacherName(),
             testSubject.getSemester(),
             testSubject.getSchedule(),
+                null,
             null
         );
 
@@ -131,6 +132,7 @@ class CreateSubjectUseCaseImplTest {
             testSubject.getTeacherName(),
             testSubject.getSemester(),
             testSubject.getSchedule(),
+                null,
             List.of()
         );
 
@@ -161,6 +163,7 @@ class CreateSubjectUseCaseImplTest {
             testSubject.getTeacherName(),
             testSubject.getSemester(),
             testSubject.getSchedule(),
+                null,
             invalidCuts
         );
 
@@ -192,6 +195,7 @@ class CreateSubjectUseCaseImplTest {
             testSubject.getTeacherName(),
             testSubject.getSemester(),
             testSubject.getSchedule(),
+                null,
             invalidCuts
         );
 
@@ -223,6 +227,7 @@ class CreateSubjectUseCaseImplTest {
             testSubject.getTeacherName(),
             testSubject.getSemester(),
             testSubject.getSchedule(),
+                null,
             exactCuts
         );
         
@@ -255,6 +260,7 @@ class CreateSubjectUseCaseImplTest {
             testSubject.getTeacherName(),
             testSubject.getSemester(),
             testSubject.getSchedule(),
+                null,
             singleCut
         );
         
@@ -291,6 +297,7 @@ class CreateSubjectUseCaseImplTest {
             testSubject.getTeacherName(),
             testSubject.getSemester(),
             testSubject.getSchedule(),
+                null,
             closeCuts
         );
 
@@ -322,6 +329,7 @@ class CreateSubjectUseCaseImplTest {
             testSubject.getTeacherName(),
             testSubject.getSemester(),
             testSubject.getSchedule(),
+                null,
             decimalCuts
         );
         

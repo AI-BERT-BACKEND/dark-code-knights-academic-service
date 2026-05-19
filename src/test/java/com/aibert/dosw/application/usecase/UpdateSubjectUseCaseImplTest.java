@@ -211,6 +211,7 @@ class UpdateSubjectUseCaseImplTest {
             updatedSubject.getTeacherName(),
             updatedSubject.getSemester(),
             updatedSubject.getSchedule(),
+                null,
             null
         );
         
@@ -239,6 +240,7 @@ class UpdateSubjectUseCaseImplTest {
             updatedSubject.getTeacherName(),
             updatedSubject.getSemester(),
             updatedSubject.getSchedule(),
+                null,
             List.of()
         );
         
@@ -271,6 +273,7 @@ class UpdateSubjectUseCaseImplTest {
             updatedSubject.getTeacherName(),
             updatedSubject.getSemester(),
             updatedSubject.getSchedule(),
+                null,
             invalidCuts
         );
 
@@ -304,6 +307,7 @@ class UpdateSubjectUseCaseImplTest {
             updatedSubject.getTeacherName(),
             updatedSubject.getSemester(),
             updatedSubject.getSchedule(),
+                null,
             invalidCuts
         );
 
@@ -337,6 +341,7 @@ class UpdateSubjectUseCaseImplTest {
             updatedSubject.getTeacherName(),
             updatedSubject.getSemester(),
             updatedSubject.getSchedule(),
+                null,
             exactCuts
         );
         
