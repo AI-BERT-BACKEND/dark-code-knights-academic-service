@@ -255,40 +255,91 @@ El sistema interactúa con una API de IA externa (Gemini). Se identifican dos ac
 
 ### 5.2 Diagrama de Clases
 
-- [Ver Diagrama de Clases (diagrams.net)](https://viewer.diagrams.net/?tags=%7B%7D&lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1&title=DiagramaClasesAIBERT.xml&dark=0#R%3Cmxfile%3E%3Cdiagram%20name%3D%22Academic%20Service%20-%20Diagrama%20de%20clases%22%20id%3D%22class-diagram%22%3E5V1bd%2BI4Ev41nJN56BzLN%2BCRGMKwu92dgcn2zhPHsRXwjsGMLwnsr1%2FJlo0sXzEC29NPwXJJCH1flapKZWcgabvj3NUP26%2BOCe2BKJjHgTQdiCIYSWP0B7ecopYRvsING9cyoybh3LCy%2FgdJz7g1sEzokbaoyXcc27cO6UbD2e%2Bh4afadNd1PtNi745tphoO%2BgZmGlaGbmdbf1imv41a0aSF841fobXZxl89jO%2Fs9FiaNHhb3XQ%2BqSZpNpA013H86NPuqEEbr156YZ4L7iYzc%2BHer9PB1k%2FQXSNh95TtSkbz%2FFP8y71Pa2fre3T15Pm66xNsJAE1vDv7%2BBrI8TXpCtC16wR7E5rkSneNuDO6ir7oQ7cD8kUzPKODY%2B19j9yDrg%2BP1LzI75lDZwfD2QtbeslVssCfZ4CAqqhRIxknliE0lMmlTuixSYY%2BLyD6QNYwfz1XWnYZM2tML%2BhWP%2BCPu%2BMG68pjsLMfDVv30BSePreWD1cH3cACn%2Bg2atv6OzteQdva7NFnA40MXQYAkLeoA00cTJ6i4dHHJySh2miST28u%2BrTBn1bB23%2BRymhoKNexbehmRfJanrC2uVD34cMvRfc30J%2FYdun9p9PCLBYIDmbpFyAzA6P7TQgDsoRJtPSYJghHvkx6zpeJoZtwZxlNCIMAXwW7ne6eHjw%2FMNG0FmYz8IZKJXbSDcCb9V3bZ1hc9y1nv%2FLdwPADFzbSfGf%2Fbm1Q51LlTr6ioYaOckCW0yAr4xF3kOc9xxj5YGYjVF24sTw0j1JQw9G9tmy2UG2zRzFteG7yi55zYmXtAjvU%2BybE8KLe8MGLnIWFORC1kDB%2F3cx8A6DwV%2B0IMv1w6JTrOzkcbMsI0Wm0mslOl3J9h8My1ze5vmY5NXf1WqgYySq3qxYWFn%2FHo8aqMRAlgDFcaKH%2FShzgVw9qugep%2B6mPlL9LlOCXgTRBjaR7I%2BByQpYKD1Thsb%2F5vUZtjp3IcM29GphFMcjTaRX5mw8EtX%2BhjS5PlsQj1yNbbeAYZIGoXA%2Ft66HX0L6GvkN9hSS%2BhkW2ozYVUxQ4wDe1ew3fNHTt6sNHXEHLJIh9OBjJBnApl8M1HHEwpJNew4UMaRzMk6i8nj3NCeEpm8pJ2xQmmAf890Ft1mv4tDgGz4np6zgzVAhPb4l2Ok2gBT4VHWS5QIX4dUfhFC8MmUzASOLOkOVm3meGLEk8H4bsNShBxf8hlmG%2FPNSjHMDTCcH6cLXy50ArVUT0w0cuvlKvwY18pbrQJlkZGtgmO%2B3laAGJgyZO7V6DFXlGdcFKUmT8vaIKrEQBXI%2FVytr1GSuSKoO%2F625s6mpglqTI4ugjSbgtoRfY%2FBwjJgEOgMykybgYR%2BTEf9VzsmQ9AZHEIOgnHMI8Zx5s4RBIInJh4iE42USBQUkGt9jC5q7ZZ5RC3eouRgBwiBEnHxtNt42OY5Q%2BO4iXf4IWWd9APH9sy5wilIjzaBA5iNxC0rXhMU%2Be3atEa8xh64pAMZ2dbu2zkLV4RDClpnTp6cAo93RASi0nczqg8jgdIEYYTb2I%2FfRCd1EBkhRiHu2%2FkJ8aRj%2FOfsPcSrIjxB%2FwXSsrE43%2FTd%2FBEinDhable5HEAv2uTcpeYhEf6sYWuhUDeXAHvXBZCkUgHbJ7twzpQZ57yjg3Nzj8wD8ATb3HpGQhuJyaTlBFOSTxAl0837AwEstNneDNhozcJgwkU%2FebUEGoUc0jjrhzIfQ%2FesyEbH6mLgOMIDFMOXd1w7c%2BLP9UQZIQ%2FH9HUy1kyKGARk1oIuZYDIYmSuwFcKQJCuVQDNdjnmRj0SLK%2BOeYtwRTF%2F4VWGhTqpJDe5KFNhR8IxR6cxwb6vsMQ%2FYmIleRvWlClLzKzkzmQ%2BROlAXyF5Yv3WdJWfIj8kiW8OB4FvL4Ty%2BOW8AXkvfQP6Jir3Tzu7U3k9revFur2D3KkYjyX3F3XhtKuW%2FBpbxogQLynhMg1Onbw68F94Se9SVGDPaAh2N5XH177j708GjAQ1hpVhDsfHP8ZxyZzhLBJjDIOSioTAQPpHQEz8W9Py5mqz6jsNgjYcvMOdO9PyBJte11iMz7rRehRWxPK4AicgHh%2B7L3IHwP%2FO%2FvS32%2FaUEXuNR3zY7TXhunaRAVKsc1Xi3AoHDIyc%2BOmjbrMw7Ie9J09H0oRscQQBO2YJgkwCHhPjt%2Beyk8K%2B4DFN%2Bclyh%2BxfnS24MgCzJ3n%2Bn3xfLty%2BTX1WktLacz7Z8%2Fhr%2BBL0TNoJl5MLoUJSdwDdKBTf9TCOJR46MQFGBsnY2z1%2B3ZufUJrekEP7eNBQ5wH7U8W%2Fg3TNnDFXwNj5b%2FH3zvcTwekes%2FwmtZlcn19Eg6hxen%2BAI%2FvxN1FQQpboj6qkMxbjh3Dq9SvV%2Bga6FVx4RKxmfbojWI8iuD3Ew0TbpcrrgQJ3E%2B0njkAR92RcunnyiB86PVZOQX3EAFRWI6KIqzbc%2B15QFDumgGl31bMt2ISaRXyTRkATADMe5StOSZgUKlSBa3uZ6Mr9YTlgd30xM5rSeKWq4nOaRO6Y6c1h35rEyX6E5WT9JZ%2BrtpSSHjVKYUGQiAreWoS16VyVYDQWKH4kffiIXW%2Ft3VsxRt8Wh7gWfkxVFuo50zr2AAqEyBsCoyaz3kcTYQvC0nRRpPrXUnjwXYXO%2FE1A94XF7Oi1SaceWVcf%2FHIYfPHQOgOuOOfsUZiDshwKUyF83%2F5WuPASDrj%2FYhDxe%2F742kIu0uGIg8cmxz1%2BytFWIOHG5sg8TxDYwQWv6eG6EQhLuYIBYALjYIAdBrGxQu%2F90skDhOPynFxQSRKKbfepAqrbqNOrDvr5FuUK8SvM1ItNBlGEqdUvQDLP%2FU%2FcLL%2FJLKBlwBoPrcWlHYXIfKTXH7y5iU0l7Bm%2BqqSKNzVZEjMOTPCLSb9pcN4VZ6BQu6WvtYgwxAUBX%2BbHDXYY5jnQq1a6Q7aZ6kTwXiUOWiRKepe9sko9Q866lQOU9Q91xASWU2K7Ka0W%2BjE5iplcvQOPASP%2BSqdOaleFJxe1%2FRTOWvlTuhSa3bzbBsdoCTDqzIAz6FxzdMGDYuP%2B0BCvu0lcCQjjrtaZCcdtdznMNYp2Lp5rycnxMiP42VoVeuA1YmwnN%2Bjsz7imZDK6OMUng%2BCjKowLT2eZjZTQMkjtK1CUOx1KSw4lUmSBbBVfKikJrP1SYr9zhY5rCjJs73XU6CQTN%2BZ857lSEnfrMBact1EcMhQ7uRWkyj7L6ZvKbo2kIHILHv6pCH6ZFuXOmgXEttFtj70BsxNV0QpEj1OS4yHJca1TTUqweaU2F3y5xH0SbD2lGJ7cxzFpnu7AMWtUmvMvlRAMRbkR4FRtpac1c1aB5XS9B2W%2Fu53E3q1b8dcDYRcnO%2Fs8jRtkhN2aIRqIkXSBsiUamyQ%2FVMjp8LYhvBq8g4g%2Bq41DCw8nEZIL94FFHq9dB5SiEqtKD81GuGW%2BYNe5pcERMw4rJaLp48GJgvz4dlU7sHLAMtsIx6G3LLLBtdxjJGXJEuYxkjz4FlE7Q9ThqybPKTOTbUS5074NjMsE86awjd7KdzSmddwm6urZebeTPo5m0iJ9I%2BhfA4HlU8GdAQv3o%2BKvUO5m5g%2BnroLKb5Ob1hzaQeE2NIqlwFYL2EHvWiZX77%2BEWQTe2eQXb5ozid8JMAYCsQyHVhfkcU2Ljvwg7ySGHoUJqZAkM1t%2Ftt8kkLbb2yds2ol%2FzLsZ9l86ZeG90BQ6%2B5K1wi0Qw7Kjl2b8vRzNZX5pNy4GIe7207gcSknOP%2FiVaYQGLkh%2BQ0pZ4dSUqv4t5sCTVPM4K82vVMa8jE2R2Z2I7duN1z1PWtBXJScalDM4woD%2FcOGDVzDR8FIQ3TozTk4x229HhvQX5QZt5xoZSnoceSdJX8UJGLrU4zn8ParVfLhi7HeQf%2BuxoL5l2ebdiKczlt%2FKrAi3HiXHX5ZjvGnxmgPN91%2FoQ%2FSL0xSODKgic0Aq%2BqXCQLHr1mrUSSSYliU%2BTmnCvZeoMctWY3Rw5duo7j00YUP5Pw1TEhlvg%2F%3C%2Fdiagram%3E%3C%2Fmxfile%3E)
+![Diagrama_Clases.png](docs/Diagrama_Clases.png)
 
-El diagrama de clases sigue la arquitectura hexagonal dividida en cuatro capas: **Entrypoints**, **Aplicación**, **Dominio** e **Infraestructura**. El dominio contiene las entidades `Subject`, `EvaluationCut`, `Grade` y `SimulationResult`, más las 8 interfaces de puertos `in/out`. La capa de infraestructura implementa esos puertos con adaptadores JPA sin que el dominio lo sepa.
+Refleja el modelo de dominio bajo arquitectura hexagonal. Hay cuatro entidades principales:
+
+- **`Subject`** es la entidad raíz. Agrupa los datos de una materia del estudiante y contiene una lista embebida de `EvaluationCut`. Es el único punto de acceso para leer cortes.
+- **`EvaluationCut`** representa un corte de evaluación (ej. "Corte 1, 35%"). Lleva el campo `grade` (Double), que no se ingresa directamente sino que se **calcula automáticamente** como promedio ponderado de las `Grade` que pertenecen a ese corte.
+- **`Grade`** es una actividad evaluativa (ej. "Parcial 1, nota 4.5, 60% del corte"). Múltiples `Grade` componen un corte.
+- **`SimulationResult`** no se persiste — es un objeto de retorno del caso de uso de simulación con el resultado de la proyección (`requiredGrade`, `achievable`, etc.).
+
+Las interfaces `SubjectRepositoryPort` y `GradeRepositoryPort` son los **puertos de salida** del dominio: definen el contrato de persistencia sin saber nada de JPA ni de PostgreSQL. La infraestructura los implementa desde afuera.
 
 ---
 
 ### 5.3 Diagrama de Componentes
 
-![DIagrama_componentes_especifico.png](docs/DIagrama_componentes_especifico.png)
+![Diagrama_Componentes_Especifico.png](docs/Diagrama_Componentes_Especifico.png)
 
-El diagrama muestra la organización interna del `academic-service`. Cada flujo sigue el mismo patrón en capas: `Controller → UseCase → AverageCalculator/Validator → RepositoryAdapter`, con `MapStruct Mappers` encargados de la conversión entre capas.
+Muestra los **5 flujos funcionales** del microservicio, cada uno como una cadena horizontal de componentes:
+
+| Flujo | Controlador | Caso de Uso | Componente auxiliar | Repositorio |
+|:---|:---|:---|:---|:---|
+| Dashboard | `AcademicController` | `AcademicSummaryUseCase` | `AverageCalculator` | `SubjectRepository` |
+| Materias | `SubjectController` | `SubjectsUseCase` | `PercentageValidator` + `SubjectMapper` | `SubjectRepository` |
+| Estructura | `EvalStructureController` | `ConfigureEvaluationStructureUseCase` | `PercentageValidator` | `EvaluationCutRepository` |
+| Notas | `GradeController` | `GradeUseCase` | `AverageCalculator` + `GradeMapper` | `GradeRepository` |
+| Simulación | `SimulationController` | `SimulateTargetGradeUseCase` | `GradeCalculator` | `SubjectRepository` |
+
+Los componentes `Util` representan utilidades transversales. Todos los flujos convergen en PostgreSQL. Dashboard y Simulación comparten `SubjectRepository` porque la simulación necesita leer la materia completa con sus cortes para identificar cuáles tienen nota pendiente.
 
 ---
 
 ### 5.4 Diagrama Entidad-Relación
 
-![Diagrama_entidad_relacion.png](docs/Diagrama_entidad_relacion.png)
+![Diagrama_ER.png](docs/Diagrama_ER.png)
 
-El modelo de datos está compuesto por tres entidades principales:
+El modelo de datos está compuesto por seis entidades principales:
 
 ```
-┌──────────────┐  1     N  ┌───────────────────┐  1     N  ┌────────────┐
-│   subjects   │───────────│  evaluation_cuts   │───────────│   grades   │
-│──────────────│           │───────────────────│           │────────────│
-│ id (PK)      │           │ id (PK)            │           │ id (PK)    │
-│ student_id   │           │ subject_id (FK)    │           │ cut_id(FK) │
-│ subject_name │           │ cut_name           │           │ activity   │
-│ credits      │           │ cut_percentage     │           │ grade_value│
-│ teacher_name │           │ grade              │           │ percentage │
-│ semester     │           └───────────────────┘           └────────────│
-└──────────────┘
-```
+┌──────────────────┐  1     N  ┌──────────────────┐  1     N   ┌─────────────────────┐
+│     subjects     │───────────│  evaluation_cuts  │───────────│       grades        │
+│──────────────────│           │──────────────────│            │─────────────────────│
+│ subject_id (PK)  │           │ cut_id (PK)       │           │ grade_id (PK)       │
+│ student_id       │           │ subject_id (FK)   │     ┌─────│ cut_id (FK)         │
+│ subject_name     │           │ cut_name          │     │     │ subject_id (FK)     │
+│ credits          │           │ cut_percentage    │     │     │ activity_name       │
+│ schedule         │           └──────────────────┘     │      │ grade_value         │
+│ teacher_name     │◄──────────────────────────────────┘       │ grade_percentage    │
+│ semester         │                                           └─────────────────────┘
+│ created_at       │
+│                  │  1     N  ┌──────────────────┐
+│                  │───────────│  academic_goals  │
+└──────────────────┘           │──────────────────│
+                               │ goal_id (PK)     │
+┌──────────────────────────┐   │ student_id       │
+│     schedule_configs     │   │ goal_name        │
+│──────────────────────────│   │ target_grade     │
+│ config_id (PK)           │   │ subject_id (FK)  │
+│ student_id               │   └──────────────────┘
+│ free_time_hours          │
+│ rest_hours               │   ┌──────────────────────┐
+│ personal_time_hours      │   │  study_preferences   │
+│ social_time_hours        │   │──────────────────────│
+│ max_study_hours_per_day  │   │ preference_id (PK)   │
+└──────────────────────────┘   │ student_id           │
+                               │ study_modality       │
+                               │ study_environment    │
+                               │ study_method         │
+                               └──────────────────────┘
 
-La entidad `subjects` actúa como núcleo; `evaluation_cuts` almacena el promedio calculado de cada corte (`grade`); `grades` almacena cada actividad evaluativa individual.
+```
+El esquema tiene dos grupos de tablas que se conectan al estudiante:
+
+**Grupo académico**:
+- **`subjects`** es la tabla central. Cada fila es una materia de un estudiante en un semestre.
+- **`evaluation_cuts`** depende de `subjects` (1:N). Cada corte tiene nombre y porcentaje; la nota del corte no se almacena aquí sino que se calcula a partir de `grades`.
+- **`grades`** depende de `evaluation_cuts` y de `subjects` (FK a ambas). Cada fila es una actividad evaluativa con su nota (`grade_value` entre 0.0–5.0) y su peso (`grade_percentage`) dentro del corte.
+
+**Grupo de planificación**:
+- **`academic_goals`** vincula una meta de nota (`target_grade`) a una materia específica — base de la simulación persistida.
+- **`schedule_configs`** guarda las horas disponibles del estudiante (tiempo libre, descanso, estudio máximo) — usado por el módulo de planificación de horarios.
+- **`study_preferences`** almacena preferencias de modalidad, entorno y método de estudio — personalización para recomendaciones de la IA.
+
+> `schedule_configs` y `study_preferences` no tienen FK a `subjects`, solo a `student_id`, porque son configuraciones globales del estudiante, no de una materia en particular.
+
+
 
 ---
 
