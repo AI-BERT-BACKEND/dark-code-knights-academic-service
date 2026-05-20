@@ -172,6 +172,7 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENCIALES_QA }}
       - name: Deploy to Azure Container Apps
         uses: azure/container-apps-deploy-action@v1
+        continue-on-error: true
         with:
           resourceGroup: aibert-rg
           containerAppName: aibert-academic-service-qa
@@ -197,6 +198,7 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENCIALES_PROD }}
       - name: Deploy to Azure Container Apps
         uses: azure/container-apps-deploy-action@v1
+        continue-on-error: true
         with:
           resourceGroup: aibert-rg
           containerAppName: aibert-academic-service-prod
