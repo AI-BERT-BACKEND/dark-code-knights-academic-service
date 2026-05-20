@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.OptionalDouble;
 
-@Tag(name = "Academic Dashboard", description = "Student academic summary (R05)")
+@Tag(name = "Academic Dashboard", description = "Student academic summary (AIB-9)")
 @RestController
 @RequiredArgsConstructor
 public class AcademicController {

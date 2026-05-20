@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Locale;
 
-@Tag(name = "Simulation", description = "Target grade simulation for pending evaluation cuts (R10)")
+@Tag(name = "Simulation", description = "Target grade simulation for pending evaluation cuts (AIB-17)")
 @RestController
 @RequiredArgsConstructor
 public class SimulationController {

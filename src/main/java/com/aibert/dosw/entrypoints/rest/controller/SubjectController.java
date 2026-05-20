@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Tag(name = "Subjects", description = "Academic subject management for the authenticated student (R06)")
+@Tag(name = "Subjects", description = "Academic subject management for the authenticated student (AIB-13)")
 @RestController
 @RequestMapping("/api/v1/subjects")
 @RequiredArgsConstructor

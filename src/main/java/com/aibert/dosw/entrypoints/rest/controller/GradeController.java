@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Tag(name = "Grades", description = "Grade registration and management by evaluation cut (R08, R09)")
+@Tag(name = "Grades", description = "Grade registration and management by evaluation cut (AIB-15)")
 @RestController
 @RequiredArgsConstructor
 public class GradeController {

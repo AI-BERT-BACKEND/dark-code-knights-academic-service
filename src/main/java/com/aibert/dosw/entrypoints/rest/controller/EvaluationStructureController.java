@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Tag(name = "Evaluation Structure", description = "Configuration of evaluation cuts for a subject (R07)")
+@Tag(name = "Evaluation Structure", description = "Configuration of evaluation cuts for a subject (AIB-14)")
 @RestController
 @RequestMapping("/api/v1/subjects")
 @RequiredArgsConstructor
