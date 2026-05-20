@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Tag(name = "Academic Goals", description = "Definición de metas académicas (AIB-11)")
+@Tag(name = "Academic Goals", description = "Academic goal definition and progress tracking (AIB-11)")
 @RestController
 @RequestMapping("/api/v1/academic/goals")
 @RequiredArgsConstructor
@@ -33,7 +33,7 @@ public class AcademicGoalController {
     private final GetAcademicGoalUseCase getAcademicGoalUseCase;
 
     @PutMapping
-    @Operation(summary = "Guardar o actualizar una meta académica")
+    @Operation(summary = "Create or update an academic goal")
     public ResponseEntity<ApiResponse<AcademicGoalProgressDTO>> setGoal(
             @RequestHeader("X-Student-Id") String studentId,
             @Valid @RequestBody AcademicGoalRequestDTO request) {
@@ -49,7 +49,7 @@ public class AcademicGoalController {
     }
 
     @GetMapping("/{goalId}")
-    @Operation(summary = "Consultar una meta académica por su ID")
+    @Operation(summary = "Get an academic goal by ID")
     public ResponseEntity<ApiResponse<AcademicGoalProgressDTO>> getGoal(
             @PathVariable Long goalId,
             @RequestHeader("X-Student-Id") String studentId) {
@@ -59,7 +59,7 @@ public class AcademicGoalController {
     }
 
     @GetMapping
-    @Operation(summary = "Listar todas las metas del estudiante, con filtro opcional por semestre")
+    @Operation(summary = "List all goals for the student, with optional semester filter")
     public ResponseEntity<ApiResponse<List<AcademicGoalProgressDTO>>> getAllGoals(
             @RequestHeader("X-Student-Id") String studentId,
             @RequestParam(required = false) String semester) {

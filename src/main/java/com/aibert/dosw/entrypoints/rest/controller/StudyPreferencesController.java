@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Study Preferences", description = "Configuración de preferencias de estudio (AIB-12)")
+@Tag(name = "Study Preferences", description = "Student study preferences configuration (AIB-12)")
 @RestController
 @RequestMapping("/api/v1/students/preferences")
 @RequiredArgsConstructor
@@ -28,7 +28,7 @@ public class StudyPreferencesController {
     private final GetStudyPreferencesUseCase getStudyPreferencesUseCase;
 
     @PutMapping
-    @Operation(summary = "Guardar o actualizar preferencias de estudio")
+    @Operation(summary = "Save or update study preferences")
     public ResponseEntity<ApiResponse<StudyPreferencesResponseDTO>> save(
             @RequestHeader("X-Student-Id") String studentId,
             @Valid @RequestBody StudyPreferencesRequestDTO request) {
@@ -45,7 +45,7 @@ public class StudyPreferencesController {
     }
 
     @GetMapping
-    @Operation(summary = "Consultar preferencias de estudio del estudiante")
+    @Operation(summary = "Get study preferences for the student")
     public ResponseEntity<ApiResponse<StudyPreferencesResponseDTO>> get(
             @RequestHeader("X-Student-Id") String studentId) {
 

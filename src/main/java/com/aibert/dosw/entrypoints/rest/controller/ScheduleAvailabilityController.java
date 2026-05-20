@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/students/schedule-availability")
 @RequiredArgsConstructor
-@Tag(name = "Schedule Availability", description = "Configuración de disponibilidad de horarios (AIB-10)")
+@Tag(name = "Schedule Availability", description = "Student schedule availability configuration (AIB-10)")
 public class ScheduleAvailabilityController {
 
     private final SaveScheduleAvailabilityUseCase saveUseCase;
@@ -30,7 +30,7 @@ public class ScheduleAvailabilityController {
     private final ScheduleAvailabilityMapper mapper;
 
     @PutMapping
-    @Operation(summary = "Guardar o actualizar la disponibilidad de horarios del estudiante")
+    @Operation(summary = "Save or update the student's schedule availability")
     public ResponseEntity<ApiResponse<ScheduleAvailabilityResponseDTO>> save(
             @RequestHeader("X-Student-Id") String studentId,
             @Valid @RequestBody ScheduleAvailabilityRequestDTO request) {
@@ -49,7 +49,7 @@ public class ScheduleAvailabilityController {
     }
 
     @GetMapping
-    @Operation(summary = "Consultar la disponibilidad de horarios del estudiante")
+    @Operation(summary = "Get the student's schedule availability")
     public ResponseEntity<ApiResponse<ScheduleAvailabilityResponseDTO>> get(
             @RequestHeader("X-Student-Id") String studentId) {
 
