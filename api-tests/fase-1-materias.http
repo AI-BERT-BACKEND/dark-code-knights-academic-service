@@ -1,5 +1,5 @@
 ### ================================================================
-### FASE 1 — Gestión de Materias (R06)
+### FASE 1 — Gestión de Materias (AIB-13)
 ### Prerequisito: base de datos limpia (IDs inician en 1)
 ###
 ### IDs resultantes al terminar este archivo:
@@ -12,8 +12,8 @@
 ### Siguiente ID de cut:      5
 ### ================================================================
 
-@baseUrl = http://localhost:8002
-@studentId = student-test
+@baseUrl = https://aibert-academic-service-qa.yellowwave-cb2d91fc.centralus.azurecontainerapps.io
+@studentId = test-student-123
 @ct = application/json
 
 
@@ -31,6 +31,7 @@ X-Student-Id: {{studentId}}
   "credits": 3,
   "teacherName": "Prof. Error",
   "semester": "2025-1",
+  "schedule": "LUNES 08:00-10:00",
   "evaluationCuts": [
     { "cutName": "Corte 1", "cutPercentage": 40 },
     { "cutName": "Corte 2", "cutPercentage": 40 }
@@ -52,6 +53,7 @@ X-Student-Id: {{studentId}}
   "credits": 4,
   "teacherName": "Prof. Ramírez",
   "semester": "2025-1",
+  "schedule": "LUNES 08:00-10:00",
   "evaluationCuts": [
     { "cutName": "Corte 1", "cutPercentage": 40 },
     { "cutName": "Corte 2", "cutPercentage": 60 }
@@ -73,6 +75,7 @@ X-Student-Id: {{studentId}}
   "credits": 3,
   "teacherName": "Otro Profesor",
   "semester": "2025-1",
+  "schedule": "MARTES 10:00-12:00",
   "evaluationCuts": [
     { "cutName": "Corte 1", "cutPercentage": 50 },
     { "cutName": "Corte 2", "cutPercentage": 50 }
@@ -94,6 +97,7 @@ X-Student-Id: {{studentId}}
   "credits": 3,
   "teacherName": "Prof. Torres",
   "semester": "2025-1",
+  "schedule": "MIERCOLES 14:00-16:00",
   "evaluationCuts": [
     { "cutName": "Corte 1", "cutPercentage": 50 },
     { "cutName": "Corte 2", "cutPercentage": 50 }
@@ -105,7 +109,7 @@ X-Student-Id: {{studentId}}
 # CASO 5 — Listar todas las materias del estudiante → 200 OK
 # Espera: lista con 2 materias (Cálculo Diferencial y Física General)
 # ------------------------------------------------------------------
-### GET todas las materias de student-test
+### GET todas las materias de test-student-123
 GET {{baseUrl}}/api/v1/subjects
 X-Student-Id: {{studentId}}
 
@@ -142,6 +146,7 @@ X-Student-Id: {{studentId}}
   "credits": 4,
   "teacherName": "Prof. Torres",
   "semester": "2025-1",
+  "schedule": "MIERCOLES 14:00-16:00",
   "evaluationCuts": [
     { "cutName": "Corte 1", "cutPercentage": 50 },
     { "cutName": "Corte 2", "cutPercentage": 50 }
@@ -172,6 +177,7 @@ X-Student-Id: {{studentId}}
   "credits": 3,
   "teacherName": "Prof. X",
   "semester": "2025-1",
+  "schedule": "VIERNES 08:00-10:00",
   "evaluationCuts": [
     { "cutName": "Corte 1", "cutPercentage": 100 }
   ]
@@ -180,7 +186,7 @@ X-Student-Id: {{studentId}}
 
 # ------------------------------------------------------------------
 # CASO 11 — Error: validación créditos fuera de rango → 400 Bad Request
-# Espera: error de validación @Max (máximo 10 créditos)
+# Espera: error de validación @Max (máximo 4 créditos)
 # ------------------------------------------------------------------
 ### POST con credits=15
 POST {{baseUrl}}/api/v1/subjects
@@ -192,6 +198,7 @@ X-Student-Id: {{studentId}}
   "credits": 15,
   "teacherName": "Prof. X",
   "semester": "2025-1",
+  "schedule": "SABADO 10:00-12:00",
   "evaluationCuts": [
     { "cutName": "Corte 1", "cutPercentage": 100 }
   ]

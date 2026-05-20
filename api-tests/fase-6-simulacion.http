@@ -1,5 +1,5 @@
 ### ================================================================
-### FASE 6 — Simulación de Nota Objetivo (R10)
+### FASE 6 — Simulación de Nota Objetivo (AIB-17)
 ### Prerequisito: fases 1, 2, 3 y 4 ejecutadas (fase 5 es opcional)
 ###
 ### Estado de la BD al llegar aquí (subject id=1):
@@ -8,12 +8,13 @@
 ###   cutId=7  Corte 3  40%  grade=null  → PENDIENTE
 ###
 ### Fórmula de simulación:
-###   currentScore     = 5.00*30 + 3.50*30 = 255
+###   currentScore      = 5.00*30 + 3.50*30 = 255
 ###   pendingPercentage = 40
-###   requiredGrade    = (targetGrade*100 - 255) / 40
+###   requiredGrade     = (targetGrade*100 - 255) / 40
 ### ================================================================
 
-@baseUrl = http://localhost:8002
+@baseUrl = https://aibert-academic-service-qa.yellowwave-cb2d91fc.centralus.azurecontainerapps.io
+@studentId = test-student-123
 @ct = application/json
 @s1 = 1
 @cut3 = 7
@@ -26,6 +27,7 @@
 ### POST simulate en subjectId=999
 POST {{baseUrl}}/api/v1/subjects/999/simulate
 Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
 
 {
   "targetGrade": 3.5
@@ -39,6 +41,7 @@ Content-Type: {{ct}}
 ### POST simulate con targetGrade=6.0
 POST {{baseUrl}}/api/v1/subjects/{{s1}}/simulate
 Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
 
 {
   "targetGrade": 6.0
@@ -52,6 +55,7 @@ Content-Type: {{ct}}
 ### POST simulate con targetGrade=-1.0
 POST {{baseUrl}}/api/v1/subjects/{{s1}}/simulate
 Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
 
 {
   "targetGrade": -1.0
@@ -65,6 +69,7 @@ Content-Type: {{ct}}
 ### POST simulate con targetGrade=null
 POST {{baseUrl}}/api/v1/subjects/{{s1}}/simulate
 Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
 
 {
   "targetGrade": null
@@ -76,15 +81,15 @@ Content-Type: {{ct}}
 # targetGrade=4.0
 # requiredGrade = (4.0*100 - 255) / 40 = 145/40 = 3.625
 # Espera:
-#   targetGrade=4.0
 #   requiredGrade=3.625
-#   achievable=true
-#   pendingCutsPercentage=40.0
+#   isAchievable=true
+#   pendingCuts=[{ cutId: 7, cutName: "Corte 3", cutPercentage: 40 }]
 #   message="Para alcanzar 4.0 necesitas obtener 3.63 o más..."
 # ------------------------------------------------------------------
 ### POST simulate targetGrade=4.0 — meta alcanzable
 POST {{baseUrl}}/api/v1/subjects/{{s1}}/simulate
 Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
 
 {
   "targetGrade": 4.0
@@ -96,14 +101,15 @@ Content-Type: {{ct}}
 # targetGrade=5.0
 # requiredGrade = (5.0*100 - 255) / 40 = 245/40 = 6.125  → supera 5.0
 # Espera:
-#   targetGrade=5.0
 #   requiredGrade=6.125
-#   achievable=false
+#   isAchievable=false
+#   pendingCuts=[{ cutId: 7, cutName: "Corte 3", cutPercentage: 40 }]
 #   message="No es posible alcanzar 5.0. La nota requerida (6.13) supera el máximo..."
 # ------------------------------------------------------------------
 ### POST simulate targetGrade=5.0 — meta inalcanzable
 POST {{baseUrl}}/api/v1/subjects/{{s1}}/simulate
 Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
 
 {
   "targetGrade": 5.0
@@ -116,14 +122,15 @@ Content-Type: {{ct}}
 # requiredGrade = (2.0*100 - 255) / 40 = -55/40 = -1.375 → clampeado a 0.0
 # Ya se supera la meta sin importar la nota del Corte 3
 # Espera:
-#   targetGrade=2.0
 #   requiredGrade=0.0
-#   achievable=true
+#   isAchievable=true
+#   pendingCuts=[{ cutId: 7, cutName: "Corte 3", cutPercentage: 40 }]
 #   message="¡Ya tienes asegurado superar tu meta!..."
 # ------------------------------------------------------------------
 ### POST simulate targetGrade=2.0 — meta ya asegurada
 POST {{baseUrl}}/api/v1/subjects/{{s1}}/simulate
 Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
 
 {
   "targetGrade": 2.0
@@ -138,6 +145,7 @@ Content-Type: {{ct}}
 ### POST nota en Corte 3 — cierra todos los cortes
 POST {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut3}}/grades
 Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
 
 {
   "activityName": "Examen Final",
@@ -156,6 +164,7 @@ Content-Type: {{ct}}
 ### POST simulate sin cortes pendientes
 POST {{baseUrl}}/api/v1/subjects/{{s1}}/simulate
 Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
 
 {
   "targetGrade": 3.5
@@ -172,3 +181,4 @@ Content-Type: {{ct}}
 # ------------------------------------------------------------------
 ### GET averages finales con los 3 cortes calificados
 GET {{baseUrl}}/api/v1/subjects/{{s1}}/averages
+X-Student-Id: {{studentId}}
