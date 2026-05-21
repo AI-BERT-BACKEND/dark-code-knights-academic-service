@@ -41,7 +41,7 @@ public class AcademicController {
     @GetMapping("/api/v1/academic/summary")
     public ResponseEntity<ApiResponse<AcademicSummaryDTO>> getSummary(
             @Parameter(description = "Authenticated student ID", required = true)
-            @RequestHeader("X-Student-Id") String studentId) {
+            @RequestHeader("studentId") String studentId) {
 
         List<Subject> subjects = getAcademicSummaryUseCase.getSummary(studentId);
 

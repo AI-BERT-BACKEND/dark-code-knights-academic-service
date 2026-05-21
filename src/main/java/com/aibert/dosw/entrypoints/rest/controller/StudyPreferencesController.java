@@ -30,7 +30,7 @@ public class StudyPreferencesController {
     @PutMapping
     @Operation(summary = "Save or update study preferences")
     public ResponseEntity<ApiResponse<StudyPreferencesResponseDTO>> save(
-            @RequestHeader("X-Student-Id") String studentId,
+            @RequestHeader("studentId") String studentId,
             @Valid @RequestBody StudyPreferencesRequestDTO request) {
 
         StudyPreferences domain = StudyPreferences.builder()
@@ -47,7 +47,7 @@ public class StudyPreferencesController {
     @GetMapping
     @Operation(summary = "Get study preferences for the student")
     public ResponseEntity<ApiResponse<StudyPreferencesResponseDTO>> get(
-            @RequestHeader("X-Student-Id") String studentId) {
+            @RequestHeader("studentId") String studentId) {
 
         StudyPreferences preferences = getStudyPreferencesUseCase.get(studentId);
         return ResponseEntity.ok(ApiResponse.ok(toDTO(preferences)));

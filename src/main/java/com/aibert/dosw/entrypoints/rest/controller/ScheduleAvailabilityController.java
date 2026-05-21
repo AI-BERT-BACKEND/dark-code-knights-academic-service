@@ -32,7 +32,7 @@ public class ScheduleAvailabilityController {
     @PutMapping
     @Operation(summary = "Save or update the student's schedule availability")
     public ResponseEntity<ApiResponse<ScheduleAvailabilityResponseDTO>> save(
-            @RequestHeader("X-Student-Id") String studentId,
+            @RequestHeader("studentId") String studentId,
             @Valid @RequestBody ScheduleAvailabilityRequestDTO request) {
 
         ScheduleAvailability domain = ScheduleAvailability.builder()
@@ -51,7 +51,7 @@ public class ScheduleAvailabilityController {
     @GetMapping
     @Operation(summary = "Get the student's schedule availability")
     public ResponseEntity<ApiResponse<ScheduleAvailabilityResponseDTO>> get(
-            @RequestHeader("X-Student-Id") String studentId) {
+            @RequestHeader("studentId") String studentId) {
 
         ScheduleAvailabilityResponseDTO response = mapper.toResponse(getUseCase.get(studentId));
         return ResponseEntity.ok(ApiResponse.ok(response, "ok"));

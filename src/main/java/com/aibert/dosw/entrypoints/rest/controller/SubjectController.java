@@ -55,7 +55,7 @@ public class SubjectController {
     @PostMapping
     public ResponseEntity<ApiResponse<SubjectResponseDTO>> create(
             @Parameter(description = "Authenticated student ID", required = true)
-            @RequestHeader("X-Student-Id") String studentId,
+            @RequestHeader("studentId") String studentId,
             @Valid @RequestBody SubjectRequestDTO request) {
         Subject subject = entrypointMapper.toDomain(request, studentId);
         Subject created = createSubjectUseCase.create(subject);
@@ -74,7 +74,7 @@ public class SubjectController {
     @GetMapping
     public ResponseEntity<ApiResponse<List<SubjectResponseDTO>>> getAll(
             @Parameter(description = "Authenticated student ID", required = true)
-            @RequestHeader("X-Student-Id") String studentId) {
+            @RequestHeader("studentId") String studentId) {
         List<Subject> subjects = getSubjectsUseCase.getAllByStudent(studentId);
         return ResponseEntity.ok(ApiResponse.ok(subjectMapper.toResponseDTOList(subjects)));
     }
@@ -90,7 +90,7 @@ public class SubjectController {
     @GetMapping("/{subjectId}")
     public ResponseEntity<ApiResponse<SubjectResponseDTO>> getById(
             @Parameter(description = "Authenticated student ID", required = true)
-            @RequestHeader("X-Student-Id") String studentId,
+            @RequestHeader("studentId") String studentId,
             @Parameter(description = "Subject ID", required = true)
             @PathVariable Long subjectId) {
         Subject subject = getSubjectsUseCase.getByIdAndStudent(subjectId, studentId);
@@ -112,7 +112,7 @@ public class SubjectController {
             @Parameter(description = "Subject ID", required = true)
             @PathVariable Long subjectId,
             @Parameter(description = "Authenticated student ID", required = true)
-            @RequestHeader("X-Student-Id") String studentId,
+            @RequestHeader("studentId") String studentId,
             @Valid @RequestBody SubjectRequestDTO request) {
         Subject subject = entrypointMapper.toDomain(request, studentId);
         Subject updated = updateSubjectUseCase.update(subjectId, subject);
@@ -130,7 +130,7 @@ public class SubjectController {
     @DeleteMapping("/{subjectId}")
     public ResponseEntity<Void> delete(
             @Parameter(description = "Authenticated student ID", required = true)
-            @RequestHeader("X-Student-Id") String studentId,
+            @RequestHeader("studentId") String studentId,
             @Parameter(description = "Subject ID", required = true)
             @PathVariable Long subjectId) {
         deleteSubjectUseCase.delete(subjectId, studentId);

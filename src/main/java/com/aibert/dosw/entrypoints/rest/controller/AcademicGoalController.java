@@ -35,7 +35,7 @@ public class AcademicGoalController {
     @PutMapping
     @Operation(summary = "Create or update an academic goal")
     public ResponseEntity<ApiResponse<AcademicGoalProgressDTO>> setGoal(
-            @RequestHeader("X-Student-Id") String studentId,
+            @RequestHeader("studentId") String studentId,
             @Valid @RequestBody AcademicGoalRequestDTO request) {
 
         AcademicGoal saved = setAcademicGoalUseCase.set(
@@ -52,7 +52,7 @@ public class AcademicGoalController {
     @Operation(summary = "Get an academic goal by ID")
     public ResponseEntity<ApiResponse<AcademicGoalProgressDTO>> getGoal(
             @PathVariable Long goalId,
-            @RequestHeader("X-Student-Id") String studentId) {
+            @RequestHeader("studentId") String studentId) {
 
         AcademicGoalProgress progress = getAcademicGoalUseCase.getById(goalId, studentId);
         return ResponseEntity.ok(ApiResponse.ok(toDTO(progress)));
@@ -61,7 +61,7 @@ public class AcademicGoalController {
     @GetMapping
     @Operation(summary = "List all goals for the student, with optional semester filter")
     public ResponseEntity<ApiResponse<List<AcademicGoalProgressDTO>>> getAllGoals(
-            @RequestHeader("X-Student-Id") String studentId,
+            @RequestHeader("studentId") String studentId,
             @RequestParam(required = false) String semester) {
 
         List<AcademicGoalProgressDTO> dtos = getAcademicGoalUseCase.getAllProgress(studentId, semester)
