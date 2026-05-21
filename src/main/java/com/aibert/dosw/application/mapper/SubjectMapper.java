@@ -15,6 +15,7 @@ import java.util.List;
 public interface SubjectMapper {
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "externalId", ignore = true)
     @Mapping(target = "studentId", ignore = true)
     @Mapping(target = "overallAverage", ignore = true)
     Subject toDomain(SubjectRequestDTO dto);

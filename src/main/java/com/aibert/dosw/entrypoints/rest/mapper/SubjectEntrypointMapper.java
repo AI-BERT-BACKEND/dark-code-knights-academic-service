@@ -10,6 +10,7 @@ import org.mapstruct.Mapping;
 public interface SubjectEntrypointMapper {
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "externalId", ignore = true)
     @Mapping(target = "overallAverage", ignore = true)
     @Mapping(target = "studentId", source = "studentId")
     @Mapping(target = "subjectName", source = "dto.subjectName")

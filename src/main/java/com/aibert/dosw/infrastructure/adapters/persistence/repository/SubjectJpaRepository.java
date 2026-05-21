@@ -13,4 +13,6 @@ public interface SubjectJpaRepository extends JpaRepository<SubjectEntity, Long>
     boolean existsByStudentIdAndSubjectNameAndSemester(String studentId, String subjectName, String semester);
 
     Optional<SubjectEntity> findByIdAndStudentId(Long id, String studentId);
+
+    Optional<SubjectEntity> findByExternalId(String externalId);
 }

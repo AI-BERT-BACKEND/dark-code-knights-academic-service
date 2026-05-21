@@ -14,6 +14,7 @@ import java.util.List;
 public class SubjectResponseDTO {
 
     private Long id;
+    private String externalId;
     private String studentId;
     private String subjectName;
     private Integer credits;

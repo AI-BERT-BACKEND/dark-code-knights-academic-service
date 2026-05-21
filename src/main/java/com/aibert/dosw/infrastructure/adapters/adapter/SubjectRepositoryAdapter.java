@@ -63,4 +63,10 @@ public class SubjectRepositoryAdapter implements SubjectRepositoryPort {
     public void deleteById(Long id) {
         subjectJpaRepository.deleteById(id);
     }
+
+    @Override
+    public Optional<Subject> findByExternalId(String externalId) {
+        return subjectJpaRepository.findByExternalId(externalId)
+                .map(persistenceMapper::toDomain);
+    }
 }
