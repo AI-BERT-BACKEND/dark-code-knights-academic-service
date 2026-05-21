@@ -68,4 +68,24 @@ public class SubjectEntity {
 
     @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<EvaluationCutEntity> evaluationCuts;
+
+    public SubjectEntity(
+        Long id,
+        String studentId,
+        String subjectName,
+        Integer credits,
+        String teacherName,
+        String semester,
+        String schedule,
+        List<EvaluationCutEntity> evaluationCuts
+    ) {
+        this.id = id;
+        this.studentId = studentId;
+        this.subjectName = subjectName;
+        this.credits = credits;
+        this.teacherName = teacherName;
+        this.semester = semester;
+        this.schedule = schedule;
+        this.evaluationCuts = evaluationCuts;
+    }
 }
