@@ -66,7 +66,7 @@ class AcademicGoalIntegrationTest {
 
         String response = mockMvc.perform(post("/api/v1/subjects")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
+                        .header("studentId", STUDENT_ID)
                         .content("""
                                 {
                                   "subjectName": "Cálculo Integral",
@@ -95,7 +95,7 @@ class AcademicGoalIntegrationTest {
     void shouldCreateGeneralGoal() throws Exception {
         mockMvc.perform(put(GOALS_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
+                        .header("studentId", STUDENT_ID)
                         .content("""
                                 {"goalName": "Mejorar mi promedio general", "targetGrade": 4.0}
                                 """))
@@ -115,7 +115,7 @@ class AcademicGoalIntegrationTest {
     void shouldCreateSubjectLinkedGoal() throws Exception {
         mockMvc.perform(put(GOALS_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
+                        .header("studentId", STUDENT_ID)
                         .content("""
                                 {"goalName": "Aprobar Cálculo", "targetGrade": 4.0, "subjectId": %d}
                                 """.formatted(subjectId)))
@@ -131,7 +131,7 @@ class AcademicGoalIntegrationTest {
     void shouldUpdateExistingGoal() throws Exception {
         mockMvc.perform(put(GOALS_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
+                        .header("studentId", STUDENT_ID)
                         .content("""
                                 {"goalName": "Aprobar Cálculo", "targetGrade": 3.0}
                                 """))
@@ -139,7 +139,7 @@ class AcademicGoalIntegrationTest {
 
         mockMvc.perform(put(GOALS_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
+                        .header("studentId", STUDENT_ID)
                         .content("""
                                 {"goalName": "Aprobar Cálculo", "targetGrade": 4.5}
                                 """))
@@ -154,7 +154,7 @@ class AcademicGoalIntegrationTest {
     void shouldCreateSeparateGoalsForDifferentNames() throws Exception {
         mockMvc.perform(put(GOALS_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
+                        .header("studentId", STUDENT_ID)
                         .content("""
                                 {"goalName": "Meta A", "targetGrade": 3.5}
                                 """))
@@ -162,7 +162,7 @@ class AcademicGoalIntegrationTest {
 
         mockMvc.perform(put(GOALS_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
+                        .header("studentId", STUDENT_ID)
                         .content("""
                                 {"goalName": "Meta B", "targetGrade": 4.0}
                                 """))
@@ -178,7 +178,7 @@ class AcademicGoalIntegrationTest {
     void shouldReturn400WhenGoalNameMissing() throws Exception {
         mockMvc.perform(put(GOALS_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
+                        .header("studentId", STUDENT_ID)
                         .content("""
                                 {"targetGrade": 4.0}
                                 """))
@@ -191,7 +191,7 @@ class AcademicGoalIntegrationTest {
     void shouldReturn400WhenGoalNameTooShort() throws Exception {
         mockMvc.perform(put(GOALS_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
+                        .header("studentId", STUDENT_ID)
                         .content("""
                                 {"goalName": "AB", "targetGrade": 4.0}
                                 """))
@@ -203,7 +203,7 @@ class AcademicGoalIntegrationTest {
     void shouldReturn400WhenTargetGradeNull() throws Exception {
         mockMvc.perform(put(GOALS_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
+                        .header("studentId", STUDENT_ID)
                         .content("""
                                 {"goalName": "Mi meta"}
                                 """))
@@ -215,7 +215,7 @@ class AcademicGoalIntegrationTest {
     void shouldReturn400WhenTargetGradeExceedsFive() throws Exception {
         mockMvc.perform(put(GOALS_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
+                        .header("studentId", STUDENT_ID)
                         .content("""
                                 {"goalName": "Mi meta", "targetGrade": 5.1}
                                 """))
@@ -227,7 +227,7 @@ class AcademicGoalIntegrationTest {
     void shouldReturn404WhenSubjectNotOwned() throws Exception {
         mockMvc.perform(put(GOALS_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", "other-student")
+                        .header("studentId", "other-student")
                         .content("""
                                 {"goalName": "Aprobar Cálculo", "targetGrade": 4.0, "subjectId": %d}
                                 """.formatted(subjectId)))
@@ -241,7 +241,7 @@ class AcademicGoalIntegrationTest {
     void shouldReturnGoalById() throws Exception {
         String createResponse = mockMvc.perform(put(GOALS_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
+                        .header("studentId", STUDENT_ID)
                         .content("""
                                 {"goalName": "Sacar buen promedio", "targetGrade": 3.5}
                                 """))
@@ -251,7 +251,7 @@ class AcademicGoalIntegrationTest {
         Long goalId = objectMapper.readTree(createResponse).get("data").get("goalId").asLong();
 
         mockMvc.perform(get(GOALS_URL + "/{goalId}", goalId)
-                        .header("X-Student-Id", STUDENT_ID))
+                        .header("studentId", STUDENT_ID))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.goalName").value("Sacar buen promedio"))
                 .andExpect(jsonPath("$.data.targetGrade").value(3.5));
@@ -261,7 +261,7 @@ class AcademicGoalIntegrationTest {
     @DisplayName("Should return 404 when goal does not exist")
     void shouldReturn404WhenGoalNotFound() throws Exception {
         mockMvc.perform(get(GOALS_URL + "/99999")
-                        .header("X-Student-Id", STUDENT_ID))
+                        .header("studentId", STUDENT_ID))
                 .andExpect(status().isNotFound());
     }
 
@@ -272,7 +272,7 @@ class AcademicGoalIntegrationTest {
     void shouldReturnAllGoalsWithoutSemesterFilter() throws Exception {
         mockMvc.perform(put(GOALS_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
+                        .header("studentId", STUDENT_ID)
                         .content("""
                                 {"goalName": "Meta A", "targetGrade": 3.5}
                                 """))
@@ -280,14 +280,14 @@ class AcademicGoalIntegrationTest {
 
         mockMvc.perform(put(GOALS_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
+                        .header("studentId", STUDENT_ID)
                         .content("""
                                 {"goalName": "Meta B", "targetGrade": 4.0, "subjectId": %d}
                                 """.formatted(subjectId)))
                 .andExpect(status().isOk());
 
         mockMvc.perform(get(GOALS_URL)
-                        .header("X-Student-Id", STUDENT_ID))
+                        .header("studentId", STUDENT_ID))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", hasSize(2)));
     }
@@ -296,7 +296,7 @@ class AcademicGoalIntegrationTest {
     @DisplayName("Should return empty list when student has no goals")
     void shouldReturnEmptyListWhenNoGoals() throws Exception {
         mockMvc.perform(get(GOALS_URL)
-                        .header("X-Student-Id", STUDENT_ID))
+                        .header("studentId", STUDENT_ID))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").isArray())
                 .andExpect(jsonPath("$.data").isEmpty());
@@ -307,7 +307,7 @@ class AcademicGoalIntegrationTest {
     void shouldFilterGoalsBySemester() throws Exception {
         mockMvc.perform(put(GOALS_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
+                        .header("studentId", STUDENT_ID)
                         .content("""
                                 {"goalName": "Aprobar Cálculo", "targetGrade": 4.0, "subjectId": %d}
                                 """.formatted(subjectId)))
@@ -315,14 +315,14 @@ class AcademicGoalIntegrationTest {
 
         mockMvc.perform(put(GOALS_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
+                        .header("studentId", STUDENT_ID)
                         .content("""
                                 {"goalName": "Meta general", "targetGrade": 3.5}
                                 """))
                 .andExpect(status().isOk());
 
         mockMvc.perform(get(GOALS_URL)
-                        .header("X-Student-Id", STUDENT_ID)
+                        .header("studentId", STUDENT_ID)
                         .param("semester", SEMESTER))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", hasSize(1)));
@@ -335,7 +335,7 @@ class AcademicGoalIntegrationTest {
     void shouldComputeRequiredGradeAfterPartialGrading() throws Exception {
         mockMvc.perform(post("/api/v1/subjects/{sid}/cuts/{cid}/grades", subjectId, cut1Id)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
+                        .header("studentId", STUDENT_ID)
                         .content("""
                                 {"activityName": "Parcial 1", "gradeValue": 4.0, "percentage": 100}
                                 """))
@@ -344,7 +344,7 @@ class AcademicGoalIntegrationTest {
         // cut1=4.0×40=160, pending=60%; required=(4.0×100-160)/60=4.0
         mockMvc.perform(put(GOALS_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
+                        .header("studentId", STUDENT_ID)
                         .content("""
                                 {"goalName": "Aprobar Cálculo", "targetGrade": 4.0, "subjectId": %d}
                                 """.formatted(subjectId)))
@@ -358,7 +358,7 @@ class AcademicGoalIntegrationTest {
     void shouldSetNotAchievableWhenImpossible() throws Exception {
         mockMvc.perform(post("/api/v1/subjects/{sid}/cuts/{cid}/grades", subjectId, cut1Id)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
+                        .header("studentId", STUDENT_ID)
                         .content("""
                                 {"activityName": "Parcial 1", "gradeValue": 1.0, "percentage": 100}
                                 """))
@@ -367,7 +367,7 @@ class AcademicGoalIntegrationTest {
         // target=4.5; cut1=1.0×40=40; pending=60; required=(4.5×100-40)/60≈6.83>5
         mockMvc.perform(put(GOALS_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
+                        .header("studentId", STUDENT_ID)
                         .content("""
                                 {"goalName": "Meta alta", "targetGrade": 4.5, "subjectId": %d}
                                 """.formatted(subjectId)))

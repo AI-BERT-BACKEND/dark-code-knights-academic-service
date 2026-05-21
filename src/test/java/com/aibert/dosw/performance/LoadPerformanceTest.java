@@ -43,7 +43,7 @@ class LoadPerformanceTest {
         
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("X-Student-Id", "student-performance-test");
+        headers.set("studentId", "student-performance-test");
         
         long start = System.currentTimeMillis();
         ResponseEntity<String> response = restTemplate.postForEntity(
@@ -79,7 +79,7 @@ class LoadPerformanceTest {
         
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("X-Student-Id", "student-performance-test");
+        headers.set("studentId", "student-performance-test");
         
         // Create subject first
         ResponseEntity<String> createResponse = restTemplate.postForEntity(
@@ -144,7 +144,7 @@ class LoadPerformanceTest {
         
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("X-Student-Id", "student-performance-test");
+        headers.set("studentId", "student-performance-test");
         
         // Create subject first
         ResponseEntity<String> createResponse = restTemplate.postForEntity(

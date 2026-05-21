@@ -51,7 +51,7 @@ class ScheduleAvailabilityIntegrationTest {
     void shouldCreateAvailabilityWithAllFields() throws Exception {
         mockMvc.perform(put(URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
+                        .header("studentId", STUDENT_ID)
                         .content("""
                                 {
                                   "freeTimeHours": 4.0,
@@ -74,7 +74,7 @@ class ScheduleAvailabilityIntegrationTest {
     void shouldCreateWithPartialFields() throws Exception {
         mockMvc.perform(put(URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
+                        .header("studentId", STUDENT_ID)
                         .content("""
                                 {
                                   "restHours": 8.0,
@@ -92,7 +92,7 @@ class ScheduleAvailabilityIntegrationTest {
     void shouldCreateWithEmptyBody() throws Exception {
         mockMvc.perform(put(URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
+                        .header("studentId", STUDENT_ID)
                         .content("{}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true));
@@ -105,7 +105,7 @@ class ScheduleAvailabilityIntegrationTest {
     void shouldUpdateExistingAvailability() throws Exception {
         mockMvc.perform(put(URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
+                        .header("studentId", STUDENT_ID)
                         .content("""
                                 {"freeTimeHours": 3.0, "restHours": 7.0}
                                 """))
@@ -113,7 +113,7 @@ class ScheduleAvailabilityIntegrationTest {
 
         mockMvc.perform(put(URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
+                        .header("studentId", STUDENT_ID)
                         .content("""
                                 {"freeTimeHours": 5.0, "restHours": 9.0}
                                 """))
@@ -132,14 +132,14 @@ class ScheduleAvailabilityIntegrationTest {
     void shouldReturnAvailabilityAfterSaving() throws Exception {
         mockMvc.perform(put(URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
+                        .header("studentId", STUDENT_ID)
                         .content("""
                                 {"freeTimeHours": 4.0, "maxStudyHoursPerDay": 6.0}
                                 """))
                 .andExpect(status().isOk());
 
         mockMvc.perform(get(URL)
-                        .header("X-Student-Id", STUDENT_ID))
+                        .header("studentId", STUDENT_ID))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.freeTimeHours").value(4.0))
                 .andExpect(jsonPath("$.data.maxStudyHoursPerDay").value(6.0));
@@ -149,7 +149,7 @@ class ScheduleAvailabilityIntegrationTest {
     @DisplayName("Should return 404 when no availability configured")
     void shouldReturn404WhenNotConfigured() throws Exception {
         mockMvc.perform(get(URL)
-                        .header("X-Student-Id", "unknown-student"))
+                        .header("studentId", "unknown-student"))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.success").value(false));
     }
@@ -161,7 +161,7 @@ class ScheduleAvailabilityIntegrationTest {
     void shouldReturn400WhenMaxStudyHoursExceeds15() throws Exception {
         mockMvc.perform(put(URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
+                        .header("studentId", STUDENT_ID)
                         .content("""
                                 {"maxStudyHoursPerDay": 16.0}
                                 """))
@@ -176,7 +176,7 @@ class ScheduleAvailabilityIntegrationTest {
     void shouldReturn400WhenFieldIsZero() throws Exception {
         mockMvc.perform(put(URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
+                        .header("studentId", STUDENT_ID)
                         .content("""
                                 {"freeTimeHours": 0.0}
                                 """))
@@ -189,7 +189,7 @@ class ScheduleAvailabilityIntegrationTest {
     void shouldReturn400WhenFieldIsNegative() throws Exception {
         mockMvc.perform(put(URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
+                        .header("studentId", STUDENT_ID)
                         .content("""
                                 {"restHours": -1.0}
                                 """))
@@ -204,7 +204,7 @@ class ScheduleAvailabilityIntegrationTest {
     void shouldReturn400WhenSumExceeds24() throws Exception {
         mockMvc.perform(put(URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
+                        .header("studentId", STUDENT_ID)
                         .content("""
                                 {
                                   "freeTimeHours": 8.0,

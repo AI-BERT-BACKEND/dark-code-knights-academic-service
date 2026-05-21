@@ -52,7 +52,7 @@ class StudyPreferencesIntegrationTest {
     void shouldCreatePreferencesWithAllFields() throws Exception {
         mockMvc.perform(put(URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
+                        .header("studentId", STUDENT_ID)
                         .content("""
                                 {
                                   "studyModality": "VISUAL",
@@ -74,7 +74,7 @@ class StudyPreferencesIntegrationTest {
     void shouldCreatePreferencesWithEmptyBody() throws Exception {
         mockMvc.perform(put(URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
+                        .header("studentId", STUDENT_ID)
                         .content("{}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true));
@@ -85,7 +85,7 @@ class StudyPreferencesIntegrationTest {
     void shouldCreatePreferencesWithPartialFields() throws Exception {
         mockMvc.perform(put(URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
+                        .header("studentId", STUDENT_ID)
                         .content("""
                                 {"studyModality": "AUDITIVO"}
                                 """))
@@ -100,7 +100,7 @@ class StudyPreferencesIntegrationTest {
     void shouldUpdateExistingPreferences() throws Exception {
         mockMvc.perform(put(URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
+                        .header("studentId", STUDENT_ID)
                         .content("""
                                 {"studyModality": "VISUAL", "studyMethod": "INDIVIDUAL"}
                                 """))
@@ -108,7 +108,7 @@ class StudyPreferencesIntegrationTest {
 
         mockMvc.perform(put(URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
+                        .header("studentId", STUDENT_ID)
                         .content("""
                                 {"studyModality": "AUDITIVO", "studyEnvironment": "CAFETERIA", "studyMethod": "GRUPO"}
                                 """))
@@ -127,7 +127,7 @@ class StudyPreferencesIntegrationTest {
     void shouldReturn400WhenStudyMethodExceeds100Characters() throws Exception {
         mockMvc.perform(put(URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
+                        .header("studentId", STUDENT_ID)
                         .content("""
                                 {"studyMethod": "%s"}
                                 """.formatted("A".repeat(101))))
@@ -151,7 +151,7 @@ class StudyPreferencesIntegrationTest {
     void shouldReturnSavedPreferencesOnGet() throws Exception {
         mockMvc.perform(put(URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
+                        .header("studentId", STUDENT_ID)
                         .content("""
                                 {
                                   "studyModality": "KINESTESICO",
@@ -162,7 +162,7 @@ class StudyPreferencesIntegrationTest {
                 .andExpect(status().isOk());
 
         mockMvc.perform(get(URL)
-                        .header("X-Student-Id", STUDENT_ID))
+                        .header("studentId", STUDENT_ID))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data.studyModality").value("KINESTESICO"))
@@ -175,7 +175,7 @@ class StudyPreferencesIntegrationTest {
     @DisplayName("Should return 404 when no preferences exist for the student")
     void shouldReturn404WhenNoPreferencesExist() throws Exception {
         mockMvc.perform(get(URL)
-                        .header("X-Student-Id", "unknown-student"))
+                        .header("studentId", "unknown-student"))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.error", containsString("unknown-student")));
@@ -195,7 +195,7 @@ class StudyPreferencesIntegrationTest {
     void shouldAcceptStudyMethodOf100Characters() throws Exception {
         mockMvc.perform(put(URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", STUDENT_ID)
+                        .header("studentId", STUDENT_ID)
                         .content("""
                                 {"studyMethod": "%s"}
                                 """.formatted("A".repeat(100))))
@@ -210,7 +210,7 @@ class StudyPreferencesIntegrationTest {
     void shouldIsolatePreferencesPerStudent() throws Exception {
         mockMvc.perform(put(URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", "studentA")
+                        .header("studentId", "studentA")
                         .content("""
                                 {"studyModality": "VISUAL", "studyMethod": "INDIVIDUAL"}
                                 """))
@@ -218,17 +218,17 @@ class StudyPreferencesIntegrationTest {
 
         mockMvc.perform(put(URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Student-Id", "studentB")
+                        .header("studentId", "studentB")
                         .content("""
                                 {"studyModality": "AUDITIVO", "studyMethod": "GRUPO"}
                                 """))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(get(URL).header("X-Student-Id", "studentA"))
+        mockMvc.perform(get(URL).header("studentId", "studentA"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.studyModality").value("VISUAL"));
 
-        mockMvc.perform(get(URL).header("X-Student-Id", "studentB"))
+        mockMvc.perform(get(URL).header("studentId", "studentB"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.studyModality").value("AUDITIVO"));
 

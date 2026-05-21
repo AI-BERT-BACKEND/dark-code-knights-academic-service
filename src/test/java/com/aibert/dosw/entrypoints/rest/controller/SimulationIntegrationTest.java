@@ -70,7 +70,7 @@ class SimulationIntegrationTest {
 
         String createResponse = mockMvc.perform(post("/api/v1/subjects")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("X-Student-Id", "student-test")
+                .header("studentId", "student-test")
                 .content(subjectJson))
                 .andExpect(status().isCreated())
                 .andReturn().getResponse().getContentAsString();
@@ -292,7 +292,7 @@ class SimulationIntegrationTest {
 
         String createResponse = mockMvc.perform(post("/api/v1/subjects")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("X-Student-Id", "student-test")
+                .header("studentId", "student-test")
                 .content(newSubjectJson))
                 .andReturn().getResponse().getContentAsString();
 
@@ -334,7 +334,7 @@ class SimulationIntegrationTest {
 
         String createResponse = mockMvc.perform(post("/api/v1/subjects")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("X-Student-Id", "student-test")
+                .header("studentId", "student-test")
                 .content(singleCutSubjectJson))
                 .andReturn().getResponse().getContentAsString();
 
