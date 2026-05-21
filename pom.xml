@@ -188,11 +188,21 @@
                                         <limit>
                                             <counter>INSTRUCTION</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.80</minimum>
+                                            <minimum>0.90</minimum>
                                         </limit>
                                     </limits>
                                 </rule>
                             </rules>
+                            <excludes>
+                                <exclude>**/config/**</exclude>
+                                <exclude>**/AcademicServiceApplication.class</exclude>
+                                <exclude>**/dto/request/**</exclude>
+                                <exclude>**/dto/response/**</exclude>
+                                <exclude>**/infrastructure/adapters/persistence/entity/**</exclude>
+                                <exclude>**/infrastructure/adapters/persistence/mapper/**</exclude>
+                                <exclude>**/entrypoints/rest/mapper/**</exclude>
+                                <exclude>**/application/mapper/**</exclude>
+                            </excludes>
                         </configuration>
                     </execution>
                 </executions>
@@ -235,7 +245,7 @@
                                                 <limit>
                                                     <counter>INSTRUCTION</counter>
                                                     <value>COVEREDRATIO</value>
-                                                    <minimum>0.80</minimum>
+                                                    <minimum>0.90</minimum>
                                                 </limit>
                                             </limits>
                                         </rule>

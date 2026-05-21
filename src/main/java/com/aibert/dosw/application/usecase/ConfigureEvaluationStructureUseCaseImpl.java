@@ -33,6 +33,7 @@ public class ConfigureEvaluationStructureUseCaseImpl implements ConfigureEvaluat
 
         Subject updated = Subject.builder()
                 .id(existing.getId())
+                .externalId(existing.getExternalId())
                 .studentId(existing.getStudentId())
                 .subjectName(existing.getSubjectName())
                 .credits(existing.getCredits())
