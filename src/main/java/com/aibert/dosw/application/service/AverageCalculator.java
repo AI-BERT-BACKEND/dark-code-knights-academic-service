@@ -72,6 +72,7 @@ public class AverageCalculator {
 
         subjectRepository.save(Subject.builder()
                 .id(subject.getId())
+                .externalId(subject.getExternalId())
                 .studentId(subject.getStudentId())
                 .subjectName(subject.getSubjectName())
                 .credits(subject.getCredits())
