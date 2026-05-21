@@ -48,6 +48,12 @@ spring:
   config:
     activate:
       on-profile: qa
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}   
+    properties:
+      security.protocol: SASL_SSL
+      sasl.mechanism: PLAIN
+      sasl.jaas.config: "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"$ConnectionString\" password=\"${KAFKA_CONNECTION_STRING}\";"
   datasource:
     url: ${DB_URL}
     username: ${DB_USER}
@@ -61,10 +67,8 @@ spring:
       ddl-auto: update
     show-sql: false
     open-in-view: false
-
 server:
   port: 1502
-
 ---
 spring:
   config:
