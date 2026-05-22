@@ -2,7 +2,11 @@ package com.aibert.dosw.entrypoints.advice;
 
 import com.aibert.dosw.domain.exceptions.CutCapacityExceededException;
 import com.aibert.dosw.domain.exceptions.DuplicateSubjectException;
+import com.aibert.dosw.domain.exceptions.GoalNotFoundException;
 import com.aibert.dosw.domain.exceptions.GradeNotFoundException;
+import com.aibert.dosw.domain.exceptions.ScheduleAvailabilityNotFoundException;
+import com.aibert.dosw.domain.exceptions.ScheduleHoursExceedDayException;
+import com.aibert.dosw.domain.exceptions.StudyPreferencesNotFoundException;
 import com.aibert.dosw.domain.exceptions.EvaluationStructureLockedException;
 import com.aibert.dosw.domain.exceptions.GradeOutOfRangeException;
 import com.aibert.dosw.domain.exceptions.InvalidEvaluationStructureException;
@@ -16,6 +20,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -33,6 +38,36 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ApiResponse.error(errors, HttpStatus.BAD_REQUEST.value()));
+    }
+
+    @ExceptionHandler(ScheduleAvailabilityNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleScheduleAvailabilityNotFound(
+            ScheduleAvailabilityNotFoundException ex) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ApiResponse.error(ex.getMessage(), HttpStatus.NOT_FOUND.value()));
+    }
+
+    @ExceptionHandler(ScheduleHoursExceedDayException.class)
+    public ResponseEntity<ApiResponse<Void>> handleScheduleHoursExceedDay(ScheduleHoursExceedDayException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
+    }
+
+    @ExceptionHandler(GoalNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleGoalNotFound(GoalNotFoundException ex) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ApiResponse.error(ex.getMessage(), HttpStatus.NOT_FOUND.value()));
+    }
+
+    @ExceptionHandler(StudyPreferencesNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleStudyPreferencesNotFound(
+            StudyPreferencesNotFoundException ex) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ApiResponse.error(ex.getMessage(), HttpStatus.NOT_FOUND.value()));
     }
 
     @ExceptionHandler(GradeNotFoundException.class)
@@ -141,6 +176,19 @@ public class GlobalExceptionHandler {
         String mensaje = String.format(
                 "El header requerido '%s' no fue enviado en la petición",
                 ex.getHeaderName());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error(mensaje, HttpStatus.BAD_REQUEST.value()));
+    }
+
+    /**
+     * Maneja parámetros de query requeridos ausentes.
+     */
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ApiResponse<Void>> handleMissingRequestParam(MissingServletRequestParameterException ex) {
+        String mensaje = String.format(
+                "El parámetro requerido '%s' no fue enviado en la petición",
+                ex.getParameterName());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ApiResponse.error(mensaje, HttpStatus.BAD_REQUEST.value()));

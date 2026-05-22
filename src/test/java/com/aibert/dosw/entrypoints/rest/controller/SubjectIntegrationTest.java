@@ -59,6 +59,7 @@ class SubjectIntegrationTest {
               "credits": 4,
               "teacherName": "Prof. Ramírez",
               "semester": "2025-1",
+              "schedule": "Lunes 08:30 - 10:00",
               "evaluationCuts": [
                 { "cutName": "Corte 1", "cutPercentage": 40 },
                 { "cutName": "Corte 2", "cutPercentage": 60 }
@@ -68,7 +69,7 @@ class SubjectIntegrationTest {
 
         mockMvc.perform(post("/api/v1/subjects")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("X-Student-Id", "student-test")
+                .header("studentId", "student-test")
                 .content(subjectJson))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.success").value(true))
@@ -76,6 +77,7 @@ class SubjectIntegrationTest {
                 .andExpect(jsonPath("$.data.credits").value(4))
                 .andExpect(jsonPath("$.data.teacherName").value("Prof. Ramírez"))
                 .andExpect(jsonPath("$.data.semester").value("2025-1"))
+                .andExpect(jsonPath("$.data.schedule").value("Lunes 08:30 - 10:00"))
                 .andExpect(jsonPath("$.data.evaluationCuts").isArray())
                 .andExpect(jsonPath("$.data.evaluationCuts", hasSize(2)))
                 .andExpect(jsonPath("$.data.evaluationCuts[0].cutName").value("Corte 1"))
@@ -94,6 +96,7 @@ class SubjectIntegrationTest {
               "credits": 3,
               "teacherName": "Prof. Error",
               "semester": "2025-1",
+              "schedule": "Lunes 08:30 - 10:00",
               "evaluationCuts": [
                 { "cutName": "Corte 1", "cutPercentage": 40 },
                 { "cutName": "Corte 2", "cutPercentage": 40 }
@@ -103,7 +106,7 @@ class SubjectIntegrationTest {
 
         mockMvc.perform(post("/api/v1/subjects")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("X-Student-Id", "student-test")
+                .header("studentId", "student-test")
                 .content(subjectJson))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.success").value(false))
@@ -119,6 +122,7 @@ class SubjectIntegrationTest {
               "credits": 4,
               "teacherName": "Prof. Ramírez",
               "semester": "2025-1",
+              "schedule": "Lunes 08:30 - 10:00",
               "evaluationCuts": [
                 { "cutName": "Corte 1", "cutPercentage": 40 },
                 { "cutName": "Corte 2", "cutPercentage": 60 }
@@ -128,13 +132,13 @@ class SubjectIntegrationTest {
 
         mockMvc.perform(post("/api/v1/subjects")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("X-Student-Id", "student-test")
+                .header("studentId", "student-test")
                 .content(subjectJson))
                 .andExpect(status().isCreated());
 
         mockMvc.perform(post("/api/v1/subjects")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("X-Student-Id", "student-test")
+                .header("studentId", "student-test")
                 .content(subjectJson))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.success").value(false))
@@ -150,6 +154,7 @@ class SubjectIntegrationTest {
               "credits": 4,
               "teacherName": "Prof. Ramírez",
               "semester": "2025-1",
+              "schedule": "Lunes 08:30 - 10:00",
               "evaluationCuts": [
                 { "cutName": "Corte 1", "cutPercentage": 40 },
                 { "cutName": "Corte 2", "cutPercentage": 60 }
@@ -163,6 +168,7 @@ class SubjectIntegrationTest {
               "credits": 3,
               "teacherName": "Prof. Torres",
               "semester": "2025-1",
+              "schedule": "Martes 10:00 - 12:00",
               "evaluationCuts": [
                 { "cutName": "Corte 1", "cutPercentage": 50 },
                 { "cutName": "Corte 2", "cutPercentage": 50 }
@@ -172,16 +178,16 @@ class SubjectIntegrationTest {
 
         mockMvc.perform(post("/api/v1/subjects")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("X-Student-Id", "student-test")
+                .header("studentId", "student-test")
                 .content(subjectJson1));
 
         mockMvc.perform(post("/api/v1/subjects")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("X-Student-Id", "student-test")
+                .header("studentId", "student-test")
                 .content(subjectJson2));
 
         mockMvc.perform(get("/api/v1/subjects")
-                .header("X-Student-Id", "student-test"))
+                .header("studentId", "student-test"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data").isArray())
@@ -198,6 +204,7 @@ class SubjectIntegrationTest {
               "credits": 4,
               "teacherName": "Prof. Ramírez",
               "semester": "2025-1",
+              "schedule": "Lunes 08:30 - 10:00",
               "evaluationCuts": [
                 { "cutName": "Corte 1", "cutPercentage": 40 },
                 { "cutName": "Corte 2", "cutPercentage": 60 }
@@ -207,14 +214,14 @@ class SubjectIntegrationTest {
 
         String createResponse = mockMvc.perform(post("/api/v1/subjects")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("X-Student-Id", "student-test")
+                .header("studentId", "student-test")
                 .content(subjectJson))
                 .andReturn().getResponse().getContentAsString();
 
         Long subjectId = objectMapper.readTree(createResponse).get("data").get("id").asLong();
 
         mockMvc.perform(get("/api/v1/subjects/{id}", subjectId)
-                .header("X-Student-Id", "student-test"))
+                .header("studentId", "student-test"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data.id").value(subjectId))
@@ -228,7 +235,7 @@ class SubjectIntegrationTest {
     @DisplayName("Should return 403 when getting subject not owned by student")
     void shouldReturn403WhenGettingNonExistentSubject() throws Exception {
         mockMvc.perform(get("/api/v1/subjects/{id}", 999)
-                .header("X-Student-Id", "student-test"))
+                .header("studentId", "student-test"))
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.error").value(containsString("No tienes acceso a la materia con id 999")));
@@ -243,6 +250,7 @@ class SubjectIntegrationTest {
               "credits": 3,
               "teacherName": "Prof. Torres",
               "semester": "2025-1",
+              "schedule": "Martes 10:00 - 12:00",
               "evaluationCuts": [
                 { "cutName": "Corte 1", "cutPercentage": 50 },
                 { "cutName": "Corte 2", "cutPercentage": 50 }
@@ -252,7 +260,7 @@ class SubjectIntegrationTest {
 
         String createResponse = mockMvc.perform(post("/api/v1/subjects")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("X-Student-Id", "student-test")
+                .header("studentId", "student-test")
                 .content(subjectJson))
                 .andReturn().getResponse().getContentAsString();
 
@@ -264,6 +272,7 @@ class SubjectIntegrationTest {
               "credits": 4,
               "teacherName": "Prof. Torres",
               "semester": "2025-1",
+              "schedule": "Jueves 14:00 - 16:00",
               "evaluationCuts": [
                 { "cutName": "Corte 1", "cutPercentage": 50 },
                 { "cutName": "Corte 2", "cutPercentage": 50 }
@@ -273,7 +282,7 @@ class SubjectIntegrationTest {
 
         mockMvc.perform(put("/api/v1/subjects/{id}", subjectId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("X-Student-Id", "student-test")
+                .header("studentId", "student-test")
                 .content(updateJson))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
@@ -291,6 +300,7 @@ class SubjectIntegrationTest {
               "credits": 3,
               "teacherName": "Prof. Torres",
               "semester": "2025-1",
+              "schedule": "Martes 10:00 - 12:00",
               "evaluationCuts": [
                 { "cutName": "Corte 1", "cutPercentage": 50 },
                 { "cutName": "Corte 2", "cutPercentage": 50 }
@@ -300,14 +310,14 @@ class SubjectIntegrationTest {
 
         String createResponse = mockMvc.perform(post("/api/v1/subjects")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("X-Student-Id", "student-test")
+                .header("studentId", "student-test")
                 .content(subjectJson))
                 .andReturn().getResponse().getContentAsString();
 
         Long subjectId = objectMapper.readTree(createResponse).get("data").get("id").asLong();
 
         mockMvc.perform(delete("/api/v1/subjects/{id}", subjectId)
-                .header("X-Student-Id", "student-test"))
+                .header("studentId", "student-test"))
                 .andExpect(status().isNoContent());
     }
 
@@ -315,7 +325,7 @@ class SubjectIntegrationTest {
     @DisplayName("Should return 403 when deleting subject not owned by student")
     void shouldReturn403WhenDeletingNonExistentSubject() throws Exception {
         mockMvc.perform(delete("/api/v1/subjects/{id}", 999)
-                .header("X-Student-Id", "student-test"))
+                .header("studentId", "student-test"))
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.error").value(containsString("No tienes acceso a la materia con id 999")));
@@ -338,7 +348,7 @@ class SubjectIntegrationTest {
 
         mockMvc.perform(post("/api/v1/subjects")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("X-Student-Id", "student-test")
+                .header("studentId", "student-test")
                 .content(subjectJson))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.success").value(false));
@@ -361,7 +371,7 @@ class SubjectIntegrationTest {
 
         mockMvc.perform(post("/api/v1/subjects")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("X-Student-Id", "student-test")
+                .header("studentId", "student-test")
                 .content(subjectJson))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.success").value(false));
@@ -376,6 +386,7 @@ class SubjectIntegrationTest {
               "credits": 2,
               "teacherName": "Prof. Simple",
               "semester": "2025-1",
+              "schedule": "Viernes 07:00 - 09:00",
               "evaluationCuts": [
                 { "cutName": "Corte Único", "cutPercentage": 100 }
               ]
@@ -384,7 +395,7 @@ class SubjectIntegrationTest {
 
         mockMvc.perform(post("/api/v1/subjects")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("X-Student-Id", "student-test")
+                .header("studentId", "student-test")
                 .content(subjectJson))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.success").value(true))

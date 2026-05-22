@@ -49,16 +49,18 @@ class UpdateSubjectUseCaseImplTest {
             .studentId("student123")
             .subjectName("Mathematics")
             .semester("2025-1")
+            .schedule("Lunes 08:30 - 10:00")
             .credits(4)
             .teacherName("Dr. Smith")
             .evaluationCuts(validEvaluationCuts)
             .build();
-            
+
         updatedSubject = Subject.builder()
             .id(1L)
             .studentId("student123")
             .subjectName("Advanced Mathematics")
             .semester("2025-1")
+            .schedule("Martes 10:00 - 12:00")
             .credits(5)
             .teacherName("Dr. Johnson")
             .evaluationCuts(validEvaluationCuts)
@@ -110,6 +112,7 @@ class UpdateSubjectUseCaseImplTest {
             .studentId("student123")
             .subjectName("Physics")
             .semester("2025-1")
+            .schedule("Miercoles 14:00 - 16:00")
             .credits(4)
             .teacherName("Dr. Brown")
             .evaluationCuts(validEvaluationCuts)
@@ -142,6 +145,7 @@ class UpdateSubjectUseCaseImplTest {
             .studentId("student123")
             .subjectName("Mathematics")
             .semester("2025-1")
+            .schedule("Lunes 08:30 - 10:00")
             .credits(5)
             .teacherName("Dr. Johnson")
             .evaluationCuts(validEvaluationCuts)
@@ -171,6 +175,7 @@ class UpdateSubjectUseCaseImplTest {
             .studentId("student123")
             .subjectName("Advanced Mathematics")
             .semester("2025-2")
+            .schedule("Jueves 07:00 - 09:00")
             .credits(5)
             .teacherName("Dr. Johnson")
             .evaluationCuts(validEvaluationCuts)
@@ -205,6 +210,8 @@ class UpdateSubjectUseCaseImplTest {
             updatedSubject.getCredits(),
             updatedSubject.getTeacherName(),
             updatedSubject.getSemester(),
+            updatedSubject.getSchedule(),
+                null,
             null
         );
         
@@ -232,6 +239,8 @@ class UpdateSubjectUseCaseImplTest {
             updatedSubject.getCredits(),
             updatedSubject.getTeacherName(),
             updatedSubject.getSemester(),
+            updatedSubject.getSchedule(),
+                null,
             List.of()
         );
         
@@ -263,9 +272,11 @@ class UpdateSubjectUseCaseImplTest {
             updatedSubject.getCredits(),
             updatedSubject.getTeacherName(),
             updatedSubject.getSemester(),
+            updatedSubject.getSchedule(),
+                null,
             invalidCuts
         );
-        
+
         when(subjectRepository.findById(1L)).thenReturn(Optional.of(existingSubject));
 
         // When & Then
@@ -273,7 +284,7 @@ class UpdateSubjectUseCaseImplTest {
             InvalidEvaluationStructureException.class,
             () -> updateSubjectUseCase.update(1L, subjectWithInvalidCuts)
         );
-        
+
         assertTrue(exception.getMessage().contains("suma de porcentajes de los cortes debe ser exactamente 100"));
         assertTrue(exception.getMessage().contains("70.0"));
         verify(subjectRepository, times(1)).findById(1L);
@@ -295,9 +306,11 @@ class UpdateSubjectUseCaseImplTest {
             updatedSubject.getCredits(),
             updatedSubject.getTeacherName(),
             updatedSubject.getSemester(),
+            updatedSubject.getSchedule(),
+                null,
             invalidCuts
         );
-        
+
         when(subjectRepository.findById(1L)).thenReturn(Optional.of(existingSubject));
 
         // When & Then
@@ -305,7 +318,7 @@ class UpdateSubjectUseCaseImplTest {
             InvalidEvaluationStructureException.class,
             () -> updateSubjectUseCase.update(1L, subjectWithInvalidCuts)
         );
-        
+
         assertTrue(exception.getMessage().contains("suma de porcentajes de los cortes debe ser exactamente 100"));
         assertTrue(exception.getMessage().contains("110.0"));
         verify(subjectRepository, times(1)).findById(1L);
@@ -327,6 +340,8 @@ class UpdateSubjectUseCaseImplTest {
             updatedSubject.getCredits(),
             updatedSubject.getTeacherName(),
             updatedSubject.getSemester(),
+            updatedSubject.getSchedule(),
+                null,
             exactCuts
         );
         

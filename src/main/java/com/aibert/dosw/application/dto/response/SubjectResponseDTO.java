@@ -14,10 +14,13 @@ import java.util.List;
 public class SubjectResponseDTO {
 
     private Long id;
+    private String externalId;
     private String studentId;
     private String subjectName;
     private Integer credits;
     private String teacherName;
     private String semester;
+    private String schedule;
+    private Double overallAverage;
     private List<EvaluationCutResponseDTO> evaluationCuts;
 }

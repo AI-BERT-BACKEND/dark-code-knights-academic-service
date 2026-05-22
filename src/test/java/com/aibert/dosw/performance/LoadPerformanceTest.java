@@ -33,6 +33,7 @@ class LoadPerformanceTest {
               "credits": 3,
               "teacherName": "Prof. Torres",
               "semester": "2025-1",
+              "schedule": "Lunes 08:30 - 10:00",
               "evaluationCuts": [
                 { "cutName": "Corte 1", "cutPercentage": 50 },
                 { "cutName": "Corte 2", "cutPercentage": 50 }
@@ -42,7 +43,7 @@ class LoadPerformanceTest {
         
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("X-Student-Id", "student-performance-test");
+        headers.set("studentId", "student-performance-test");
         
         long start = System.currentTimeMillis();
         ResponseEntity<String> response = restTemplate.postForEntity(
@@ -67,6 +68,7 @@ class LoadPerformanceTest {
               "credits": 4,
               "teacherName": "Prof. Ramírez",
               "semester": "2025-1",
+              "schedule": "Lunes 08:30 - 10:00",
               "evaluationCuts": [
                 { "cutName": "Corte 1", "cutPercentage": 30 },
                 { "cutName": "Corte 2", "cutPercentage": 30 },
@@ -77,7 +79,7 @@ class LoadPerformanceTest {
         
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("X-Student-Id", "student-performance-test");
+        headers.set("studentId", "student-performance-test");
         
         // Create subject first
         ResponseEntity<String> createResponse = restTemplate.postForEntity(
@@ -131,6 +133,7 @@ class LoadPerformanceTest {
               "credits": 4,
               "teacherName": "Prof. Ramírez",
               "semester": "2025-1",
+              "schedule": "Lunes 08:30 - 10:00",
               "evaluationCuts": [
                 { "cutName": "Corte 1", "cutPercentage": 30 },
                 { "cutName": "Corte 2", "cutPercentage": 30 },
@@ -141,7 +144,7 @@ class LoadPerformanceTest {
         
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("X-Student-Id", "student-performance-test");
+        headers.set("studentId", "student-performance-test");
         
         // Create subject first
         ResponseEntity<String> createResponse = restTemplate.postForEntity(

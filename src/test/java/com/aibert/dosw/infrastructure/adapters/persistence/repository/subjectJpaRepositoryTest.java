@@ -33,6 +33,7 @@ class SubjectJpaRepositoryTest {
             .credits(4)
             .teacherName("Dr. Smith")
             .semester("2025-1")
+            .schedule("Lunes 08:30 - 10:00")
             .evaluationCuts(List.of())
             .build();
 
@@ -59,6 +60,7 @@ class SubjectJpaRepositoryTest {
             .credits(4)
             .teacherName("Dr. Smith")
             .semester("2025-1")
+            .schedule("Lunes 08:30 - 10:00")
             .evaluationCuts(List.of())
             .build();
         SubjectEntity entity2 = SubjectEntity.builder()
@@ -67,6 +69,7 @@ class SubjectJpaRepositoryTest {
             .credits(3)
             .teacherName("Dr. Johnson")
             .semester("2025-1")
+            .schedule("Lunes 08:30 - 10:00")
             .evaluationCuts(List.of())
             .build();
         
@@ -101,6 +104,7 @@ class SubjectJpaRepositoryTest {
             .credits(4)
             .teacherName("Dr. Smith")
             .semester("2025-1")
+            .schedule("Lunes 08:30 - 10:00")
             .evaluationCuts(List.of())
             .build();
         
@@ -140,6 +144,7 @@ class SubjectJpaRepositoryTest {
             .credits(4)
             .teacherName("Dr. Smith")
             .semester("2025-1")
+            .schedule("Lunes 08:30 - 10:00")
             .evaluationCuts(List.of())
             .build();
         SubjectEntity entity2 = SubjectEntity.builder()
@@ -148,6 +153,7 @@ class SubjectJpaRepositoryTest {
             .credits(3)
             .teacherName("Dr. Johnson")
             .semester("2025-2")
+            .schedule("Lunes 08:30 - 10:00")
             .evaluationCuts(List.of())
             .build();
         
@@ -181,6 +187,7 @@ class SubjectJpaRepositoryTest {
             .credits(4)
             .teacherName("Dr. Smith")
             .semester("2025-1")
+            .schedule("Lunes 08:30 - 10:00")
             .evaluationCuts(List.of())
             .build();
         
@@ -204,6 +211,7 @@ class SubjectJpaRepositoryTest {
             .credits(4)
             .teacherName("Dr. Smith")
             .semester("2025-1")
+            .schedule("Lunes 08:30 - 10:00")
             .evaluationCuts(List.of())
             .build();
         SubjectEntity entity2 = SubjectEntity.builder()
@@ -212,6 +220,7 @@ class SubjectJpaRepositoryTest {
             .credits(3)
             .teacherName("Dr. Johnson")
             .semester("2025-1")
+            .schedule("Lunes 08:30 - 10:00")
             .evaluationCuts(List.of())
             .build();
         
@@ -235,6 +244,7 @@ class SubjectJpaRepositoryTest {
             .credits(4)
             .teacherName("Dr. Smith")
             .semester("2025-1")
+            .schedule("Lunes 08:30 - 10:00")
             .evaluationCuts(List.of())
             .build();
         

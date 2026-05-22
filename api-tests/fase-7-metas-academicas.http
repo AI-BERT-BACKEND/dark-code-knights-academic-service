@@ -1,0 +1,154 @@
+### ================================================================
+### FASE 7 — Metas Académicas (AIB-11)
+### Prerequisito: fase-1-materias.http ejecutado
+###              subjectId=1 "Cálculo Diferencial" existe
+###
+### Endpoints:
+###   PUT  /api/v1/academic/goals          → Crear o actualizar meta
+###   GET  /api/v1/academic/goals/{goalId} → Obtener progreso de una meta
+###   GET  /api/v1/academic/goals?semester=YYYY-N → Listar progresos del semestre
+###
+### IDs resultantes al terminar este archivo:
+###   goalId=1  "Aprobar Cálculo"    subjectId=1  targetGrade=3.5
+###   goalId=2  "Subir el GPA"       subjectId=null  targetGrade=4.0
+### ================================================================
+
+@baseUrl = https://aibert-academic-service-qa.yellowwave-cb2d91fc.centralus.azurecontainerapps.io
+@studentId = test-student-123
+@ct = application/json
+
+
+# ------------------------------------------------------------------
+# CASO 1 — Error: goalName muy corto (< 3 chars) → 400 Bad Request
+# Espera: error de validación @Size
+# ------------------------------------------------------------------
+### PUT meta con nombre de 2 caracteres
+PUT {{baseUrl}}/api/v1/academic/goals
+Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
+
+{
+  "goalName": "AB",
+  "targetGrade": 3.5,
+  "subjectId": 1
+}
+
+
+# ------------------------------------------------------------------
+# CASO 2 — Error: targetGrade fuera de rango (> 5.0) → 400 Bad Request
+# Espera: error de validación @DecimalMax
+# ------------------------------------------------------------------
+### PUT meta con targetGrade=6.0
+PUT {{baseUrl}}/api/v1/academic/goals
+Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
+
+{
+  "goalName": "Meta Invalida",
+  "targetGrade": 6.0,
+  "subjectId": 1
+}
+
+
+# ------------------------------------------------------------------
+# CASO 3 — Error: subjectId no existe → 404 Not Found
+# Espera: { "success": false, "error": "Materia con id 999 no encontrada", "code": 404 }
+# ------------------------------------------------------------------
+### PUT meta con subjectId=999
+PUT {{baseUrl}}/api/v1/academic/goals
+Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
+
+{
+  "goalName": "Meta Invalida",
+  "targetGrade": 3.5,
+  "subjectId": 999
+}
+
+
+# ------------------------------------------------------------------
+# CASO 4 — Crear meta asociada a materia → 200 OK  (upsert: crea)
+# Espera: goalId=1, goalName="Aprobar Cálculo", subjectId=1, targetGrade=3.5
+# Sin notas aún → currentAverage=null, requiredGrade=null (o el valor calculado)
+# ------------------------------------------------------------------
+### PUT meta "Aprobar Cálculo" vinculada a subjectId=1 — goalId=1
+PUT {{baseUrl}}/api/v1/academic/goals
+Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
+
+{
+  "goalName": "Aprobar Cálculo",
+  "targetGrade": 3.5,
+  "subjectId": 1
+}
+
+
+# ------------------------------------------------------------------
+# CASO 5 — Crear meta general (sin materia) → 200 OK  (upsert: crea)
+# Espera: goalId=2, goalName="Subir el GPA", subjectId=null, targetGrade=4.0
+# ------------------------------------------------------------------
+### PUT meta "Subir el GPA" sin materia — goalId=2
+PUT {{baseUrl}}/api/v1/academic/goals
+Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
+
+{
+  "goalName": "Subir el GPA",
+  "targetGrade": 4.0
+}
+
+
+# ------------------------------------------------------------------
+# CASO 6 — Actualizar meta existente (mismo nombre = upsert) → 200 OK
+# Sube targetGrade de 3.5 a 4.0 en "Aprobar Cálculo"
+# Espera: misma goalId=1, targetGrade=4.0
+# ------------------------------------------------------------------
+### PUT meta "Aprobar Cálculo" actualizada — targetGrade=4.0
+PUT {{baseUrl}}/api/v1/academic/goals
+Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
+
+{
+  "goalName": "Aprobar Cálculo",
+  "targetGrade": 4.0,
+  "subjectId": 1
+}
+
+
+# ------------------------------------------------------------------
+# CASO 7 — Obtener progreso de una meta → 200 OK
+# Espera: goalId=1, goalName="Aprobar Cálculo", subjectId=1,
+#         targetGrade=4.0, currentAverage, requiredGrade, isAchievable
+# Nota: subjectName y semester NO aparecen en la respuesta (eliminados en AIB-11)
+# ------------------------------------------------------------------
+### GET progreso de goalId=1
+GET {{baseUrl}}/api/v1/academic/goals/1
+X-Student-Id: {{studentId}}
+
+
+# ------------------------------------------------------------------
+# CASO 8 — Error: goalId inexistente → 404 Not Found
+# Espera: { "success": false, "error": "...", "code": 404 }
+# ------------------------------------------------------------------
+### GET progreso de goalId=999
+GET {{baseUrl}}/api/v1/academic/goals/999
+X-Student-Id: {{studentId}}
+
+
+# ------------------------------------------------------------------
+# CASO 9 — Listar progresos del semestre → 200 OK
+# Espera: lista con metas cuya materia vinculada es del semestre "2025-1"
+#         (metas sin materia también pueden aparecer según implementación)
+# ------------------------------------------------------------------
+### GET progresos del semestre 2025-1
+GET {{baseUrl}}/api/v1/academic/goals?semester=2025-1
+X-Student-Id: {{studentId}}
+
+
+# ------------------------------------------------------------------
+# CASO 10 — Aislamiento: otro estudiante no ve las metas de test-student-123 → 200 OK
+# Espera: lista vacía para student-otro
+# ------------------------------------------------------------------
+### GET progresos de student-otro (sin metas)
+GET {{baseUrl}}/api/v1/academic/goals?semester=2025-1
+X-Student-Id: student-otro

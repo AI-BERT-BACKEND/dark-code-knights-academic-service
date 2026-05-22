@@ -1,0 +1,136 @@
+### ================================================================
+### FASE 9 — Disponibilidad de Horarios (AIB-10)
+### Prerequisito: ninguno (standalone)
+###
+### Endpoints:
+###   PUT /api/v1/students/schedule-availability  → Guardar disponibilidad (upsert)
+###   GET /api/v1/students/schedule-availability  → Consultar disponibilidad actual
+###
+### Reglas de negocio:
+###   - Todos los campos de horas son opcionales (nullable)
+###   - Cada campo > 0.0 si se provee (@DecimalMin(value="0.0", inclusive=false))
+###   - maxStudyHoursPerDay ≤ 15.0 (@DecimalMax)
+###   - Suma total de horas no puede superar 24 (validación en use case)
+### ================================================================
+
+@baseUrl = https://aibert-academic-service-qa.yellowwave-cb2d91fc.centralus.azurecontainerapps.io
+@studentId = test-student-123
+@ct = application/json
+
+
+# ------------------------------------------------------------------
+# CASO 1 — Consultar disponibilidad sin datos → 200 OK
+# Espera: todos los campos null (o registro vacío)
+# ------------------------------------------------------------------
+### GET disponibilidad de test-student-123 antes de configurarla
+GET {{baseUrl}}/api/v1/students/schedule-availability
+X-Student-Id: {{studentId}}
+
+
+# ------------------------------------------------------------------
+# CASO 2 — Error: horas = 0 → 400 Bad Request
+# Espera: error de validación @DecimalMin (value="0.0", inclusive=false)
+# ------------------------------------------------------------------
+### PUT con freeTimeHours=0 (no cumple > 0)
+PUT {{baseUrl}}/api/v1/students/schedule-availability
+Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
+
+{
+  "freeTimeHours": 0,
+  "restHours": 8.0
+}
+
+
+# ------------------------------------------------------------------
+# CASO 3 — Error: maxStudyHoursPerDay > 15 → 400 Bad Request
+# Espera: error de validación @DecimalMax
+# ------------------------------------------------------------------
+### PUT con maxStudyHoursPerDay=16
+PUT {{baseUrl}}/api/v1/students/schedule-availability
+Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
+
+{
+  "freeTimeHours": 4.0,
+  "restHours": 8.0,
+  "maxStudyHoursPerDay": 16.0
+}
+
+
+# ------------------------------------------------------------------
+# CASO 4 — Error: suma de horas supera 24 → 400 Bad Request
+# Espera: { "success": false, "error": "La suma de las horas no puede superar 24", "code": 400 }
+# ------------------------------------------------------------------
+### PUT con suma de horas > 24
+PUT {{baseUrl}}/api/v1/students/schedule-availability
+Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
+
+{
+  "freeTimeHours": 8.0,
+  "restHours": 8.0,
+  "personalTimeHours": 5.0,
+  "socialTimeHours": 5.0,
+  "maxStudyHoursPerDay": 8.0
+}
+
+
+# ------------------------------------------------------------------
+# CASO 5 — Guardar disponibilidad completa → 200 OK
+# Suma: 4 + 8 + 2 + 2 = 16 ≤ 24  ✓   maxStudy=6 ≤ 15  ✓
+# Espera: todos los campos persistidos; respuesta SIN studentId
+# ------------------------------------------------------------------
+### PUT disponibilidad completa
+PUT {{baseUrl}}/api/v1/students/schedule-availability
+Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
+
+{
+  "freeTimeHours": 4.0,
+  "restHours": 8.0,
+  "personalTimeHours": 2.0,
+  "socialTimeHours": 2.0,
+  "maxStudyHoursPerDay": 6.0
+}
+
+
+# ------------------------------------------------------------------
+# CASO 6 — Verificar que la disponibilidad se guardó → 200 OK
+# Espera:
+#   freeTimeHours        = 4.0
+#   restHours            = 8.0
+#   personalTimeHours    = 2.0
+#   socialTimeHours      = 2.0
+#   maxStudyHoursPerDay  = 6.0
+#   (sin campo studentId en la respuesta)
+# ------------------------------------------------------------------
+### GET disponibilidad post-guardado
+GET {{baseUrl}}/api/v1/students/schedule-availability
+X-Student-Id: {{studentId}}
+
+
+# ------------------------------------------------------------------
+# CASO 7 — Actualizar disponibilidad (upsert) → 200 OK
+# Reduce horas de sueño; los campos no enviados quedan null
+# Espera: solo freeTimeHours y restHours con valor; resto null
+# ------------------------------------------------------------------
+### PUT disponibilidad parcial (upsert)
+PUT {{baseUrl}}/api/v1/students/schedule-availability
+Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
+
+{
+  "freeTimeHours": 5.0,
+  "restHours": 7.0,
+  "maxStudyHoursPerDay": 8.0
+}
+
+
+# ------------------------------------------------------------------
+# CASO 8 — Aislamiento: student-otro tiene su propia disponibilidad → 200 OK
+# Espera: disponibilidad vacía (independiente de test-student-123)
+# ------------------------------------------------------------------
+### GET disponibilidad de student-otro (aislamiento)
+GET {{baseUrl}}/api/v1/students/schedule-availability
+X-Student-Id: student-otro

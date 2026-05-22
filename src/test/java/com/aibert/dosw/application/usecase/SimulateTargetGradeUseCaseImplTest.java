@@ -77,6 +77,8 @@ class SimulateTargetGradeUseCaseImplTest {
             testSubject.getCredits(),
             testSubject.getTeacherName(),
             testSubject.getSemester(),
+            testSubject.getSchedule(),
+                null,
             cuts
         );
         when(subjectRepository.findById(1L)).thenReturn(Optional.of(subjectWithCuts));
@@ -89,12 +91,16 @@ class SimulateTargetGradeUseCaseImplTest {
         assertEquals(4.0, result.getTargetGrade());
         assertTrue(result.isAchievable());
         assertEquals(70.0, result.getPendingPercentage());
-        
+
         // Current score: 4.0 * 30.0 = 120.0
         // Target score: 4.0 * 100.0 = 400.0
         // Required: (400.0 - 120.0) / 70.0 = 4.0
         assertEquals(4.0, result.getRequiredGrade());
-        
+
+        assertNotNull(result.getPendingCuts());
+        assertEquals(2, result.getPendingCuts().size());
+        assertTrue(result.getPendingCuts().stream().allMatch(c -> c.getGrade() == null));
+
         verify(subjectRepository, times(1)).findById(1L);
     }
 
@@ -124,6 +130,8 @@ class SimulateTargetGradeUseCaseImplTest {
             testSubject.getCredits(),
             testSubject.getTeacherName(),
             testSubject.getSemester(),
+            testSubject.getSchedule(),
+                null,
             cuts
         );
         when(subjectRepository.findById(1L)).thenReturn(Optional.of(subjectWithCuts));
@@ -136,12 +144,16 @@ class SimulateTargetGradeUseCaseImplTest {
         assertEquals(5.0, result.getTargetGrade());
         assertFalse(result.isAchievable());
         assertEquals(70.0, result.getPendingPercentage());
-        
+
         // Current score: 4.0 * 30.0 = 120.0
         // Target score: 5.0 * 100.0 = 500.0
         // Required: (500.0 - 120.0) / 70.0 = 5.428... (unachievable)
         assertTrue(result.getRequiredGrade() > 5.0);
-        
+
+        assertNotNull(result.getPendingCuts());
+        assertEquals(1, result.getPendingCuts().size());
+        assertNull(result.getPendingCuts().get(0).getGrade());
+
         verify(subjectRepository, times(1)).findById(1L);
     }
 
@@ -171,6 +183,8 @@ class SimulateTargetGradeUseCaseImplTest {
             testSubject.getCredits(),
             testSubject.getTeacherName(),
             testSubject.getSemester(),
+            testSubject.getSchedule(),
+                null,
             cuts
         );
         when(subjectRepository.findById(1L)).thenReturn(Optional.of(subjectWithCuts));
@@ -183,12 +197,15 @@ class SimulateTargetGradeUseCaseImplTest {
         assertEquals(3.5, result.getTargetGrade());
         assertTrue(result.isAchievable());
         assertEquals(70.0, result.getPendingPercentage());
-        
+
         // Current score: 5.0 * 30.0 = 150.0
         // Target score: 3.5 * 100.0 = 350.0
         // Required: (350.0 - 150.0) / 70.0 = 2.857...
         assertEquals(2.857142857142857, result.getRequiredGrade()); // Math.max(0.0, 2.857...)
-        
+
+        assertNotNull(result.getPendingCuts());
+        assertEquals(1, result.getPendingCuts().size());
+
         verify(subjectRepository, times(1)).findById(1L);
     }
 
@@ -240,6 +257,8 @@ class SimulateTargetGradeUseCaseImplTest {
             testSubject.getCredits(),
             testSubject.getTeacherName(),
             testSubject.getSemester(),
+            testSubject.getSchedule(),
+                null,
             cuts
         );
         when(subjectRepository.findById(1L)).thenReturn(Optional.of(subjectWithAllGrades));
@@ -280,6 +299,8 @@ class SimulateTargetGradeUseCaseImplTest {
             testSubject.getCredits(),
             testSubject.getTeacherName(),
             testSubject.getSemester(),
+            testSubject.getSchedule(),
+                null,
             cuts
         );
         when(subjectRepository.findById(1L)).thenReturn(Optional.of(subjectWithCuts));
@@ -292,12 +313,15 @@ class SimulateTargetGradeUseCaseImplTest {
         assertEquals(4.0, result.getTargetGrade());
         assertTrue(result.isAchievable());
         assertEquals(70.0, result.getPendingPercentage());
-        
+
         // Current score: 4.0 * 30.0 = 120.0
         // Target score: 4.0 * 100.0 = 400.0
         // Required: (400.0 - 120.0) / 70.0 = 4.0
         assertEquals(4.0, result.getRequiredGrade());
-        
+
+        assertNotNull(result.getPendingCuts());
+        assertEquals(1, result.getPendingCuts().size());
+
         verify(subjectRepository, times(1)).findById(1L);
     }
 
@@ -333,6 +357,8 @@ class SimulateTargetGradeUseCaseImplTest {
             testSubject.getCredits(),
             testSubject.getTeacherName(),
             testSubject.getSemester(),
+            testSubject.getSchedule(),
+                null,
             cuts
         );
         when(subjectRepository.findById(1L)).thenReturn(Optional.of(subjectWithAllPending));
@@ -345,12 +371,15 @@ class SimulateTargetGradeUseCaseImplTest {
         assertEquals(4.0, result.getTargetGrade());
         assertTrue(result.isAchievable());
         assertEquals(100.0, result.getPendingPercentage());
-        
+
         // Current score: 0.0
         // Target score: 4.0 * 100.0 = 400.0
         // Required: (400.0 - 0.0) / 100.0 = 4.0
         assertEquals(4.0, result.getRequiredGrade());
-        
+
+        assertNotNull(result.getPendingCuts());
+        assertEquals(3, result.getPendingCuts().size());
+
         verify(subjectRepository, times(1)).findById(1L);
     }
 
@@ -380,6 +409,8 @@ class SimulateTargetGradeUseCaseImplTest {
             testSubject.getCredits(),
             testSubject.getTeacherName(),
             testSubject.getSemester(),
+            testSubject.getSchedule(),
+                null,
             cuts
         );
         when(subjectRepository.findById(1L)).thenReturn(Optional.of(subjectWithCuts));
@@ -392,12 +423,15 @@ class SimulateTargetGradeUseCaseImplTest {
         assertEquals(5.0, result.getTargetGrade());
         assertFalse(result.isAchievable());
         assertEquals(70.0, result.getPendingPercentage());
-        
+
         // Current score: 4.0 * 30.0 = 120.0
         // Target score: 5.0 * 100.0 = 500.0
         // Required: (500.0 - 120.0) / 70.0 = 5.428... (unachievable)
         assertTrue(result.getRequiredGrade() > 5.0);
-        
+
+        assertNotNull(result.getPendingCuts());
+        assertEquals(1, result.getPendingCuts().size());
+
         verify(subjectRepository, times(1)).findById(1L);
     }
 
@@ -427,6 +461,8 @@ class SimulateTargetGradeUseCaseImplTest {
             testSubject.getCredits(),
             testSubject.getTeacherName(),
             testSubject.getSemester(),
+            testSubject.getSchedule(),
+                null,
             cuts
         );
         when(subjectRepository.findById(1L)).thenReturn(Optional.of(subjectWithCuts));
@@ -439,12 +475,15 @@ class SimulateTargetGradeUseCaseImplTest {
         assertEquals(0.0, result.getTargetGrade());
         assertTrue(result.isAchievable());
         assertEquals(70.0, result.getPendingPercentage());
-        
+
         // Current score: 4.0 * 30.0 = 120.0
         // Target score: 0.0 * 100.0 = 0.0
         // Required: (0.0 - 120.0) / 70.0 = -1.714...
         assertEquals(0.0, result.getRequiredGrade()); // Math.max(0.0, -1.714...)
-        
+
+        assertNotNull(result.getPendingCuts());
+        assertEquals(1, result.getPendingCuts().size());
+
         verify(subjectRepository, times(1)).findById(1L);
     }
 
@@ -488,7 +527,10 @@ class SimulateTargetGradeUseCaseImplTest {
         assertEquals(4.0, result.getTargetGrade());
         assertTrue(result.isAchievable());
         assertEquals(50.0, result.getPendingPercentage());
-        
+
+        assertNotNull(result.getPendingCuts());
+        assertEquals(1, result.getPendingCuts().size());
+
         verify(subjectRepository, times(1)).findById(subjectId);
     }
 }

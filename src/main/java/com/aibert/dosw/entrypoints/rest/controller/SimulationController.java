@@ -1,6 +1,7 @@
 package com.aibert.dosw.entrypoints.rest.controller;
 
 import com.aibert.dosw.application.dto.request.SimulationRequestDTO;
+import com.aibert.dosw.application.dto.response.PendingCutSimulationDTO;
 import com.aibert.dosw.application.dto.response.SimulationResponseDTO;
 import com.aibert.dosw.domain.model.SimulationResult;
 import com.aibert.dosw.domain.ports.in.SimulateTargetGradeUseCase;
@@ -17,9 +18,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Locale;
 
-@Tag(name = "Simulación", description = "Simulación de nota objetivo en cortes pendientes (R10)")
+@Tag(name = "Simulation", description = "Target grade simulation for pending evaluation cuts (AIB-17)")
 @RestController
 @RequiredArgsConstructor
 public class SimulationController {
@@ -27,18 +29,18 @@ public class SimulationController {
     private final SimulateTargetGradeUseCase simulateTargetGradeUseCase;
 
     @Operation(
-            summary = "Simular nota objetivo",
-            description = "Calcula la nota mínima necesaria en los cortes pendientes para alcanzar la meta. Fórmula: requiredGrade = (targetGrade × 100 − puntajeActual) / porcentajePendiente"
+            summary = "Simulate target grade",
+            description = "Calculates the minimum grade needed in the pending cuts to reach the target. Formula: requiredGrade = (targetGrade × 100 − currentScore) / pendingPercentage"
     )
     @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Simulación calculada (puede ser alcanzable o no)"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "targetGrade nulo o fuera del rango 0.0–5.0"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Materia no encontrada"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "422", description = "La materia no tiene cortes pendientes por calificar")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Simulation calculated (may or may not be achievable)"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "targetGrade is null or out of range 0.0–5.0"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Subject not found"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "422", description = "The subject has no pending cuts to grade")
     })
     @PostMapping("/api/v1/subjects/{subjectId}/simulate")
     public ResponseEntity<ApiResponse<SimulationResponseDTO>> simulate(
-            @Parameter(description = "ID de la materia a simular", required = true)
+            @Parameter(description = "ID of the subject to simulate", required = true)
             @PathVariable Long subjectId,
             @Valid @RequestBody SimulationRequestDTO request) {
 
@@ -62,12 +64,20 @@ public class SimulationController {
                     result.getTargetGrade(), result.getRequiredGrade(), result.getPendingPercentage());
         }
 
+        List<PendingCutSimulationDTO> pendingCutDTOs = result.getPendingCuts().stream()
+                .map(cut -> PendingCutSimulationDTO.builder()
+                        .cutId(cut.getId())
+                        .cutName(cut.getCutName())
+                        .cutPercentage(cut.getCutPercentage())
+                        .requiredGrade(result.getRequiredGrade())
+                        .build())
+                .toList();
+
         SimulationResponseDTO response = SimulationResponseDTO.builder()
-                .targetGrade(result.getTargetGrade())
                 .requiredGrade(result.getRequiredGrade())
-                .achievable(result.isAchievable())
-                .pendingCutsPercentage(result.getPendingPercentage())
+                .isAchievable(result.isAchievable())
                 .message(message)
+                .pendingCuts(pendingCutDTOs)
                 .build();
 
         return ResponseEntity.ok(ApiResponse.ok(response));

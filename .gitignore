@@ -162,6 +162,7 @@ target/
 #### ENVIRONMENT VARIABLES ####
 .env
 .env.*
+!.env.example
 .env.local
 .env.development.local
 .env.test.local
@@ -277,3 +278,4 @@ ROADMAP.md
 API_CONTRACTS.md
 AUDITORIA.md
 ROADMAP2.md
+DATABASE_SCHEMA.md

@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @Builder
 @AllArgsConstructor
@@ -15,4 +17,5 @@ public class SimulationResult {
     private Double requiredGrade;
     private boolean achievable;
     private Double pendingPercentage;
+    private List<EvaluationCut> pendingCuts;
 }
