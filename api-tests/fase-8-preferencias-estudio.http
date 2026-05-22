@@ -1,0 +1,94 @@
+### ================================================================
+### FASE 8 — Preferencias de Estudio (AIB-12)
+### Prerequisito: ninguno (standalone)
+###
+### Endpoints:
+###   PUT /api/v1/students/preferences  → Crear o actualizar preferencias (upsert)
+###   GET /api/v1/students/preferences  → Consultar preferencias actuales
+###
+### Semántica: un estudiante tiene exactamente un registro de preferencias.
+###            PUT siempre hace upsert (crea si no existe, reemplaza si existe).
+### ================================================================
+
+@baseUrl = https://aibert-academic-service-qa.yellowwave-cb2d91fc.centralus.azurecontainerapps.io
+@studentId = test-student-123
+@ct = application/json
+
+
+# ------------------------------------------------------------------
+# CASO 1 — Consultar preferencias de estudiante sin datos → 200 OK
+# Espera: todos los campos null (o registro vacío)
+# ------------------------------------------------------------------
+### GET preferencias de test-student-123 antes de configurarlas
+GET {{baseUrl}}/api/v1/students/preferences
+X-Student-Id: {{studentId}}
+
+
+# ------------------------------------------------------------------
+# CASO 2 — Guardar preferencias completas → 200 OK
+# Espera: preferencias guardadas con los valores enviados
+# Nota: la respuesta NO incluye studentId (eliminado en AIB-10)
+# ------------------------------------------------------------------
+### PUT preferencias completas
+PUT {{baseUrl}}/api/v1/students/preferences
+Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
+
+{
+  "studyModality": "Virtual",
+  "studyEnvironment": "Casa",
+  "studyMethod": "Mapas conceptuales"
+}
+
+
+# ------------------------------------------------------------------
+# CASO 3 — Verificar que las preferencias se guardaron → 200 OK
+# Espera:
+#   studyModality   = "Virtual"
+#   studyEnvironment = "Casa"
+#   studyMethod     = "Mapas conceptuales"
+#   (sin campo studentId en la respuesta)
+# ------------------------------------------------------------------
+### GET preferencias post-guardado
+GET {{baseUrl}}/api/v1/students/preferences
+X-Student-Id: {{studentId}}
+
+
+# ------------------------------------------------------------------
+# CASO 4 — Actualizar preferencias (upsert) → 200 OK
+# Cambia solo el método de estudio; los otros campos se reemplazan
+# Espera: studyMethod="Flashcards"
+# ------------------------------------------------------------------
+### PUT preferencias actualizadas
+PUT {{baseUrl}}/api/v1/students/preferences
+Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
+
+{
+  "studyModality": "Presencial",
+  "studyEnvironment": "Biblioteca",
+  "studyMethod": "Flashcards"
+}
+
+
+# ------------------------------------------------------------------
+# CASO 5 — Guardar preferencias parciales (campos opcionales) → 200 OK
+# Espera: solo studyModality seteado; studyEnvironment y studyMethod = null
+# ------------------------------------------------------------------
+### PUT preferencias con solo un campo
+PUT {{baseUrl}}/api/v1/students/preferences
+Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
+
+{
+  "studyModality": "Híbrido"
+}
+
+
+# ------------------------------------------------------------------
+# CASO 6 — Aislamiento: student-otro tiene sus propias preferencias → 200 OK
+# Espera: preferencias vacías (independientes de test-student-123)
+# ------------------------------------------------------------------
+### GET preferencias de student-otro (aislamiento)
+GET {{baseUrl}}/api/v1/students/preferences
+X-Student-Id: student-otro

@@ -57,6 +57,7 @@ class GradeIntegrationTest {
               "credits": 4,
               "teacherName": "Prof. Ramírez",
               "semester": "2025-1",
+              "schedule": "Lunes 08:30 - 10:00",
               "evaluationCuts": [
                 { "cutName": "Corte 1", "cutPercentage": 30 },
                 { "cutName": "Corte 2", "cutPercentage": 30 },
@@ -67,7 +68,7 @@ class GradeIntegrationTest {
 
         String createResponse = mockMvc.perform(post("/api/v1/subjects")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("X-Student-Id", "student-test")
+                .header("studentId", "student-test")
                 .content(subjectJson))
                 .andExpect(status().isCreated())
                 .andReturn().getResponse().getContentAsString();
@@ -96,6 +97,26 @@ class GradeIntegrationTest {
                 .andExpect(jsonPath("$.data.gradeValue").value(4.5))
                 .andExpect(jsonPath("$.data.percentage").value(60))
                 .andExpect(jsonPath("$.message").value("ok"));
+    }
+
+    @Test
+    @DisplayName("Should return 400 when activityName exceeds 100 characters")
+    void shouldReturn400WhenActivityNameExceeds100Characters() throws Exception {
+        String longName = "A".repeat(101);
+        String gradeJson = String.format("""
+            {
+              "activityName": "%s",
+              "gradeValue": 4.0,
+              "percentage": 50
+            }
+            """, longName);
+
+        mockMvc.perform(post("/api/v1/subjects/{subjectId}/cuts/{cutId}/grades", subjectId, cutId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(gradeJson))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.error").value(containsString("El nombre de la actividad no puede superar 100 caracteres")));
     }
 
     @Test
@@ -352,7 +373,7 @@ class GradeIntegrationTest {
     }
 
     @Test
-    @DisplayName("Should delete grade successfully")
+    @DisplayName("Should delete grade successfully and return updatedAverage")
     void shouldDeleteGradeSuccessfully() throws Exception {
         String gradeJson = """
             {
@@ -370,7 +391,36 @@ class GradeIntegrationTest {
         Long gradeId = objectMapper.readTree(createResponse).get("data").get("id").asLong();
 
         mockMvc.perform(delete("/api/v1/subjects/{subjectId}/cuts/{cutId}/grades/{gradeId}", subjectId, cutId, gradeId))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.data.success").value(true))
+                .andExpect(jsonPath("$.data.message").value("Nota eliminada exitosamente!"));
+    }
+
+    @Test
+    @DisplayName("Should return null updatedAverage after deleting only grade in cut")
+    void shouldReturnNullUpdatedAverageAfterDeletingOnlyGradeInCut() throws Exception {
+        String gradeJson = """
+            {
+              "activityName": "Unica Nota",
+              "gradeValue": 3.0,
+              "percentage": 100
+            }
+            """;
+
+        String createResponse = mockMvc.perform(post("/api/v1/subjects/{subjectId}/cuts/{cutId}/grades", subjectId, cutId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(gradeJson))
+                .andReturn().getResponse().getContentAsString();
+
+        Long gradeId = objectMapper.readTree(createResponse).get("data").get("id").asLong();
+
+        mockMvc.perform(delete("/api/v1/subjects/{subjectId}/cuts/{cutId}/grades/{gradeId}", subjectId, cutId, gradeId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.data.success").value(true))
+                .andExpect(jsonPath("$.data.message").value("Nota eliminada exitosamente!"))
+                .andExpect(jsonPath("$.data.updatedAverage").doesNotExist());
     }
 
     @Test

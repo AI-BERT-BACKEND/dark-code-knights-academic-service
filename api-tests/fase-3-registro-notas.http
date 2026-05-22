@@ -1,5 +1,5 @@
 ### ================================================================
-### FASE 3 — Registro de Notas (R08)
+### FASE 3 — Registro de Notas (AIB-15)
 ### Prerequisito: fase-1 y fase-2 ejecutados
 ###
 ### Estado inicial:
@@ -14,7 +14,8 @@
 ###   → overallAverage  = 3.90 * 30 / 100 = 1.17  (solo 1 corte calificado)
 ### ================================================================
 
-@baseUrl = http://localhost:8002
+@baseUrl = https://aibert-academic-service-qa.yellowwave-cb2d91fc.centralus.azurecontainerapps.io
+@studentId = test-student-123
 @ct = application/json
 @s1 = 1
 @cut1 = 5
@@ -29,6 +30,7 @@
 ### POST nota con gradeValue=6.0 en cut1
 POST {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut1}}/grades
 Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
 
 {
   "activityName": "Parcial Invalido",
@@ -44,6 +46,7 @@ Content-Type: {{ct}}
 ### POST nota con gradeValue=-1.0
 POST {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut1}}/grades
 Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
 
 {
   "activityName": "Parcial Invalido",
@@ -59,6 +62,7 @@ Content-Type: {{ct}}
 ### POST nota con percentage=0
 POST {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut1}}/grades
 Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
 
 {
   "activityName": "Parcial Invalido",
@@ -74,6 +78,7 @@ Content-Type: {{ct}}
 ### POST nota en cutId=999
 POST {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/999/grades
 Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
 
 {
   "activityName": "Parcial",
@@ -91,6 +96,7 @@ Content-Type: {{ct}}
 ### POST "Parcial 1" en cut1 — gradeId=1
 POST {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut1}}/grades
 Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
 
 {
   "activityName": "Parcial 1",
@@ -107,6 +113,7 @@ Content-Type: {{ct}}
 ### PUT evaluation-structure con nota ya registrada
 PUT {{baseUrl}}/api/v1/subjects/{{s1}}/evaluation-structure
 Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
 
 {
   "evaluationCuts": [
@@ -124,6 +131,7 @@ Content-Type: {{ct}}
 ### POST "Quiz 1" en cut1 — gradeId=2
 POST {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut1}}/grades
 Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
 
 {
   "activityName": "Quiz 1",
@@ -140,6 +148,7 @@ Content-Type: {{ct}}
 ### POST nota en cut1 ya lleno al 100%
 POST {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut1}}/grades
 Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
 
 {
   "activityName": "Taller Extra",
@@ -154,6 +163,7 @@ Content-Type: {{ct}}
 # ------------------------------------------------------------------
 ### GET grades del cut1
 GET {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut1}}/grades
+X-Student-Id: {{studentId}}
 
 
 # ------------------------------------------------------------------
@@ -162,6 +172,7 @@ GET {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut1}}/grades
 # ------------------------------------------------------------------
 ### GET grades del cut2 (sin notas aún)
 GET {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut2}}/grades
+X-Student-Id: {{studentId}}
 
 
 # ------------------------------------------------------------------
@@ -174,3 +185,4 @@ GET {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut2}}/grades
 # ------------------------------------------------------------------
 ### GET averages de subject id=1
 GET {{baseUrl}}/api/v1/subjects/{{s1}}/averages
+X-Student-Id: {{studentId}}

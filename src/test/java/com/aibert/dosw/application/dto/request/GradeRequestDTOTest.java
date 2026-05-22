@@ -112,6 +112,44 @@ class GradeRequestDTOTest {
     }
 
     @Test
+    @DisplayName("Should fail validation when activityName exceeds 100 characters")
+    void shouldFailValidationWhenActivityNameExceeds100Characters() {
+        // Given
+        String longName = "A".repeat(101);
+        GradeRequestDTO dto = GradeRequestDTO.builder()
+            .activityName(longName)
+            .gradeValue(4.0)
+            .percentage(30.0)
+            .build();
+
+        // When
+        Set<ConstraintViolation<GradeRequestDTO>> violations = validator.validate(dto);
+
+        // Then
+        assertThat(violations).hasSize(1);
+        assertThat(violations.iterator().next().getMessage())
+            .contains("El nombre de la actividad no puede superar 100 caracteres");
+    }
+
+    @Test
+    @DisplayName("Should pass validation when activityName is exactly 100 characters")
+    void shouldPassValidationWhenActivityNameIsExactly100Characters() {
+        // Given
+        String exactName = "A".repeat(100);
+        GradeRequestDTO dto = GradeRequestDTO.builder()
+            .activityName(exactName)
+            .gradeValue(4.0)
+            .percentage(30.0)
+            .build();
+
+        // When
+        Set<ConstraintViolation<GradeRequestDTO>> violations = validator.validate(dto);
+
+        // Then
+        assertThat(violations).isEmpty();
+    }
+
+    @Test
     @DisplayName("Should validate blank activityName")
     void shouldValidateBlankActivityName() {
         // Given

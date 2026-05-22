@@ -117,6 +117,8 @@ class DeleteSubjectUseCaseImplTest {
             existingSubject.getCredits(),
             existingSubject.getTeacherName(),
             existingSubject.getSemester(),
+            existingSubject.getSchedule(),
+                null,
             existingSubject.getEvaluationCuts()
         );
         when(subjectRepository.findByIdAndStudentId(testId, STUDENT_ID)).thenReturn(Optional.of(testSubject));

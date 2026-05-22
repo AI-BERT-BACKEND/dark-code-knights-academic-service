@@ -1,5 +1,5 @@
 ### ================================================================
-### FASE 4 — Edición y Eliminación de Notas (R09)
+### FASE 4 — Edición y Eliminación de Notas (AIB-15)
 ### Prerequisito: fases 1, 2 y 3 ejecutadas
 ###
 ### Estado inicial:
@@ -30,7 +30,8 @@
 ###   overallAverage = 2.55
 ### ================================================================
 
-@baseUrl = http://localhost:8002
+@baseUrl = https://aibert-academic-service-qa.yellowwave-cb2d91fc.centralus.azurecontainerapps.io
+@studentId = test-student-123
 @ct = application/json
 @s1 = 1
 @cut1 = 5
@@ -45,6 +46,7 @@
 ### PUT grade id=1 con gradeValue=5.5
 PUT {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut1}}/grades/1
 Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
 
 {
   "activityName": "Parcial 1",
@@ -60,6 +62,7 @@ Content-Type: {{ct}}
 ### PUT grade id=999
 PUT {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut1}}/grades/999
 Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
 
 {
   "activityName": "Fantasma",
@@ -76,6 +79,7 @@ Content-Type: {{ct}}
 ### PUT grade id=1 — nueva nota 5.0
 PUT {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut1}}/grades/1
 Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
 
 {
   "activityName": "Parcial 1",
@@ -94,6 +98,7 @@ Content-Type: {{ct}}
 # ------------------------------------------------------------------
 ### GET averages post-edición
 GET {{baseUrl}}/api/v1/subjects/{{s1}}/averages
+X-Student-Id: {{studentId}}
 
 
 # ------------------------------------------------------------------
@@ -106,6 +111,7 @@ GET {{baseUrl}}/api/v1/subjects/{{s1}}/averages
 ### POST "Examen" en cut2 — gradeId=3
 POST {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut2}}/grades
 Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
 
 {
   "activityName": "Examen",
@@ -124,6 +130,7 @@ Content-Type: {{ct}}
 # ------------------------------------------------------------------
 ### GET averages con 2 cortes calificados
 GET {{baseUrl}}/api/v1/subjects/{{s1}}/averages
+X-Student-Id: {{studentId}}
 
 
 # ------------------------------------------------------------------
@@ -132,16 +139,18 @@ GET {{baseUrl}}/api/v1/subjects/{{s1}}/averages
 # ------------------------------------------------------------------
 ### DELETE grade id=999
 DELETE {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut1}}/grades/999
+X-Student-Id: {{studentId}}
 
 
 # ------------------------------------------------------------------
-# CASO 8 — Eliminar "Quiz 1" (gradeId=2) del Corte 1 → 204 No Content
+# CASO 8 — Eliminar "Quiz 1" (gradeId=2) del Corte 1 → 200 OK
 # Recalcula Corte 1 con solo gradeId=1: (5.0*60)/60 = 5.00
 # overall = (5.00*30 + 3.50*30)/100 = 2.55
-# Espera: 204 No Content (sin body)
+# Espera: 200 OK con body { "success": true, "message": "...", "data": { "updatedAverage": ... } }
 # ------------------------------------------------------------------
 ### DELETE grade id=2 — "Quiz 1"
 DELETE {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut1}}/grades/2
+X-Student-Id: {{studentId}}
 
 
 # ------------------------------------------------------------------
@@ -154,6 +163,7 @@ DELETE {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut1}}/grades/2
 # ------------------------------------------------------------------
 ### GET averages estado final
 GET {{baseUrl}}/api/v1/subjects/{{s1}}/averages
+X-Student-Id: {{studentId}}
 
 
 # ------------------------------------------------------------------
@@ -162,6 +172,7 @@ GET {{baseUrl}}/api/v1/subjects/{{s1}}/averages
 # ------------------------------------------------------------------
 ### GET grades del cut1 post-delete
 GET {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut1}}/grades
+X-Student-Id: {{studentId}}
 
 
 # ------------------------------------------------------------------
@@ -172,6 +183,7 @@ GET {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut1}}/grades
 ### PUT grade id=1 con percentage=110 (excede capacidad)
 PUT {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut1}}/grades/1
 Content-Type: {{ct}}
+X-Student-Id: {{studentId}}
 
 {
   "activityName": "Parcial 1",

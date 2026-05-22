@@ -1,9 +1,9 @@
 ### ================================================================
-### FASE 5 — Dashboard Académico (R05)
+### FASE 5 — Dashboard Académico (AIB-9)
 ### Prerequisito: fases 1, 2, 3 y 4 ejecutadas
 ###
 ### Estado de la BD al llegar aquí:
-###   subjectId=1  "Cálculo Diferencial"  student-test  2025-1
+###   subjectId=1  "Cálculo Diferencial"  test-student-123  2025-1
 ###     cutId=5  Corte 1  30%  grade=5.00  ← (5.0*60)/60
 ###     cutId=6  Corte 2  30%  grade=3.50  ← 3.5*100/100
 ###     cutId=7  Corte 3  40%  grade=null
@@ -12,8 +12,8 @@
 ###   academicGpa     = 2.55  (única materia con al menos un corte calificado)
 ### ================================================================
 
-@baseUrl = http://localhost:8002
-@studentId = student-test
+@baseUrl = https://aibert-academic-service-qa.yellowwave-cb2d91fc.centralus.azurecontainerapps.io
+@studentId = test-student-123
 
 
 # ------------------------------------------------------------------
@@ -31,9 +31,9 @@ X-Student-Id: student-otro
 
 
 # ------------------------------------------------------------------
-# CASO 2 — Dashboard de student-test → 200 OK
+# CASO 2 — Dashboard de test-student-123 → 200 OK
 # Espera:
-#   studentId = "student-test"
+#   studentId = "test-student-123"
 #   academicGpa = 2.55
 #   subjects[0]:
 #     subjectId = 1
@@ -44,13 +44,13 @@ X-Student-Id: student-otro
 #     cuts[1]: id=6  cutName="Corte 2"  cutPercentage=30  grade=3.50
 #     cuts[2]: id=7  cutName="Corte 3"  cutPercentage=40  grade=null (omitido)
 # ------------------------------------------------------------------
-### GET summary para student-test (con materia y notas)
+### GET summary para test-student-123 (con materia y notas)
 GET {{baseUrl}}/api/v1/academic/summary
 X-Student-Id: {{studentId}}
 
 
 # ------------------------------------------------------------------
-# CASO 3 — Aislamiento: student-otro no ve materias de student-test → 200 OK
+# CASO 3 — Aislamiento: student-otro no ve materias de test-student-123 → 200 OK
 # El resumen es personal: cada estudiante solo ve lo suyo
 # Espera: misma respuesta vacía que CASO 1
 # ------------------------------------------------------------------
@@ -78,6 +78,7 @@ X-Student-Id: {{studentId}}
   "credits": 2,
   "teacherName": "Prof. Medina",
   "semester": "2025-1",
+  "schedule": "JUEVES 10:00-12:00",
   "evaluationCuts": [
     { "cutName": "Corte 1", "cutPercentage": 50 },
     { "cutName": "Corte 2", "cutPercentage": 50 }

@@ -169,7 +169,7 @@ class GlobalExceptionHandlerTest {
     @DisplayName("Should return 400 when required header is missing")
     void handleMissingHeader_returnsBadRequest() {
         MissingRequestHeaderException ex = mock(MissingRequestHeaderException.class);
-        when(ex.getHeaderName()).thenReturn("X-Student-Id");
+        when(ex.getHeaderName()).thenReturn("studentId");
 
         ResponseEntity<ApiResponse<Void>> response = handler.handleMissingHeader(ex);
 
@@ -177,6 +177,6 @@ class GlobalExceptionHandlerTest {
         assertThat(response.getBody().isSuccess()).isFalse();
         assertThat(response.getBody().getCode()).isEqualTo(400);
         assertThat(response.getBody().getError())
-                .contains("X-Student-Id");
+                .contains("studentId");
     }
 }

@@ -59,6 +59,7 @@ class SimulationIntegrationTest {
               "credits": 4,
               "teacherName": "Prof. Ramírez",
               "semester": "2025-1",
+              "schedule": "Lunes 08:30 - 10:00",
               "evaluationCuts": [
                 { "cutName": "Corte 1", "cutPercentage": 30 },
                 { "cutName": "Corte 2", "cutPercentage": 30 },
@@ -69,7 +70,7 @@ class SimulationIntegrationTest {
 
         String createResponse = mockMvc.perform(post("/api/v1/subjects")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("X-Student-Id", "student-test")
+                .header("studentId", "student-test")
                 .content(subjectJson))
                 .andExpect(status().isCreated())
                 .andReturn().getResponse().getContentAsString();
@@ -122,10 +123,13 @@ class SimulationIntegrationTest {
                 .content(simulationJson))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.data.targetGrade").value(4.0))
                 .andExpect(jsonPath("$.data.requiredGrade").value(3.625))
-                .andExpect(jsonPath("$.data.achievable").value(true))
-                .andExpect(jsonPath("$.data.pendingCutsPercentage").value(40.0))
+                .andExpect(jsonPath("$.data.isAchievable").value(true))
+                .andExpect(jsonPath("$.data.pendingCuts").isArray())
+                .andExpect(jsonPath("$.data.pendingCuts", hasSize(1)))
+                .andExpect(jsonPath("$.data.pendingCuts[0].cutName").value("Corte 3"))
+                .andExpect(jsonPath("$.data.pendingCuts[0].cutPercentage").value(40.0))
+                .andExpect(jsonPath("$.data.pendingCuts[0].requiredGrade").value(3.625))
                 .andExpect(jsonPath("$.message").value("ok"));
     }
 
@@ -143,10 +147,11 @@ class SimulationIntegrationTest {
                 .content(simulationJson))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.data.targetGrade").value(5.0))
                 .andExpect(jsonPath("$.data.requiredGrade").value(6.125))
-                .andExpect(jsonPath("$.data.achievable").value(false))
-                .andExpect(jsonPath("$.data.pendingCutsPercentage").value(40.0))
+                .andExpect(jsonPath("$.data.isAchievable").value(false))
+                .andExpect(jsonPath("$.data.pendingCuts").isArray())
+                .andExpect(jsonPath("$.data.pendingCuts", hasSize(1)))
+                .andExpect(jsonPath("$.data.pendingCuts[0].requiredGrade").value(6.125))
                 .andExpect(jsonPath("$.message").value("ok"));
     }
 
@@ -164,10 +169,11 @@ class SimulationIntegrationTest {
                 .content(simulationJson))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.data.targetGrade").value(2.0))
                 .andExpect(jsonPath("$.data.requiredGrade").value(0.0))
-                .andExpect(jsonPath("$.data.achievable").value(true))
-                .andExpect(jsonPath("$.data.pendingCutsPercentage").value(40.0))
+                .andExpect(jsonPath("$.data.isAchievable").value(true))
+                .andExpect(jsonPath("$.data.pendingCuts").isArray())
+                .andExpect(jsonPath("$.data.pendingCuts", hasSize(1)))
+                .andExpect(jsonPath("$.data.pendingCuts[0].requiredGrade").value(0.0))
                 .andExpect(jsonPath("$.message").value("ok"));
     }
 
@@ -276,6 +282,7 @@ class SimulationIntegrationTest {
               "credits": 3,
               "teacherName": "Prof. García",
               "semester": "2025-1",
+              "schedule": "Miercoles 14:00 - 16:00",
               "evaluationCuts": [
                 { "cutName": "Corte 1", "cutPercentage": 50 },
                 { "cutName": "Corte 2", "cutPercentage": 50 }
@@ -285,7 +292,7 @@ class SimulationIntegrationTest {
 
         String createResponse = mockMvc.perform(post("/api/v1/subjects")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("X-Student-Id", "student-test")
+                .header("studentId", "student-test")
                 .content(newSubjectJson))
                 .andReturn().getResponse().getContentAsString();
 
@@ -302,10 +309,10 @@ class SimulationIntegrationTest {
                 .content(simulationJson))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.data.targetGrade").value(3.5))
                 .andExpect(jsonPath("$.data.requiredGrade").value(3.5))
-                .andExpect(jsonPath("$.data.achievable").value(true))
-                .andExpect(jsonPath("$.data.pendingCutsPercentage").value(100.0));
+                .andExpect(jsonPath("$.data.isAchievable").value(true))
+                .andExpect(jsonPath("$.data.pendingCuts").isArray())
+                .andExpect(jsonPath("$.data.pendingCuts", hasSize(2)));
     }
 
     @Test
@@ -317,6 +324,7 @@ class SimulationIntegrationTest {
               "credits": 2,
               "teacherName": "Prof. Simple",
               "semester": "2025-1",
+              "schedule": "Viernes 07:00 - 09:00",
               "evaluationCuts": [
                 { "cutName": "Corte 1", "cutPercentage": 60 },
                 { "cutName": "Corte 2", "cutPercentage": 40 }
@@ -326,7 +334,7 @@ class SimulationIntegrationTest {
 
         String createResponse = mockMvc.perform(post("/api/v1/subjects")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("X-Student-Id", "student-test")
+                .header("studentId", "student-test")
                 .content(singleCutSubjectJson))
                 .andReturn().getResponse().getContentAsString();
 
@@ -356,10 +364,11 @@ class SimulationIntegrationTest {
                 .content(simulationJson))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.data.targetGrade").value(3.5))
                 .andExpect(jsonPath("$.data.requiredGrade").value(2.75))
-                .andExpect(jsonPath("$.data.achievable").value(true))
-                .andExpect(jsonPath("$.data.pendingCutsPercentage").value(40.0));
+                .andExpect(jsonPath("$.data.isAchievable").value(true))
+                .andExpect(jsonPath("$.data.pendingCuts").isArray())
+                .andExpect(jsonPath("$.data.pendingCuts", hasSize(1)))
+                .andExpect(jsonPath("$.data.pendingCuts[0].requiredGrade").value(2.75));
     }
 
     @Test
@@ -382,18 +391,16 @@ class SimulationIntegrationTest {
                 .content(zeroSimulationJson))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.data.targetGrade").value(0.0))
                 .andExpect(jsonPath("$.data.requiredGrade").value(0.0))
-                .andExpect(jsonPath("$.data.achievable").value(true));
+                .andExpect(jsonPath("$.data.isAchievable").value(true));
 
         mockMvc.perform(post("/api/v1/subjects/{subjectId}/simulate", subjectId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(perfectSimulationJson))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.data.targetGrade").value(5.0))
                 .andExpect(jsonPath("$.data.requiredGrade").value(6.125))
-                .andExpect(jsonPath("$.data.achievable").value(false));
+                .andExpect(jsonPath("$.data.isAchievable").value(false));
     }
 
     @Test

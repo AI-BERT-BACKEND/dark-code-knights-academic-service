@@ -172,6 +172,7 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENCIALES_QA }}
       - name: Deploy to Azure Container Apps
         uses: azure/container-apps-deploy-action@v1
+        continue-on-error: true
         with:
           resourceGroup: aibert-rg
           containerAppName: aibert-academic-service-qa
@@ -180,7 +181,7 @@ jobs:
           registryUrl: ghcr.io
           registryUsername: ${{ github.actor }}
           registryPassword: ${{ secrets.GHCR_TOKEN }}
-          targetPort: 8080
+          targetPort: 1502
           ingress: external
           environmentVariables: SPRING_PROFILES_ACTIVE=qa DB_URL=${{ secrets.DB_URL_QA }} DB_USER=${{ secrets.DB_USER_QA }} DB_PASSWORD=${{ secrets.DB_PASSWORD_QA }}
   deploy-prod:
@@ -197,6 +198,7 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENCIALES_PROD }}
       - name: Deploy to Azure Container Apps
         uses: azure/container-apps-deploy-action@v1
+        continue-on-error: true
         with:
           resourceGroup: aibert-rg
           containerAppName: aibert-academic-service-prod

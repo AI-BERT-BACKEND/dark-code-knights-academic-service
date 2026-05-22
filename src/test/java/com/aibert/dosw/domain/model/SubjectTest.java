@@ -58,6 +58,8 @@ class SubjectTest {
             3,
             "Prof. Torres",
             "2025-1",
+            null,
+                null,
             Collections.emptyList()
         );
         

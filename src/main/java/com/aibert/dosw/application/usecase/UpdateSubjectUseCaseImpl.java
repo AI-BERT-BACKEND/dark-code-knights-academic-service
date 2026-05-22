@@ -34,11 +34,13 @@ public class UpdateSubjectUseCaseImpl implements UpdateSubjectUseCase {
 
         Subject updated = Subject.builder()
                 .id(existing.getId())
+                .externalId(existing.getExternalId())
                 .studentId(existing.getStudentId())
                 .subjectName(subject.getSubjectName())
                 .credits(subject.getCredits())
                 .teacherName(subject.getTeacherName())
                 .semester(subject.getSemester())
+                .schedule(subject.getSchedule())
                 .evaluationCuts(subject.getEvaluationCuts())
                 .build();
 

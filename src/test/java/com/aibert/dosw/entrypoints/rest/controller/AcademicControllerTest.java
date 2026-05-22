@@ -1,6 +1,7 @@
 package com.aibert.dosw.entrypoints.rest.controller;
 
 import com.aibert.dosw.application.dto.response.AcademicSummaryDTO;
+import com.aibert.dosw.application.dto.response.AcademicWeightDTO;
 import com.aibert.dosw.application.dto.response.AveragesResponseDTO;
 import com.aibert.dosw.application.mapper.SubjectMapper;
 import com.aibert.dosw.application.service.AverageCalculator;
@@ -428,5 +429,63 @@ class AcademicControllerTest {
         assertNotNull(summary.getSubjects());
         
         verify(getAcademicSummaryUseCase, times(1)).getSummary(testStudentId);
+    }
+
+    @Test
+    @DisplayName("Should get academic weight when subject exists by external id")
+    void shouldGetAcademicWeightWhenSubjectExistsByExternalId() {
+        Subject subjectWithExternalId = Subject.builder()
+                .id(11L)
+                .externalId("ext-11")
+                .studentId(testStudentId)
+                .subjectName("Mathematics")
+                .semester("2025-1")
+                .credits(4)
+                .teacherName("Dr. Smith")
+                .evaluationCuts(List.of(testCut1))
+                .build();
+
+        when(getAcademicSummaryUseCase.getSummary(testStudentId)).thenReturn(List.of(subjectWithExternalId));
+        when(averageCalculator.calculateOverallAverage(subjectWithExternalId.getEvaluationCuts())).thenReturn(1.2);
+
+        ResponseEntity<ApiResponse<AcademicWeightDTO>> response =
+                academicController.getAcademicWeight(testStudentId, "ext-11");
+
+        assertNotNull(response);
+        assertEquals(200, response.getStatusCode().value());
+        assertNotNull(response.getBody());
+        assertTrue(response.getBody().isSuccess());
+        assertEquals("ok", response.getBody().getMessage());
+        assertEquals(1.2, response.getBody().getData().getAcademicWeight(), 0.0001);
+        verify(getAcademicSummaryUseCase, times(1)).getSummary(testStudentId);
+        verify(averageCalculator, times(1)).calculateOverallAverage(subjectWithExternalId.getEvaluationCuts());
+    }
+
+    @Test
+    @DisplayName("Should return null academic weight when subject external id does not exist")
+    void shouldReturnNullAcademicWeightWhenSubjectExternalIdDoesNotExist() {
+        Subject subjectWithExternalId = Subject.builder()
+                .id(12L)
+                .externalId("ext-12")
+                .studentId(testStudentId)
+                .subjectName("Physics")
+                .semester("2025-1")
+                .credits(3)
+                .teacherName("Dr. Johnson")
+                .evaluationCuts(List.of(testCut1))
+                .build();
+
+        when(getAcademicSummaryUseCase.getSummary(testStudentId)).thenReturn(List.of(subjectWithExternalId));
+
+        ResponseEntity<ApiResponse<AcademicWeightDTO>> response =
+                academicController.getAcademicWeight(testStudentId, "missing-ext");
+
+        assertNotNull(response);
+        assertEquals(200, response.getStatusCode().value());
+        assertNotNull(response.getBody());
+        assertTrue(response.getBody().isSuccess());
+        assertNull(response.getBody().getData().getAcademicWeight());
+        verify(getAcademicSummaryUseCase, times(1)).getSummary(testStudentId);
+        verify(averageCalculator, never()).calculateOverallAverage(any());
     }
 }

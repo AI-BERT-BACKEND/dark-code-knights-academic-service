@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Tag(name = "Materias", description = "Gestión de materias académicas del estudiante (R06)")
+@Tag(name = "Subjects", description = "Academic subject management for the authenticated student (AIB-13)")
 @RestController
 @RequestMapping("/api/v1/subjects")
 @RequiredArgsConstructor
@@ -44,18 +44,18 @@ public class SubjectController {
     private final SubjectMapper subjectMapper;
 
     @Operation(
-            summary = "Crear materia",
-            description = "Crea una nueva materia con sus cortes de evaluación. La suma de cutPercentage debe ser exactamente 100."
+            summary = "Create subject",
+            description = "Creates a new subject with its evaluation cuts. The sum of cutPercentage must be exactly 100."
     )
     @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "Materia creada exitosamente"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Datos inválidos o suma de porcentajes incorrecta"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "409", description = "Ya existe una materia con ese nombre en el mismo semestre")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "Subject created successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid data or incorrect percentage sum"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "409", description = "A subject with that name already exists in the same semester")
     })
     @PostMapping
     public ResponseEntity<ApiResponse<SubjectResponseDTO>> create(
-            @Parameter(description = "ID del estudiante autenticado", required = true)
-            @RequestHeader("X-Student-Id") String studentId,
+            @Parameter(description = "Authenticated student ID", required = true)
+            @RequestHeader("studentId") String studentId,
             @Valid @RequestBody SubjectRequestDTO request) {
         Subject subject = entrypointMapper.toDomain(request, studentId);
         Subject created = createSubjectUseCase.create(subject);
@@ -65,54 +65,54 @@ public class SubjectController {
     }
 
     @Operation(
-            summary = "Listar materias del estudiante",
-            description = "Retorna todas las materias registradas por el estudiante autenticado."
+            summary = "List student subjects",
+            description = "Returns all subjects registered by the authenticated student."
     )
     @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Lista de materias (puede ser vacía)")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "List of subjects (may be empty)")
     })
     @GetMapping
     public ResponseEntity<ApiResponse<List<SubjectResponseDTO>>> getAll(
-            @Parameter(description = "ID del estudiante autenticado", required = true)
-            @RequestHeader("X-Student-Id") String studentId) {
+            @Parameter(description = "Authenticated student ID", required = true)
+            @RequestHeader("studentId") String studentId) {
         List<Subject> subjects = getSubjectsUseCase.getAllByStudent(studentId);
         return ResponseEntity.ok(ApiResponse.ok(subjectMapper.toResponseDTOList(subjects)));
     }
 
     @Operation(
-            summary = "Obtener materia por ID",
-            description = "Retorna el detalle completo de una materia, incluyendo sus cortes y promedios."
+            summary = "Get subject by ID",
+            description = "Returns the full detail of a subject, including its evaluation cuts and averages."
     )
     @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Materia encontrada"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Materia no encontrada")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Subject found"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Subject not found or does not belong to the student")
     })
     @GetMapping("/{subjectId}")
     public ResponseEntity<ApiResponse<SubjectResponseDTO>> getById(
-            @Parameter(description = "ID del estudiante autenticado", required = true)
-            @RequestHeader("X-Student-Id") String studentId,
-            @Parameter(description = "ID de la materia", required = true)
+            @Parameter(description = "Authenticated student ID", required = true)
+            @RequestHeader("studentId") String studentId,
+            @Parameter(description = "Subject ID", required = true)
             @PathVariable Long subjectId) {
         Subject subject = getSubjectsUseCase.getByIdAndStudent(subjectId, studentId);
         return ResponseEntity.ok(ApiResponse.ok(subjectMapper.toResponseDTO(subject)));
     }
 
     @Operation(
-            summary = "Actualizar materia",
-            description = "Actualiza los datos de una materia existente. Reemplaza también sus cortes de evaluación."
+            summary = "Update subject",
+            description = "Updates the data of an existing subject. Also replaces its evaluation cuts."
     )
     @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Materia actualizada exitosamente"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Datos inválidos o porcentajes incorrectos"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Materia no encontrada"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "409", description = "Nombre de materia duplicado en el semestre")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Subject updated successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid data or incorrect percentages"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Subject not found"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "409", description = "Duplicate subject name in the same semester")
     })
     @PutMapping("/{subjectId}")
     public ResponseEntity<ApiResponse<SubjectResponseDTO>> update(
-            @Parameter(description = "ID de la materia", required = true)
+            @Parameter(description = "Subject ID", required = true)
             @PathVariable Long subjectId,
-            @Parameter(description = "ID del estudiante autenticado", required = true)
-            @RequestHeader("X-Student-Id") String studentId,
+            @Parameter(description = "Authenticated student ID", required = true)
+            @RequestHeader("studentId") String studentId,
             @Valid @RequestBody SubjectRequestDTO request) {
         Subject subject = entrypointMapper.toDomain(request, studentId);
         Subject updated = updateSubjectUseCase.update(subjectId, subject);
@@ -120,18 +120,18 @@ public class SubjectController {
     }
 
     @Operation(
-            summary = "Eliminar materia",
-            description = "Elimina la materia junto con todos sus cortes y notas asociados."
+            summary = "Delete subject",
+            description = "Deletes the subject along with all its associated cuts and grades."
     )
     @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "204", description = "Materia eliminada exitosamente"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Materia no encontrada")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "204", description = "Subject deleted successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Subject not found or does not belong to the student")
     })
     @DeleteMapping("/{subjectId}")
     public ResponseEntity<Void> delete(
-            @Parameter(description = "ID del estudiante autenticado", required = true)
-            @RequestHeader("X-Student-Id") String studentId,
-            @Parameter(description = "ID de la materia", required = true)
+            @Parameter(description = "Authenticated student ID", required = true)
+            @RequestHeader("studentId") String studentId,
+            @Parameter(description = "Subject ID", required = true)
             @PathVariable Long subjectId) {
         deleteSubjectUseCase.delete(subjectId, studentId);
         return ResponseEntity.noContent().build();

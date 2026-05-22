@@ -1,6 +1,7 @@
 package com.aibert.dosw.entrypoints.rest.controller;
 
 import com.aibert.dosw.application.dto.response.AcademicSummaryDTO;
+import com.aibert.dosw.application.dto.response.AcademicWeightDTO;
 import com.aibert.dosw.application.dto.response.AveragesResponseDTO;
 import com.aibert.dosw.application.mapper.SubjectMapper;
 import com.aibert.dosw.application.service.AverageCalculator;
@@ -15,12 +16,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.OptionalDouble;
 
-@Tag(name = "Dashboard Académico", description = "Resumen académico del estudiante (R05)")
+@Tag(name = "Academic Dashboard", description = "Student academic summary (AIB-9)")
 @RestController
 @RequiredArgsConstructor
 public class AcademicController {
@@ -30,16 +32,16 @@ public class AcademicController {
     private final AverageCalculator averageCalculator;
 
     @Operation(
-            summary = "Obtener resumen académico",
-            description = "Retorna todas las materias del estudiante con promedios por corte, promedio general de cada materia y GPA global."
+            summary = "Get academic summary",
+            description = "Returns all student subjects with averages per cut, overall average per subject, and global GPA."
     )
     @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Resumen académico generado (puede tener lista vacía si no hay materias)")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Academic summary generated (may have an empty list if there are no subjects)")
     })
     @GetMapping("/api/v1/academic/summary")
     public ResponseEntity<ApiResponse<AcademicSummaryDTO>> getSummary(
-            @Parameter(description = "ID del estudiante autenticado", required = true)
-            @RequestHeader("X-Student-Id") String studentId) {
+            @Parameter(description = "Authenticated student ID", required = true)
+            @RequestHeader("studentId") String studentId) {
 
         List<Subject> subjects = getAcademicSummaryUseCase.getSummary(studentId);
 
@@ -70,5 +72,31 @@ public class AcademicController {
 
         String message = subjects.isEmpty() ? "El estudiante no tiene materias registradas" : "ok";
         return ResponseEntity.ok(ApiResponse.ok(summary, message));
+    }
+
+    @Operation(
+            summary = "Get academic weight for a subject",
+            description = "Returns the overall weighted average for a specific subject. Consumed by engine-planning via Feign."
+    )
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Academic weight returned (null if subject has no grades yet)")
+    })
+    @GetMapping("/api/v1/academic/weight")
+    public ResponseEntity<ApiResponse<AcademicWeightDTO>> getAcademicWeight(
+            @Parameter(description = "Student ID", required = true)
+            @RequestParam String studentId,
+            @Parameter(description = "Subject external UUID", required = true)
+            @RequestParam String subjectId) {
+
+        List<Subject> subjects = getAcademicSummaryUseCase.getSummary(studentId);
+
+        Double weight = subjects.stream()
+                .filter(s -> subjectId.equals(s.getExternalId()))
+                .findFirst()
+                .map(s -> averageCalculator.calculateOverallAverage(s.getEvaluationCuts()))
+                .orElse(null);
+
+        return ResponseEntity.ok(ApiResponse.ok(
+                AcademicWeightDTO.builder().academicWeight(weight).build(), "ok"));
     }
 }
