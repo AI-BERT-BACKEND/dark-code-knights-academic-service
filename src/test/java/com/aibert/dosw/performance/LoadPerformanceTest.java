@@ -1,6 +1,7 @@
 package com.aibert.dosw.performance;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,6 +27,7 @@ class LoadPerformanceTest {
     private ObjectMapper objectMapper;
 
     @Test
+    @Disabled("Performance test — depende del ambiente, no correr en CI")
     void createSubject_shouldRespondUnder2Seconds() {
         String requestBody = """
             {
