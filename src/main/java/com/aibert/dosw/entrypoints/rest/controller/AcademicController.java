@@ -11,6 +11,7 @@ import com.aibert.dosw.entrypoints.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.OptionalDouble;
 
-@Tag(name = "Academic Dashboard", description = "Student academic summary (AIB-9)")
+@Tag(name = "Academic Dashboard", description = "Manage the student's academic summary: subjects, cut averages, overall GPA, and inter-service academic weight. (AIB-9)")
 @RestController
 @RequiredArgsConstructor
 public class AcademicController {
@@ -33,10 +34,16 @@ public class AcademicController {
 
     @Operation(
             summary = "Get academic summary",
-            description = "Returns all student subjects with averages per cut, overall average per subject, and global GPA."
+            description = """
+                    Returns a complete academic summary for the authenticated student: all subjects with \
+                    their per-cut averages, each subject's overall weighted average, and a global GPA. \
+                    If the student has no subjects the response is successful with an empty list. \
+                    Subjects without grades return overallAverage: null and are excluded from the GPA calculation.""",
+            security = @SecurityRequirement(name = "bearerAuth")
     )
     @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Academic summary generated (may have an empty list if there are no subjects)")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Academic summary returned (empty subjects list if the student has no subjects registered)"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Missing or invalid Bearer token")
     })
     @GetMapping("/api/v1/academic/summary")
     public ResponseEntity<ApiResponse<AcademicSummaryDTO>> getSummary(
@@ -76,16 +83,23 @@ public class AcademicController {
 
     @Operation(
             summary = "Get academic weight for a subject",
-            description = "Returns the overall weighted average for a specific subject. Consumed by engine-planning via Feign."
+            description = """
+                    **Internal endpoint — called by engine-planning service via OpenFeign.** \
+                    Returns the overall weighted average of a specific subject identified by its external UUID. \
+                    Returns academicWeight: null if the subject has no grades registered yet. \
+                    This endpoint does not enforce student ownership: it is designed for inter-service consumption.""",
+            security = @SecurityRequirement(name = "bearerAuth")
     )
     @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Academic weight returned (null if subject has no grades yet)")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Academic weight returned (null if the subject has no grades yet)"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Missing or invalid Bearer token")
     })
     @GetMapping("/api/v1/academic/weight")
     public ResponseEntity<ApiResponse<AcademicWeightDTO>> getAcademicWeight(
-            @Parameter(description = "Student ID", required = true)
+            @Parameter(description = "Student ID whose subjects are queried", required = true)
             @RequestParam String studentId,
-            @Parameter(description = "Subject external UUID", required = true)
+            @Parameter(description = "External UUID of the subject (as provided by the planning service)", required = true,
+                    example = "b2c3d4e5-f6a7-8901-bcde-f12345678901")
             @RequestParam String subjectId) {
 
         List<Subject> subjects = getAcademicSummaryUseCase.getSummary(studentId);

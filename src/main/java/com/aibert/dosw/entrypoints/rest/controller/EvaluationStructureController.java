@@ -8,7 +8,11 @@ import com.aibert.dosw.domain.ports.in.ConfigureEvaluationStructureUseCase;
 import com.aibert.dosw.entrypoints.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Tag(name = "Evaluation Structure", description = "Configuration of evaluation cuts for a subject (AIB-14)")
+@Tag(name = "Evaluation Structure", description = "Manage the evaluation cut structure of a subject: configure and retrieve cut weights. (AIB-14)")
 @RestController
 @RequestMapping("/api/v1/subjects")
 @RequiredArgsConstructor
@@ -33,17 +37,38 @@ public class EvaluationStructureController {
 
     @Operation(
             summary = "Configure evaluation structure",
-            description = "Completely replaces the subject's evaluation cuts. Locked if grades have already been registered."
+            description = """
+                    Completely replaces the evaluation cut structure of a subject. Old cuts are deleted \
+                    and new ones are created (orphanRemoval). The sum of all cutPercentage values must equal \
+                    exactly 100. Returns 409 if any cut in the subject already has grades registered — \
+                    the structure cannot be modified once grading has begun.""",
+            security = @SecurityRequirement(name = "bearerAuth")
     )
     @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Structure configured successfully"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Percentage sum ≠ 100 or empty list"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Evaluation structure configured successfully",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "success": true,
+                                      "data": {
+                                        "subjectId": 1,
+                                        "evaluationCuts": [
+                                          { "id": 5, "cutName": "Corte 1", "cutPercentage": 30, "grade": null },
+                                          { "id": 6, "cutName": "Corte 2", "cutPercentage": 30, "grade": null },
+                                          { "id": 7, "cutName": "Corte 3", "cutPercentage": 40, "grade": null }
+                                        ]
+                                      },
+                                      "message": null
+                                    }"""))),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Empty cut list or cut percentages do not sum to 100"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Missing or invalid Bearer token"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Subject not found"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "409", description = "Structure locked because grades have already been registered")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "409", description = "Evaluation structure is locked because one or more cuts already have grades registered")
     })
     @PutMapping("/{subjectId}/evaluation-structure")
     public ResponseEntity<ApiResponse<EvaluationStructureResponseDTO>> configure(
-            @Parameter(description = "Subject ID", required = true)
+            @Parameter(description = "Numeric ID of the subject", example = "1",
+                    schema = @Schema(type = "integer", format = "int64"))
             @PathVariable Long subjectId,
             @Valid @RequestBody EvaluationStructureRequestDTO request) {
 
@@ -60,15 +85,19 @@ public class EvaluationStructureController {
 
     @Operation(
             summary = "Get evaluation structure",
-            description = "Returns the subject's current evaluation cuts with their calculated averages."
+            description = "Returns the current evaluation cut structure of a subject, including each cut's " +
+                    "weighted average if grades have been registered. Cuts without grades return grade: null.",
+            security = @SecurityRequirement(name = "bearerAuth")
     )
     @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Evaluation structure found"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Evaluation structure returned successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Missing or invalid Bearer token"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Subject not found")
     })
     @GetMapping("/{subjectId}/evaluation-structure")
     public ResponseEntity<ApiResponse<EvaluationStructureResponseDTO>> getStructure(
-            @Parameter(description = "Subject ID", required = true)
+            @Parameter(description = "Numeric ID of the subject", example = "1",
+                    schema = @Schema(type = "integer", format = "int64"))
             @PathVariable Long subjectId) {
 
         List<EvaluationCut> cuts = configureEvaluationStructureUseCase.getStructure(subjectId);

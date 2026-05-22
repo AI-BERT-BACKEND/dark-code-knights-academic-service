@@ -8,7 +8,11 @@ import com.aibert.dosw.domain.ports.in.SimulateTargetGradeUseCase;
 import com.aibert.dosw.entrypoints.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Locale;
 
-@Tag(name = "Simulation", description = "Target grade simulation for pending evaluation cuts (AIB-17)")
+@Tag(name = "Simulation", description = "Simulate the grade needed in pending evaluation cuts to reach a target final grade. (AIB-17)")
 @RestController
 @RequiredArgsConstructor
 public class SimulationController {
@@ -30,17 +34,40 @@ public class SimulationController {
 
     @Operation(
             summary = "Simulate target grade",
-            description = "Calculates the minimum grade needed in the pending cuts to reach the target. Formula: requiredGrade = (targetGrade × 100 − currentScore) / pendingPercentage"
+            description = """
+                    Calculates the minimum grade needed across all pending (ungraded) evaluation cuts \
+                    to reach the given target final grade. \
+                    Formula: requiredGrade = (targetGrade × 100 − currentScore) / pendingPercentage. \
+                    If requiredGrade > 5.0, the goal is not achievable (isAchievable: false). \
+                    If requiredGrade ≤ 0.0, the goal is already secured regardless of pending cuts (requiredGrade clamped to 0.0). \
+                    Returns 422 if the subject has no pending cuts to grade.""",
+            security = @SecurityRequirement(name = "bearerAuth")
     )
     @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Simulation calculated (may or may not be achievable)"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "targetGrade is null or out of range 0.0–5.0"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Simulation calculated — check isAchievable to determine feasibility",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "success": true,
+                                      "data": {
+                                        "requiredGrade": 3.625,
+                                        "isAchievable": true,
+                                        "message": "Para alcanzar 4.0 necesitas obtener 3.63 o más en los cortes pendientes (40% restante).",
+                                        "pendingCuts": [
+                                          { "cutId": 7, "cutName": "Corte 3", "cutPercentage": 40, "requiredGrade": 3.625 }
+                                        ]
+                                      },
+                                      "message": null
+                                    }"""))),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "targetGrade is null, below 0.0, or above 5.0"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Missing or invalid Bearer token"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Subject not found"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "422", description = "The subject has no pending cuts to grade")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "422", description = "The subject has no pending (ungraded) cuts — nothing to simulate")
     })
     @PostMapping("/api/v1/subjects/{subjectId}/simulate")
     public ResponseEntity<ApiResponse<SimulationResponseDTO>> simulate(
-            @Parameter(description = "ID of the subject to simulate", required = true)
+            @Parameter(description = "Numeric ID of the subject to simulate", example = "1",
+                    schema = @Schema(type = "integer", format = "int64"))
             @PathVariable Long subjectId,
             @Valid @RequestBody SimulationRequestDTO request) {
 

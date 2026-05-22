@@ -7,6 +7,9 @@ import com.aibert.dosw.domain.ports.in.GetStudyPreferencesUseCase;
 import com.aibert.dosw.domain.ports.in.SaveStudyPreferencesUseCase;
 import com.aibert.dosw.entrypoints.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Study Preferences", description = "Student study preferences configuration (AIB-12)")
+@Tag(name = "Study Preferences", description = "Manage the student's study preferences: modality, environment, and method. (AIB-12)")
 @RestController
 @RequestMapping("/api/v1/students/preferences")
 @RequiredArgsConstructor
@@ -28,8 +31,20 @@ public class StudyPreferencesController {
     private final GetStudyPreferencesUseCase getStudyPreferencesUseCase;
 
     @PutMapping
-    @Operation(summary = "Save or update study preferences")
+    @Operation(
+            summary = "Save or update study preferences",
+            description = "Saves or replaces the study preferences for the authenticated student (upsert semantics). " +
+                    "All fields are optional — send only the fields you want to store. " +
+                    "A second PUT completely replaces the previous record.",
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Study preferences saved successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Validation error: a field exceeds its maximum length"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Missing or invalid Bearer token")
+    })
     public ResponseEntity<ApiResponse<StudyPreferencesResponseDTO>> save(
+            @Parameter(description = "Authenticated student ID", required = true)
             @RequestHeader("studentId") String studentId,
             @Valid @RequestBody StudyPreferencesRequestDTO request) {
 
@@ -45,8 +60,18 @@ public class StudyPreferencesController {
     }
 
     @GetMapping
-    @Operation(summary = "Get study preferences for the student")
+    @Operation(
+            summary = "Get study preferences for the student",
+            description = "Returns the current study preferences of the authenticated student. " +
+                    "All fields are nullable — they return null if no value has been configured yet.",
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Study preferences returned (fields may be null if not yet configured)"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Missing or invalid Bearer token")
+    })
     public ResponseEntity<ApiResponse<StudyPreferencesResponseDTO>> get(
+            @Parameter(description = "Authenticated student ID", required = true)
             @RequestHeader("studentId") String studentId) {
 
         StudyPreferences preferences = getStudyPreferencesUseCase.get(studentId);
