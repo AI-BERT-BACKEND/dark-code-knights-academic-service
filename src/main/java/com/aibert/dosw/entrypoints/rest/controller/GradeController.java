@@ -23,6 +23,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,6 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Slf4j
 @Tag(name = "Grades", description = "Manage grade activities inside evaluation cuts: register, list, update, delete, and compute averages. (AIB-15)")
 @RestController
 @RequiredArgsConstructor
@@ -75,6 +77,7 @@ public class GradeController {
             @PathVariable Long cutId,
             @Valid @RequestBody GradeRequestDTO request) {
 
+        log.info("registerGrade - subjectId={}, cutId={}", subjectId, cutId);
         Grade saved = registerGradeUseCase.register(subjectId, cutId, gradeMapper.toDomain(request));
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -101,6 +104,7 @@ public class GradeController {
                     schema = @Schema(type = "integer", format = "int64"))
             @PathVariable Long cutId) {
 
+        log.info("getGradesByCut - subjectId={}, cutId={}", subjectId, cutId);
         List<Grade> grades = registerGradeUseCase.getGradesByCut(subjectId, cutId);
         return ResponseEntity.ok(ApiResponse.ok(gradeMapper.toResponseDTOList(grades)));
     }
@@ -134,6 +138,7 @@ public class GradeController {
             @PathVariable Long gradeId,
             @Valid @RequestBody UpdateGradeRequestDTO request) {
 
+        log.info("updateGrade - subjectId={}, cutId={}, gradeId={}", subjectId, cutId, gradeId);
         Grade updated = updateGradeUseCase.update(subjectId, cutId, gradeId, gradeMapper.toDomain(request));
         return ResponseEntity.ok(ApiResponse.ok(gradeMapper.toResponseDTO(updated)));
     }
@@ -162,6 +167,7 @@ public class GradeController {
                     schema = @Schema(type = "integer", format = "int64"))
             @PathVariable Long gradeId) {
 
+        log.info("deleteGrade - subjectId={}, cutId={}, gradeId={}", subjectId, cutId, gradeId);
         Double updatedAverage = deleteGradeUseCase.delete(subjectId, cutId, gradeId);
         GradeDeleteResponseDTO responseDTO = GradeDeleteResponseDTO.builder()
                 .message("Nota eliminada exitosamente!")
@@ -189,6 +195,7 @@ public class GradeController {
                     schema = @Schema(type = "integer", format = "int64"))
             @PathVariable Long subjectId) {
 
+        log.info("getAverages - subjectId={}", subjectId);
         Subject subject = getSubjectsUseCase.getById(subjectId);
 
         Double overallAverage = averageCalculator.calculateOverallAverage(subject.getEvaluationCuts());

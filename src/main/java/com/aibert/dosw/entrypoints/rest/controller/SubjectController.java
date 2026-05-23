@@ -20,6 +20,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,6 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Slf4j
 @Tag(name = "Subjects", description = "Manage the student's academic subjects: create, retrieve, update, and delete. (AIB-13)")
 @RestController
 @RequestMapping("/api/v1/subjects")
@@ -85,6 +87,7 @@ public class SubjectController {
             @Parameter(description = "Authenticated student ID", required = true)
             @RequestHeader("studentId") String studentId,
             @Valid @RequestBody SubjectRequestDTO request) {
+        log.info("createSubject - studentId={}", studentId);
         Subject subject = entrypointMapper.toDomain(request, studentId);
         Subject created = createSubjectUseCase.create(subject);
         return ResponseEntity
@@ -106,6 +109,7 @@ public class SubjectController {
     public ResponseEntity<com.aibert.dosw.entrypoints.ApiResponse<List<SubjectResponseDTO>>> getAll(
             @Parameter(description = "Authenticated student ID", required = true)
             @RequestHeader("studentId") String studentId) {
+        log.info("getSubjects - studentId={}", studentId);
         List<Subject> subjects = getSubjectsUseCase.getAllByStudent(studentId);
         return ResponseEntity.ok(com.aibert.dosw.entrypoints.ApiResponse.ok(subjectMapper.toResponseDTOList(subjects)));
     }
@@ -129,6 +133,7 @@ public class SubjectController {
             @Parameter(description = "Numeric ID of the subject", example = "1",
                     schema = @Schema(type = "integer", format = "int64"))
             @PathVariable Long subjectId) {
+        log.info("getSubject - studentId={}, subjectId={}", studentId, subjectId);
         Subject subject = getSubjectsUseCase.getByIdAndStudent(subjectId, studentId);
         return ResponseEntity.ok(com.aibert.dosw.entrypoints.ApiResponse.ok(subjectMapper.toResponseDTO(subject)));
     }
@@ -157,6 +162,7 @@ public class SubjectController {
             @Parameter(description = "Authenticated student ID", required = true)
             @RequestHeader("studentId") String studentId,
             @Valid @RequestBody SubjectRequestDTO request) {
+        log.info("updateSubject - studentId={}, subjectId={}", studentId, subjectId);
         Subject subject = entrypointMapper.toDomain(request, studentId);
         Subject updated = updateSubjectUseCase.update(subjectId, subject);
         return ResponseEntity.ok(com.aibert.dosw.entrypoints.ApiResponse.ok(subjectMapper.toResponseDTO(updated)));
@@ -181,6 +187,7 @@ public class SubjectController {
             @Parameter(description = "Numeric ID of the subject", example = "1",
                     schema = @Schema(type = "integer", format = "int64"))
             @PathVariable Long subjectId) {
+        log.info("deleteSubject - studentId={}, subjectId={}", studentId, subjectId);
         deleteSubjectUseCase.delete(subjectId, studentId);
         return ResponseEntity.noContent().build();
     }

@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Slf4j
 @Tag(name = "Academic Goals", description = "Manage academic goals for the student: create, update, and track progress toward a target grade. (AIB-11)")
 @RestController
 @RequestMapping("/api/v1/academic/goals")
@@ -56,6 +58,7 @@ public class AcademicGoalController {
             @RequestHeader("studentId") String studentId,
             @Valid @RequestBody AcademicGoalRequestDTO request) {
 
+        log.info("setGoal - studentId={}", studentId);
         AcademicGoal saved = setAcademicGoalUseCase.set(
                 studentId,
                 request.getGoalName(),
@@ -86,6 +89,7 @@ public class AcademicGoalController {
             @Parameter(description = "Authenticated student ID", required = true)
             @RequestHeader("studentId") String studentId) {
 
+        log.info("getGoal - studentId={}, goalId={}", studentId, goalId);
         AcademicGoalProgress progress = getAcademicGoalUseCase.getById(goalId, studentId);
         return ResponseEntity.ok(ApiResponse.ok(toDTO(progress)));
     }
@@ -108,6 +112,7 @@ public class AcademicGoalController {
             @Parameter(description = "Optional semester filter in YYYY-1 or YYYY-2 format", example = "2025-1")
             @RequestParam(required = false) String semester) {
 
+        log.info("getAllGoals - studentId={}, semester={}", studentId, semester);
         List<AcademicGoalProgressDTO> dtos = getAcademicGoalUseCase.getAllProgress(studentId, semester)
                 .stream()
                 .map(this::toDTO)

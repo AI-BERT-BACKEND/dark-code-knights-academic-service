@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Slf4j
 @Tag(name = "Evaluation Structure", description = "Manage the evaluation cut structure of a subject: configure and retrieve cut weights. (AIB-14)")
 @RestController
 @RequestMapping("/api/v1/subjects")
@@ -72,6 +74,7 @@ public class EvaluationStructureController {
             @PathVariable Long subjectId,
             @Valid @RequestBody EvaluationStructureRequestDTO request) {
 
+        log.info("configureEvaluationStructure - subjectId={}", subjectId);
         List<EvaluationCut> cuts = subjectMapper.toDomainCutList(request.getEvaluationCuts());
         List<EvaluationCut> result = configureEvaluationStructureUseCase.configure(subjectId, cuts);
 
@@ -100,6 +103,7 @@ public class EvaluationStructureController {
                     schema = @Schema(type = "integer", format = "int64"))
             @PathVariable Long subjectId) {
 
+        log.info("getEvaluationStructure - subjectId={}", subjectId);
         List<EvaluationCut> cuts = configureEvaluationStructureUseCase.getStructure(subjectId);
 
         EvaluationStructureResponseDTO response = EvaluationStructureResponseDTO.builder()
