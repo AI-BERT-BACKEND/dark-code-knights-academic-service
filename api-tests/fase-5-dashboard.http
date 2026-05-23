@@ -74,7 +74,7 @@ Content-Type: application/json
 studentId: {{studentId}}
 
 {
-  "subjectName": "Estadística",
+  "subjectName": "Estadística v2",
   "credits": 2,
   "teacherName": "Prof. Medina",
   "semester": "2025-1",

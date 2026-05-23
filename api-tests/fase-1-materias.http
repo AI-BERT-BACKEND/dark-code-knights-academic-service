@@ -27,7 +27,7 @@ Content-Type: {{ct}}
 studentId: {{studentId}}
 
 {
-  "subjectName": "Materia Invalida",
+  "subjectName": "Materia Invalida v2",
   "credits": 3,
   "teacherName": "Prof. Error",
   "semester": "2025-1",
@@ -49,7 +49,7 @@ Content-Type: {{ct}}
 studentId: {{studentId}}
 
 {
-  "subjectName": "Cálculo Diferencial",
+  "subjectName": "Cálculo Diferencial v2",
   "credits": 4,
   "teacherName": "Prof. Ramírez",
   "semester": "2025-1",
@@ -71,7 +71,7 @@ Content-Type: {{ct}}
 studentId: {{studentId}}
 
 {
-  "subjectName": "Cálculo Diferencial",
+  "subjectName": "Cálculo Diferencial v2",
   "credits": 3,
   "teacherName": "Otro Profesor",
   "semester": "2025-1",
@@ -93,7 +93,7 @@ Content-Type: {{ct}}
 studentId: {{studentId}}
 
 {
-  "subjectName": "Física General",
+  "subjectName": "Física General v2",
   "credits": 3,
   "teacherName": "Prof. Torres",
   "semester": "2025-1",
@@ -142,7 +142,7 @@ Content-Type: {{ct}}
 studentId: {{studentId}}
 
 {
-  "subjectName": "Física Clásica",
+  "subjectName": "Física Clásica v2",
   "credits": 4,
   "teacherName": "Prof. Torres",
   "semester": "2025-1",
@@ -194,7 +194,7 @@ Content-Type: {{ct}}
 studentId: {{studentId}}
 
 {
-  "subjectName": "Materia Inválida",
+  "subjectName": "Materia Inválida v2",
   "credits": 15,
   "teacherName": "Prof. X",
   "semester": "2025-1",

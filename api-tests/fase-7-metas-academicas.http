@@ -77,7 +77,7 @@ Content-Type: {{ct}}
 studentId: {{studentId}}
 
 {
-  "goalName": "Aprobar Cálculo",
+  "goalName": "Aprobar Cálculo v2",
   "targetGrade": 3.5,
   "subjectId": 1
 }
@@ -93,7 +93,7 @@ Content-Type: {{ct}}
 studentId: {{studentId}}
 
 {
-  "goalName": "Subir el GPA",
+  "goalName": "Subir el GPA v2",
   "targetGrade": 4.0
 }
 
@@ -109,7 +109,7 @@ Content-Type: {{ct}}
 studentId: {{studentId}}
 
 {
-  "goalName": "Aprobar Cálculo",
+  "goalName": "Aprobar Cálculo v2",
   "targetGrade": 4.0,
   "subjectId": 1
 }
