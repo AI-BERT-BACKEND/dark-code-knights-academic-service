@@ -30,7 +30,7 @@
 ### POST nota con gradeValue=6.0 en cut1
 POST {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut1}}/grades
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "activityName": "Parcial Invalido",
@@ -46,7 +46,7 @@ X-Student-Id: {{studentId}}
 ### POST nota con gradeValue=-1.0
 POST {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut1}}/grades
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "activityName": "Parcial Invalido",
@@ -62,7 +62,7 @@ X-Student-Id: {{studentId}}
 ### POST nota con percentage=0
 POST {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut1}}/grades
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "activityName": "Parcial Invalido",
@@ -78,7 +78,7 @@ X-Student-Id: {{studentId}}
 ### POST nota en cutId=999
 POST {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/999/grades
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "activityName": "Parcial",
@@ -96,7 +96,7 @@ X-Student-Id: {{studentId}}
 ### POST "Parcial 1" en cut1 — gradeId=1
 POST {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut1}}/grades
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "activityName": "Parcial 1",
@@ -113,7 +113,7 @@ X-Student-Id: {{studentId}}
 ### PUT evaluation-structure con nota ya registrada
 PUT {{baseUrl}}/api/v1/subjects/{{s1}}/evaluation-structure
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "evaluationCuts": [
@@ -131,7 +131,7 @@ X-Student-Id: {{studentId}}
 ### POST "Quiz 1" en cut1 — gradeId=2
 POST {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut1}}/grades
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "activityName": "Quiz 1",
@@ -148,7 +148,7 @@ X-Student-Id: {{studentId}}
 ### POST nota en cut1 ya lleno al 100%
 POST {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut1}}/grades
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "activityName": "Taller Extra",
@@ -163,7 +163,7 @@ X-Student-Id: {{studentId}}
 # ------------------------------------------------------------------
 ### GET grades del cut1
 GET {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut1}}/grades
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 
 # ------------------------------------------------------------------
@@ -172,7 +172,7 @@ X-Student-Id: {{studentId}}
 # ------------------------------------------------------------------
 ### GET grades del cut2 (sin notas aún)
 GET {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut2}}/grades
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 
 # ------------------------------------------------------------------
@@ -185,4 +185,4 @@ X-Student-Id: {{studentId}}
 # ------------------------------------------------------------------
 ### GET averages de subject id=1
 GET {{baseUrl}}/api/v1/subjects/{{s1}}/averages
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}

@@ -24,7 +24,7 @@
 # ------------------------------------------------------------------
 ### GET disponibilidad de test-student-123 antes de configurarla
 GET {{baseUrl}}/api/v1/students/schedule-availability
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 
 # ------------------------------------------------------------------
@@ -34,7 +34,7 @@ X-Student-Id: {{studentId}}
 ### PUT con freeTimeHours=0 (no cumple > 0)
 PUT {{baseUrl}}/api/v1/students/schedule-availability
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "freeTimeHours": 0,
@@ -49,7 +49,7 @@ X-Student-Id: {{studentId}}
 ### PUT con maxStudyHoursPerDay=16
 PUT {{baseUrl}}/api/v1/students/schedule-availability
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "freeTimeHours": 4.0,
@@ -65,7 +65,7 @@ X-Student-Id: {{studentId}}
 ### PUT con suma de horas > 24
 PUT {{baseUrl}}/api/v1/students/schedule-availability
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "freeTimeHours": 8.0,
@@ -84,7 +84,7 @@ X-Student-Id: {{studentId}}
 ### PUT disponibilidad completa
 PUT {{baseUrl}}/api/v1/students/schedule-availability
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "freeTimeHours": 4.0,
@@ -107,7 +107,7 @@ X-Student-Id: {{studentId}}
 # ------------------------------------------------------------------
 ### GET disponibilidad post-guardado
 GET {{baseUrl}}/api/v1/students/schedule-availability
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 
 # ------------------------------------------------------------------
@@ -118,7 +118,7 @@ X-Student-Id: {{studentId}}
 ### PUT disponibilidad parcial (upsert)
 PUT {{baseUrl}}/api/v1/students/schedule-availability
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "freeTimeHours": 5.0,
@@ -133,4 +133,4 @@ X-Student-Id: {{studentId}}
 # ------------------------------------------------------------------
 ### GET disponibilidad de student-otro (aislamiento)
 GET {{baseUrl}}/api/v1/students/schedule-availability
-X-Student-Id: student-otro
+studentId: student-otro

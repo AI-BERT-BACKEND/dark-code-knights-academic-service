@@ -27,7 +27,7 @@
 ### POST simulate en subjectId=999
 POST {{baseUrl}}/api/v1/subjects/999/simulate
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "targetGrade": 3.5
@@ -41,7 +41,7 @@ X-Student-Id: {{studentId}}
 ### POST simulate con targetGrade=6.0
 POST {{baseUrl}}/api/v1/subjects/{{s1}}/simulate
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "targetGrade": 6.0
@@ -55,7 +55,7 @@ X-Student-Id: {{studentId}}
 ### POST simulate con targetGrade=-1.0
 POST {{baseUrl}}/api/v1/subjects/{{s1}}/simulate
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "targetGrade": -1.0
@@ -69,7 +69,7 @@ X-Student-Id: {{studentId}}
 ### POST simulate con targetGrade=null
 POST {{baseUrl}}/api/v1/subjects/{{s1}}/simulate
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "targetGrade": null
@@ -89,7 +89,7 @@ X-Student-Id: {{studentId}}
 ### POST simulate targetGrade=4.0 — meta alcanzable
 POST {{baseUrl}}/api/v1/subjects/{{s1}}/simulate
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "targetGrade": 4.0
@@ -109,7 +109,7 @@ X-Student-Id: {{studentId}}
 ### POST simulate targetGrade=5.0 — meta inalcanzable
 POST {{baseUrl}}/api/v1/subjects/{{s1}}/simulate
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "targetGrade": 5.0
@@ -130,7 +130,7 @@ X-Student-Id: {{studentId}}
 ### POST simulate targetGrade=2.0 — meta ya asegurada
 POST {{baseUrl}}/api/v1/subjects/{{s1}}/simulate
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "targetGrade": 2.0
@@ -145,7 +145,7 @@ X-Student-Id: {{studentId}}
 ### POST nota en Corte 3 — cierra todos los cortes
 POST {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut3}}/grades
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "activityName": "Examen Final",
@@ -164,7 +164,7 @@ X-Student-Id: {{studentId}}
 ### POST simulate sin cortes pendientes
 POST {{baseUrl}}/api/v1/subjects/{{s1}}/simulate
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "targetGrade": 3.5
@@ -181,4 +181,4 @@ X-Student-Id: {{studentId}}
 # ------------------------------------------------------------------
 ### GET averages finales con los 3 cortes calificados
 GET {{baseUrl}}/api/v1/subjects/{{s1}}/averages
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}

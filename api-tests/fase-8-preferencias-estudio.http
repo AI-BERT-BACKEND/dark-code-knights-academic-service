@@ -21,7 +21,7 @@
 # ------------------------------------------------------------------
 ### GET preferencias de test-student-123 antes de configurarlas
 GET {{baseUrl}}/api/v1/students/preferences
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 
 # ------------------------------------------------------------------
@@ -32,7 +32,7 @@ X-Student-Id: {{studentId}}
 ### PUT preferencias completas
 PUT {{baseUrl}}/api/v1/students/preferences
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "studyModality": "Virtual",
@@ -51,7 +51,7 @@ X-Student-Id: {{studentId}}
 # ------------------------------------------------------------------
 ### GET preferencias post-guardado
 GET {{baseUrl}}/api/v1/students/preferences
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 
 # ------------------------------------------------------------------
@@ -62,7 +62,7 @@ X-Student-Id: {{studentId}}
 ### PUT preferencias actualizadas
 PUT {{baseUrl}}/api/v1/students/preferences
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "studyModality": "Presencial",
@@ -78,7 +78,7 @@ X-Student-Id: {{studentId}}
 ### PUT preferencias con solo un campo
 PUT {{baseUrl}}/api/v1/students/preferences
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "studyModality": "Híbrido"
@@ -91,4 +91,4 @@ X-Student-Id: {{studentId}}
 # ------------------------------------------------------------------
 ### GET preferencias de student-otro (aislamiento)
 GET {{baseUrl}}/api/v1/students/preferences
-X-Student-Id: student-otro
+studentId: student-otro

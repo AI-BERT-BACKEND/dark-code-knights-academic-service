@@ -27,7 +27,7 @@
 # ------------------------------------------------------------------
 ### GET estructura actual de subject id=1
 GET {{baseUrl}}/api/v1/subjects/1/evaluation-structure
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 
 # ------------------------------------------------------------------
@@ -37,7 +37,7 @@ X-Student-Id: {{studentId}}
 ### PUT estructura con array vacío
 PUT {{baseUrl}}/api/v1/subjects/1/evaluation-structure
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "evaluationCuts": []
@@ -51,7 +51,7 @@ X-Student-Id: {{studentId}}
 ### PUT estructura con porcentajes inválidos
 PUT {{baseUrl}}/api/v1/subjects/1/evaluation-structure
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "evaluationCuts": [
@@ -68,7 +68,7 @@ X-Student-Id: {{studentId}}
 ### PUT con cutPercentage=0
 PUT {{baseUrl}}/api/v1/subjects/1/evaluation-structure
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "evaluationCuts": [
@@ -85,7 +85,7 @@ X-Student-Id: {{studentId}}
 ### PUT estructura en subject inexistente
 PUT {{baseUrl}}/api/v1/subjects/999/evaluation-structure
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "evaluationCuts": [
@@ -103,7 +103,7 @@ X-Student-Id: {{studentId}}
 ### PUT nueva estructura con 3 cortes — cutIds resultantes: 5, 6, 7
 PUT {{baseUrl}}/api/v1/subjects/1/evaluation-structure
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "evaluationCuts": [
@@ -120,7 +120,7 @@ X-Student-Id: {{studentId}}
 # ------------------------------------------------------------------
 ### GET estructura actualizada de subject id=1
 GET {{baseUrl}}/api/v1/subjects/1/evaluation-structure
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 
 # ------------------------------------------------------------------
@@ -129,4 +129,4 @@ X-Student-Id: {{studentId}}
 # ------------------------------------------------------------------
 ### GET subject id=1 completo
 GET {{baseUrl}}/api/v1/subjects/1
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}

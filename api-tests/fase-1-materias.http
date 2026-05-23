@@ -24,7 +24,7 @@
 ### POST materia con porcentajes inválidos (40 + 40 = 80)
 POST {{baseUrl}}/api/v1/subjects
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "subjectName": "Materia Invalida",
@@ -46,7 +46,7 @@ X-Student-Id: {{studentId}}
 ### POST Cálculo Diferencial — subjectId=1
 POST {{baseUrl}}/api/v1/subjects
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "subjectName": "Cálculo Diferencial",
@@ -68,7 +68,7 @@ X-Student-Id: {{studentId}}
 ### POST Cálculo Diferencial duplicada
 POST {{baseUrl}}/api/v1/subjects
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "subjectName": "Cálculo Diferencial",
@@ -90,7 +90,7 @@ X-Student-Id: {{studentId}}
 ### POST Física General — subjectId=2
 POST {{baseUrl}}/api/v1/subjects
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "subjectName": "Física General",
@@ -111,7 +111,7 @@ X-Student-Id: {{studentId}}
 # ------------------------------------------------------------------
 ### GET todas las materias de test-student-123
 GET {{baseUrl}}/api/v1/subjects
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 
 # ------------------------------------------------------------------
@@ -120,7 +120,7 @@ X-Student-Id: {{studentId}}
 # ------------------------------------------------------------------
 ### GET subject id=1
 GET {{baseUrl}}/api/v1/subjects/1
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 
 # ------------------------------------------------------------------
@@ -129,7 +129,7 @@ X-Student-Id: {{studentId}}
 # ------------------------------------------------------------------
 ### GET subject id=999
 GET {{baseUrl}}/api/v1/subjects/999
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 
 # ------------------------------------------------------------------
@@ -139,7 +139,7 @@ X-Student-Id: {{studentId}}
 ### PUT subject id=2
 PUT {{baseUrl}}/api/v1/subjects/2
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "subjectName": "Física Clásica",
@@ -160,7 +160,7 @@ X-Student-Id: {{studentId}}
 # ------------------------------------------------------------------
 ### GET subject id=2 post-update
 GET {{baseUrl}}/api/v1/subjects/2
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 
 # ------------------------------------------------------------------
@@ -170,7 +170,7 @@ X-Student-Id: {{studentId}}
 ### POST nombre de 2 caracteres
 POST {{baseUrl}}/api/v1/subjects
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "subjectName": "AB",
@@ -191,7 +191,7 @@ X-Student-Id: {{studentId}}
 ### POST con credits=15
 POST {{baseUrl}}/api/v1/subjects
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "subjectName": "Materia Inválida",
@@ -212,7 +212,7 @@ X-Student-Id: {{studentId}}
 # ------------------------------------------------------------------
 ### DELETE subject id=2
 DELETE {{baseUrl}}/api/v1/subjects/2
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 
 # ------------------------------------------------------------------
@@ -221,4 +221,4 @@ X-Student-Id: {{studentId}}
 # ------------------------------------------------------------------
 ### GET subject id=2 post-delete
 GET {{baseUrl}}/api/v1/subjects/2
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}

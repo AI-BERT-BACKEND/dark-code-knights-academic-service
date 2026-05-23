@@ -46,7 +46,7 @@
 ### PUT grade id=1 con gradeValue=5.5
 PUT {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut1}}/grades/1
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "activityName": "Parcial 1",
@@ -62,7 +62,7 @@ X-Student-Id: {{studentId}}
 ### PUT grade id=999
 PUT {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut1}}/grades/999
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "activityName": "Fantasma",
@@ -79,7 +79,7 @@ X-Student-Id: {{studentId}}
 ### PUT grade id=1 — nueva nota 5.0
 PUT {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut1}}/grades/1
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "activityName": "Parcial 1",
@@ -98,7 +98,7 @@ X-Student-Id: {{studentId}}
 # ------------------------------------------------------------------
 ### GET averages post-edición
 GET {{baseUrl}}/api/v1/subjects/{{s1}}/averages
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 
 # ------------------------------------------------------------------
@@ -111,7 +111,7 @@ X-Student-Id: {{studentId}}
 ### POST "Examen" en cut2 — gradeId=3
 POST {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut2}}/grades
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "activityName": "Examen",
@@ -130,7 +130,7 @@ X-Student-Id: {{studentId}}
 # ------------------------------------------------------------------
 ### GET averages con 2 cortes calificados
 GET {{baseUrl}}/api/v1/subjects/{{s1}}/averages
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 
 # ------------------------------------------------------------------
@@ -139,7 +139,7 @@ X-Student-Id: {{studentId}}
 # ------------------------------------------------------------------
 ### DELETE grade id=999
 DELETE {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut1}}/grades/999
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 
 # ------------------------------------------------------------------
@@ -150,7 +150,7 @@ X-Student-Id: {{studentId}}
 # ------------------------------------------------------------------
 ### DELETE grade id=2 — "Quiz 1"
 DELETE {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut1}}/grades/2
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 
 # ------------------------------------------------------------------
@@ -163,7 +163,7 @@ X-Student-Id: {{studentId}}
 # ------------------------------------------------------------------
 ### GET averages estado final
 GET {{baseUrl}}/api/v1/subjects/{{s1}}/averages
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 
 # ------------------------------------------------------------------
@@ -172,7 +172,7 @@ X-Student-Id: {{studentId}}
 # ------------------------------------------------------------------
 ### GET grades del cut1 post-delete
 GET {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut1}}/grades
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 
 # ------------------------------------------------------------------
@@ -183,7 +183,7 @@ X-Student-Id: {{studentId}}
 ### PUT grade id=1 con percentage=110 (excede capacidad)
 PUT {{baseUrl}}/api/v1/subjects/{{s1}}/cuts/{{cut1}}/grades/1
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "activityName": "Parcial 1",

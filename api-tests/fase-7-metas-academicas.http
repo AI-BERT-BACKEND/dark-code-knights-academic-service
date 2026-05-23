@@ -25,7 +25,7 @@
 ### PUT meta con nombre de 2 caracteres
 PUT {{baseUrl}}/api/v1/academic/goals
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "goalName": "AB",
@@ -41,7 +41,7 @@ X-Student-Id: {{studentId}}
 ### PUT meta con targetGrade=6.0
 PUT {{baseUrl}}/api/v1/academic/goals
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "goalName": "Meta Invalida",
@@ -57,7 +57,7 @@ X-Student-Id: {{studentId}}
 ### PUT meta con subjectId=999
 PUT {{baseUrl}}/api/v1/academic/goals
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "goalName": "Meta Invalida",
@@ -74,7 +74,7 @@ X-Student-Id: {{studentId}}
 ### PUT meta "Aprobar Cálculo" vinculada a subjectId=1 — goalId=1
 PUT {{baseUrl}}/api/v1/academic/goals
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "goalName": "Aprobar Cálculo",
@@ -90,7 +90,7 @@ X-Student-Id: {{studentId}}
 ### PUT meta "Subir el GPA" sin materia — goalId=2
 PUT {{baseUrl}}/api/v1/academic/goals
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "goalName": "Subir el GPA",
@@ -106,7 +106,7 @@ X-Student-Id: {{studentId}}
 ### PUT meta "Aprobar Cálculo" actualizada — targetGrade=4.0
 PUT {{baseUrl}}/api/v1/academic/goals
 Content-Type: {{ct}}
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 {
   "goalName": "Aprobar Cálculo",
@@ -123,7 +123,7 @@ X-Student-Id: {{studentId}}
 # ------------------------------------------------------------------
 ### GET progreso de goalId=1
 GET {{baseUrl}}/api/v1/academic/goals/1
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 
 # ------------------------------------------------------------------
@@ -132,7 +132,7 @@ X-Student-Id: {{studentId}}
 # ------------------------------------------------------------------
 ### GET progreso de goalId=999
 GET {{baseUrl}}/api/v1/academic/goals/999
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 
 # ------------------------------------------------------------------
@@ -142,7 +142,7 @@ X-Student-Id: {{studentId}}
 # ------------------------------------------------------------------
 ### GET progresos del semestre 2025-1
 GET {{baseUrl}}/api/v1/academic/goals?semester=2025-1
-X-Student-Id: {{studentId}}
+studentId: {{studentId}}
 
 
 # ------------------------------------------------------------------
@@ -151,4 +151,4 @@ X-Student-Id: {{studentId}}
 # ------------------------------------------------------------------
 ### GET progresos de student-otro (sin metas)
 GET {{baseUrl}}/api/v1/academic/goals?semester=2025-1
-X-Student-Id: student-otro
+studentId: student-otro
