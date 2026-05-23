@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @Tag(name = "Study Preferences", description = "Manage the student's study preferences: modality, environment, and method. (AIB-12)")
 @RestController
 @RequestMapping("/api/v1/students/preferences")
@@ -48,6 +50,7 @@ public class StudyPreferencesController {
             @RequestHeader("studentId") String studentId,
             @Valid @RequestBody StudyPreferencesRequestDTO request) {
 
+        log.info("saveStudyPreferences - studentId={}", studentId);
         StudyPreferences domain = StudyPreferences.builder()
                 .studentId(studentId)
                 .studyModality(request.getStudyModality())
@@ -74,6 +77,7 @@ public class StudyPreferencesController {
             @Parameter(description = "Authenticated student ID", required = true)
             @RequestHeader("studentId") String studentId) {
 
+        log.info("getStudyPreferences - studentId={}", studentId);
         StudyPreferences preferences = getStudyPreferencesUseCase.get(studentId);
         return ResponseEntity.ok(ApiResponse.ok(toDTO(preferences)));
     }

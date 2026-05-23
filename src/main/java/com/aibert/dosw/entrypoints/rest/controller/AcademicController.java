@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.OptionalDouble;
 
+@Slf4j
 @Tag(name = "Academic Dashboard", description = "Manage the student's academic summary: subjects, cut averages, overall GPA, and inter-service academic weight. (AIB-9)")
 @RestController
 @RequiredArgsConstructor
@@ -50,6 +52,7 @@ public class AcademicController {
             @Parameter(description = "Authenticated student ID", required = true)
             @RequestHeader("studentId") String studentId) {
 
+        log.info("getAcademicSummary - studentId={}", studentId);
         List<Subject> subjects = getAcademicSummaryUseCase.getSummary(studentId);
 
         List<AveragesResponseDTO> subjectSummaries = subjects.stream()
@@ -102,6 +105,7 @@ public class AcademicController {
                     example = "b2c3d4e5-f6a7-8901-bcde-f12345678901")
             @RequestParam String subjectId) {
 
+        log.info("getAcademicWeight - studentId={}, subjectId={}", studentId, subjectId);
         List<Subject> subjects = getAcademicSummaryUseCase.getSummary(studentId);
 
         Double weight = subjects.stream()

@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Locale;
 
+@Slf4j
 @Tag(name = "Simulation", description = "Simulate the grade needed in pending evaluation cuts to reach a target final grade. (AIB-17)")
 @RestController
 @RequiredArgsConstructor
@@ -71,6 +73,7 @@ public class SimulationController {
             @PathVariable Long subjectId,
             @Valid @RequestBody SimulationRequestDTO request) {
 
+        log.info("simulate - subjectId={}, targetGrade={}", subjectId, request.getTargetGrade());
         SimulationResult result = simulateTargetGradeUseCase.simulate(subjectId, request.getTargetGrade());
 
         String message;

@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @Tag(name = "Schedule Availability", description = "Manage the student's daily schedule availability: free time, rest, personal and social hours. (AIB-10)")
 @RestController
 @RequestMapping("/api/v1/students/schedule-availability")
@@ -52,6 +54,7 @@ public class ScheduleAvailabilityController {
             @RequestHeader("X-Student-Id") String studentId,
             @Valid @RequestBody ScheduleAvailabilityRequestDTO request) {
 
+        log.info("saveScheduleAvailability - studentId={}", studentId);
         ScheduleAvailability domain = ScheduleAvailability.builder()
                 .studentId(studentId)
                 .freeTimeHours(request.getFreeTimeHours())
@@ -80,6 +83,7 @@ public class ScheduleAvailabilityController {
             @Parameter(description = "Authenticated student ID", required = true)
             @RequestHeader("X-Student-Id") String studentId) {
 
+        log.info("getScheduleAvailability - studentId={}", studentId);
         ScheduleAvailabilityResponseDTO response = mapper.toResponse(getUseCase.get(studentId));
         return ResponseEntity.ok(ApiResponse.ok(response, "ok"));
     }
